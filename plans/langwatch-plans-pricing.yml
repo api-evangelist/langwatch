@@ -1,0 +1,156 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: LangWatch
+providerId: langwatch
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - AI
+  - LLM Observability
+  - LLM Evaluation
+  - Agent Testing
+  - SaaS
+description: >-
+  Reconciled plans and metered pricing for LangWatch Cloud. LangWatch is fully
+  open-source (Apache-2.0 core, MIT SDKs) and can be self-hosted at no
+  software cost; the plans below apply to the managed Cloud offering at
+  app.langwatch.ai.
+sources:
+  - https://langwatch.ai/pricing
+  - https://langwatch.ai/docs/self-hosting/overview
+plans:
+  - id: langwatch-developer
+    name: Developer
+    type: free
+    description: Free starter plan for individual developers exploring LangWatch.
+    currency: USD
+    entries:
+      - label: Included events
+        name: events_included
+        type: included
+        metric: events
+        limit: 50000
+        period: month
+        unitPrice: 0
+      - label: Data retention
+        name: retention_days
+        type: included
+        metric: days
+        limit: 14
+        unitPrice: 0
+      - label: Included users
+        name: users
+        type: included
+        metric: users
+        limit: 2
+        unitPrice: 0
+      - label: Scenarios
+        name: scenarios
+        type: included
+        metric: scenarios
+        limit: 3
+        unitPrice: 0
+      - label: Simulations
+        name: simulations
+        type: included
+        metric: simulations
+        limit: 3
+        unitPrice: 0
+      - label: Custom evaluations
+        name: custom_evaluations
+        type: included
+        metric: custom_evaluations
+        limit: 3
+        unitPrice: 0
+    features:
+      - All platform features (observability, evaluations, prompts, datasets)
+      - Community support (GitHub and Discord)
+      - No credit card required
+  - id: langwatch-growth
+    name: Growth
+    type: subscription
+    description: Per-core-seat plan for production teams with metered overage.
+    currency: EUR
+    entries:
+      - label: Core seat
+        name: core_seat
+        type: subscription
+        metric: seat
+        limit: -1
+        period: month
+        unitPrice: 59
+        description: Base subscription per core seat (volume discount available above 20 users).
+      - label: Included events
+        name: events_included
+        type: included
+        metric: events
+        limit: 200000
+        period: month
+        unitPrice: 0
+      - label: Additional events
+        name: events_overage
+        type: metered
+        metric: events
+        limit: -1
+        unitPrice: 0.0005
+        description: Per-event price beyond the 200,000-event included pool.
+      - label: Included data retention
+        name: retention_days
+        type: included
+        metric: days
+        limit: 30
+        unitPrice: 0
+      - label: Extended retention storage
+        name: retention_storage
+        type: metered
+        metric: GB
+        limit: -1
+        unitPrice: 3
+        description: Per-GB price for custom retention beyond 30 days.
+    features:
+      - Everything in Developer
+      - Unlimited lite-users
+      - Unlimited evaluation scores, simulations, prompts
+      - Private Slack/Teams support
+      - Volume discount available above 20 users
+  - id: langwatch-enterprise
+    name: Enterprise / Regulated
+    type: enterprise
+    description: Custom-priced plan with on-premises, hosted, or hybrid deployment.
+    currency: USD
+    entries:
+      - label: Custom contract
+        name: custom
+        type: subscription
+        metric: contract
+        limit: -1
+        unitPrice: 0
+        description: Custom pricing — contact sales.
+    features:
+      - On-premises, hosted, or hybrid deployment
+      - Custom data retention
+      - Custom SSO and RBAC
+      - Audit logs
+      - Uptime and Support SLA
+      - SOC 2 / ISO 27001 reports
+      - Forward-deployed engineer
+      - AWS, Google, and Azure Marketplace billing
+  - id: langwatch-self-hosted-oss
+    name: Self-Hosted (Open Source)
+    type: free
+    description: Run the Apache-2.0 LangWatch monorepo on your own infrastructure at no software cost.
+    currency: USD
+    entries:
+      - label: Software license
+        name: license
+        type: included
+        metric: license
+        limit: -1
+        unitPrice: 0
+        description: Apache-2.0 core; MIT-licensed SDKs. Enterprise (`ee/`) modules require commercial license.
+    features:
+      - Docker Compose, Helm, Kind, or full Kubernetes deployment
+      - PostgreSQL + Redis + ClickHouse + OpenSearch data layer
+      - Community support

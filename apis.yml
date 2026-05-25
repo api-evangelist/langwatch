@@ -1,0 +1,526 @@
+aid: langwatch
+name: LangWatch
+description: >-
+  LangWatch is an open-source LLM observability, evaluation, and AI agent
+  testing platform. Built around OpenTelemetry-native tracing, LangWatch lets
+  teams instrument LLM applications (LangChain, LangGraph, DSPy, OpenAI Agents,
+  LiteLLM, Pydantic AI, CrewAI, AWS Bedrock, and more), run real-time and
+  batch evaluations, version and deploy prompts, simulate multi-turn agent
+  conversations against scripted scenarios and Judge Agents, manage labeled
+  datasets, and govern model traffic through a virtual-key AI Gateway with
+  budgets and semantic caching. The platform exposes a REST API at
+  app.langwatch.ai, ships Python and TypeScript SDKs plus an MCP server,
+  publishes the companion `scenario` agent-testing framework and `better-agents`
+  standards, and runs on Apache-2.0 core (with `ee/` enterprise modules under
+  commercial license) — deployable as LangWatch Cloud or self-hosted via Docker
+  Compose, Helm, Kind, or full Kubernetes.
+type: contract
+position: Consuming
+access: 3rd-Party
+image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - AI
+  - Artificial Intelligence
+  - LLM
+  - LLM Observability
+  - LLM Evaluation
+  - Agent Testing
+  - Agent Simulation
+  - Prompt Management
+  - Datasets
+  - Tracing
+  - OpenTelemetry
+  - AI Gateway
+  - DSPy
+  - LangChain
+  - Open Source
+  - MCP
+  - FinOps
+url: https://raw.githubusercontent.com/api-evangelist/langwatch/refs/heads/main/apis.yml
+created: '2026-05-25'
+modified: '2026-05-25'
+specificationVersion: '0.20'
+apis:
+  - aid: langwatch:langwatch-traces-api
+    name: LangWatch Traces API
+    tags:
+      - Traces
+      - Observability
+      - OpenTelemetry
+    humanURL: https://langwatch.ai/docs/api-reference/traces
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/traces
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/traces.yaml
+    description: >-
+      Search, retrieve, share, and unshare traces produced by instrumented
+      LLM applications. Traces are the foundational observability primitive in
+      LangWatch and arrive via OTLP/OpenTelemetry from Python or TypeScript
+      SDKs (or any OTel-compliant client). Endpoints include
+      /api/traces/search, /api/traces/{traceId}, /api/trace/{id}/share, and
+      /api/trace/{id}/unshare.
+  - aid: langwatch:langwatch-evaluators-api
+    name: LangWatch Evaluators API
+    tags:
+      - Evaluations
+      - Evaluators
+      - RAGAS
+      - Safety
+    humanURL: https://langwatch.ai/docs/api-reference/evaluators
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/evaluators
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/evaluators.yaml
+    description: >-
+      Configure and manage scorer evaluators — RAG quality (RAGAS), safety
+      (Azure Content Safety, OpenAI Moderation, PII), format validation,
+      semantic similarity, language detection, and LLM-as-Judge variants —
+      that grade traces and dataset records.
+  - aid: langwatch:langwatch-monitors-api
+    name: LangWatch Monitors API
+    tags:
+      - Monitors
+      - Online Evaluations
+      - Production
+    humanURL: https://langwatch.ai/docs/api-reference/monitors
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/monitors
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/monitors.yaml
+    description: >-
+      Create, toggle, and manage online monitors that automatically run
+      configured evaluators against incoming production traces in real time.
+  - aid: langwatch:langwatch-datasets-api
+    name: LangWatch Datasets API
+    tags:
+      - Datasets
+      - Records
+      - Fine-Tuning
+    humanURL: https://langwatch.ai/docs/api-reference/datasets
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/datasets
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/datasets.yaml
+    description: >-
+      Manage evaluation, regression, and fine-tuning datasets and their
+      records. Supports CSV upload, programmatic record CRUD, and conversion
+      of production traces into reusable test cases.
+  - aid: langwatch:langwatch-prompts-api
+    name: LangWatch Prompts API
+    tags:
+      - Prompts
+      - Versioning
+      - Deployment
+    humanURL: https://langwatch.ai/docs/api-reference/prompts
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/prompts
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/prompts.yaml
+    description: >-
+      Version, tag, sync, and restore prompts across projects. Backs the
+      LangWatch Studio prompt editor and supports feature-flag-style
+      deployment of prompt versions in production code.
+  - aid: langwatch:langwatch-scenarios-api
+    name: LangWatch Scenarios API
+    tags:
+      - Scenarios
+      - Agent Testing
+      - Simulations
+    humanURL: https://github.com/langwatch/scenario
+    properties:
+      - type: Documentation
+        url: https://github.com/langwatch/scenario
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/scenarios.yaml
+    description: >-
+      Define multi-turn agent test scenarios used by the open-source
+      `scenario` framework. Scenarios pair an Agent Under Test, a User
+      Simulator Agent, and a Judge Agent (with optional script DSL) and run
+      via pytest-compatible runners locally or in CI.
+  - aid: langwatch:langwatch-simulation-runs-api
+    name: LangWatch Simulation Runs API
+    tags:
+      - Simulations
+      - Agent Testing
+      - Batches
+    humanURL: https://langwatch.ai/docs/api-reference/simulation-runs
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/simulation-runs
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/simulation-runs.yaml
+    description: >-
+      Query and retrieve completed agent simulation runs and batches, including
+      Judge Agent verdicts, transcripts, and per-turn evaluator scores.
+  - aid: langwatch:langwatch-suites-api
+    name: LangWatch Suites API
+    tags:
+      - Suites
+      - Experiments
+      - Batches
+    humanURL: https://langwatch.ai/docs/api-reference/suites
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/suites
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/suites.yaml
+    description: >-
+      Manage and execute batch test suites that compose scenarios, datasets,
+      and evaluators into reproducible experiments and regression runs.
+  - aid: langwatch:langwatch-experiments-api
+    name: LangWatch Experiments API
+    tags:
+      - Experiments
+      - Batches
+      - DSPy
+    humanURL: https://langwatch.ai/docs/api-reference/experiments
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/experiments
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/experiments.yaml
+    description: >-
+      Trigger and inspect batch experiment runs (including DSPy-driven prompt
+      and pipeline optimization runs) by slug, with full per-run telemetry.
+  - aid: langwatch:langwatch-annotations-api
+    name: LangWatch Annotations API
+    tags:
+      - Annotations
+      - Labeling
+      - Human Feedback
+    humanURL: https://langwatch.ai/docs/api-reference/annotations
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/annotations
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/annotations.yaml
+    description: >-
+      Collaborative annotation and labeling workflows over traces — used by
+      domain experts and PMs to produce graded examples for evaluations and
+      fine-tuning datasets.
+  - aid: langwatch:langwatch-analytics-api
+    name: LangWatch Analytics API
+    tags:
+      - Analytics
+      - Time Series
+      - Dashboards
+    humanURL: https://langwatch.ai/docs/api-reference/analytics
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/analytics
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/analytics.yaml
+    description: >-
+      Time-series analytics over traces, tokens, costs, latency, and
+      evaluator scores — the data source behind LangWatch dashboards and
+      graphs.
+  - aid: langwatch:langwatch-dashboards-api
+    name: LangWatch Dashboards API
+    tags:
+      - Dashboards
+      - Graphs
+      - Visualization
+    humanURL: https://langwatch.ai/docs/api-reference/dashboards
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/dashboards
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/dashboards.yaml
+    description: >-
+      Create, reorder, update, and embed dashboards composed of analytics
+      graphs and saved trace searches.
+  - aid: langwatch:langwatch-projects-api
+    name: LangWatch Projects API
+    tags:
+      - Projects
+      - Teams
+      - Provisioning
+    humanURL: https://langwatch.ai/docs/api-reference/projects
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/projects
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/projects.yaml
+    description: >-
+      Programmatically provision and manage projects and team workspaces —
+      the top-level isolation boundary for traces, prompts, datasets, and
+      gateway routing.
+  - aid: langwatch:langwatch-api-keys-api
+    name: LangWatch API Keys API
+    tags:
+      - API Keys
+      - Authentication
+      - Service Accounts
+    humanURL: https://langwatch.ai/docs/api-reference/api-keys
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/api-keys
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/api-keys.yaml
+    description: >-
+      Create, list, and revoke project API keys for SDK and automation use.
+      Authenticates as `project_api_key` against the LangWatch REST API.
+  - aid: langwatch:langwatch-secrets-api
+    name: LangWatch Secrets API
+    tags:
+      - Secrets
+      - Credentials
+      - Vault
+    humanURL: https://langwatch.ai/docs/api-reference/secrets
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/secrets
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/secrets.yaml
+    description: >-
+      Encrypted credential storage for evaluator and integration secrets
+      (model-provider keys, third-party API keys) used by hosted runs.
+  - aid: langwatch:langwatch-model-providers-api
+    name: LangWatch Model Providers API
+    tags:
+      - Model Providers
+      - Model Defaults
+      - Routing
+    humanURL: https://langwatch.ai/docs/api-reference/model-providers
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/model-providers
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/model-providers.yaml
+    description: >-
+      Configure model-provider credentials and per-project model defaults
+      used by evaluators, judges, and the AI Gateway.
+  - aid: langwatch:langwatch-ai-gateway-api
+    name: LangWatch AI Gateway API
+    tags:
+      - AI Gateway
+      - Virtual Keys
+      - Budgets
+      - Caching
+      - Governance
+    humanURL: https://langwatch.ai/docs/api-reference/gateway
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/gateway
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/ai-gateway.yaml
+    description: >-
+      OpenAI/Anthropic-compatible governance proxy. Manages provider bindings,
+      virtual keys (with rotate and revoke), per-team budgets, and semantic
+      cache rules under /api/gateway/v1/* — written in Go.
+  - aid: langwatch:langwatch-workflows-api
+    name: LangWatch Workflows API
+    tags:
+      - Workflows
+      - Optimization Studio
+      - DSPy
+    humanURL: https://langwatch.ai/docs/api-reference/workflows
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/workflows
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/workflows.yaml
+    description: >-
+      Compose, version, and run optimization-studio workflows that chain
+      prompts, datasets, evaluators, and DSPy optimizers.
+  - aid: langwatch:langwatch-agents-api
+    name: LangWatch Agents API
+    tags:
+      - Agents
+      - Better Agents
+      - Configuration
+    humanURL: https://langwatch.ai/docs/api-reference/agents
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/agents
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/agents.yaml
+    description: >-
+      Define and update agent records used by Agent Simulations and
+      Scenarios — wiring system prompts, tools, and evaluator suites into
+      reproducible agent definitions.
+  - aid: langwatch:langwatch-triggers-api
+    name: LangWatch Triggers API
+    tags:
+      - Triggers
+      - Alerts
+      - Automation
+    humanURL: https://langwatch.ai/docs/api-reference/triggers
+    properties:
+      - type: Documentation
+        url: https://langwatch.ai/docs/api-reference/triggers
+      - type: OpenAPI
+        url: openapi/langwatch-openapi.json
+      - type: NaftikoCapability
+        url: capabilities/triggers.yaml
+    description: >-
+      Create and manage event-driven triggers that fire actions (alerts,
+      webhooks, eval runs) when trace conditions or monitor scores match.
+common:
+  - type: Portal
+    url: https://langwatch.ai
+  - type: Documentation
+    url: https://langwatch.ai/docs/
+  - type: GettingStarted
+    url: https://langwatch.ai/docs/integration/quickstart
+  - type: Documentation
+    name: API Reference
+    url: https://langwatch.ai/docs/api-reference
+  - type: OpenAPI
+    name: Canonical OpenAPI 3.1 spec
+    url: openapi/langwatch-openapi.json
+  - type: Application
+    name: LangWatch Cloud Dashboard
+    url: https://app.langwatch.ai
+  - type: SignUp
+    url: https://app.langwatch.ai/auth/signup
+  - type: Pricing
+    url: https://langwatch.ai/pricing
+  - type: Plans
+    url: plans/langwatch-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/langwatch-rate-limits.yml
+  - type: FinOps
+    url: finops/langwatch-finops.yml
+  - type: Documentation
+    name: Self-Hosting Overview
+    url: https://langwatch.ai/docs/self-hosting/overview
+  - type: Documentation
+    name: Observability
+    url: https://langwatch.ai/docs/observability
+  - type: Documentation
+    name: Evaluations
+    url: https://langwatch.ai/docs/evaluations
+  - type: Documentation
+    name: Prompt Management
+    url: https://langwatch.ai/docs/prompt-management
+  - type: Documentation
+    name: Agent Simulations
+    url: https://langwatch.ai/docs/simulations
+  - type: Documentation
+    name: LLM Index (llms.txt)
+    url: https://langwatch.ai/docs/llms.txt
+  - type: GitHubOrganization
+    url: https://github.com/langwatch
+  - type: SourceCode
+    name: LangWatch Monorepo
+    url: https://github.com/langwatch/langwatch
+  - type: SourceCode
+    name: scenario — Agent Testing Framework
+    url: https://github.com/langwatch/scenario
+  - type: SourceCode
+    name: better-agents — Standards for Building Agents
+    url: https://github.com/langwatch/better-agents
+  - type: SourceCode
+    name: langevals — Evaluator Aggregation Platform
+    url: https://github.com/langwatch/langevals
+  - type: SourceCode
+    name: cookbooks — Example Notebooks
+    url: https://github.com/langwatch/cookbooks
+  - type: SourceCode
+    name: skills — Reusable Agent Skills
+    url: https://github.com/langwatch/skills
+  - type: SDK
+    name: Python SDK (PyPI — `langwatch`)
+    url: https://pypi.org/project/langwatch/
+  - type: SDK
+    name: TypeScript SDK (npm — `langwatch`)
+    url: https://www.npmjs.com/package/langwatch
+  - type: MCP
+    name: LangWatch MCP Server (`@langwatch/mcp-server`)
+    url: https://www.npmjs.com/package/@langwatch/mcp-server
+  - type: License
+    name: Apache-2.0 (core); `ee/` modules commercial
+    url: https://github.com/langwatch/langwatch/blob/main/LICENSE
+  - type: TermsOfService
+    url: https://langwatch.ai/terms
+  - type: PrivacyPolicy
+    url: https://langwatch.ai/privacy
+  - type: Blog
+    url: https://langwatch.ai/blog
+  - type: ChangeLog
+    url: https://langwatch.ai/docs/changelog
+  - type: Forum
+    name: Discord Community
+    url: https://discord.gg/langwatch
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/langwatch
+  - type: Twitter
+    url: https://twitter.com/langwatchai
+  - type: YouTube
+    url: https://www.youtube.com/@langwatch
+  - type: Features
+    data:
+      - OpenTelemetry-native trace ingestion via Python and TypeScript SDKs and any OTel-compliant client
+      - Built-in evaluators — RAGAS, Azure Content Safety, OpenAI Moderation, PII, semantic similarity, language detection, LLM-as-Judge
+      - Real-time online monitors that score production traces against configured evaluators
+      - Batch experiments, suites, and DSPy-driven optimization workflows
+      - Prompt versioning with feature-flag-style deployment and `prompts/sync`/`restore`
+      - Multi-turn agent simulations with User Simulator and Judge Agents (open-source `scenario` framework)
+      - Collaborative annotation and labeling for domain experts and PMs
+      - Datasets — CSV upload, programmatic CRUD, trace-to-record conversion
+      - AI Gateway with OpenAI/Anthropic-compatible proxy, virtual keys, budgets, and semantic cache rules
+      - Open-source Apache-2.0 core, MIT-licensed SDKs, commercial `ee/` enterprise modules
+      - Self-hostable via Docker Compose, Helm, Kind, or full Kubernetes (PostgreSQL + Redis + ClickHouse + OpenSearch)
+      - LangWatch Cloud with three plans — Developer (free), Growth (EUR 59 / core-seat / month), Enterprise (custom)
+      - 14-day data retention on free tier, 30-day default on Growth, configurable on Enterprise
+      - MCP server (`@langwatch/mcp-server`) exposing observability, prompts, datasets, scenarios, and evaluator tools to Claude / Cursor / other MCP clients
+      - Integrations — OpenAI, Anthropic, Azure, AWS Bedrock, LiteLLM, LangChain, LangGraph, DSPy, OpenAI Agents, Pydantic AI, CrewAI, Autogen, Haystack
+      - "`better-agents` standards repository for agent project scaffolding"
+      - SOC 2 / ISO 27001 reports and forward-deployed engineering available under Enterprise tier
+    sources:
+      - https://langwatch.ai
+      - https://langwatch.ai/docs/
+      - https://langwatch.ai/pricing
+      - https://github.com/langwatch/langwatch
+      - https://github.com/langwatch/scenario
+      - https://raw.githubusercontent.com/langwatch/langwatch/main/langwatch/src/app/api/openapiLangWatch.json
+    updated: '2026-05-25'
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com
+    X: apievangelist
+    url: https://apievangelist.com

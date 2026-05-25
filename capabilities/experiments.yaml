@@ -1,0 +1,126 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Experiments API
+  description: 'Trigger and inspect batch experiment runs, including DSPy optimization runs. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Experiments
+  - Batches
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: experiments
+    baseUri: https://app.langwatch.ai
+    description: Trigger and inspect batch experiment runs, including DSPy optimization runs.
+    resources:
+    - name: api-experiments-slug-run
+      path: /api/experiments/{slug}/run
+      operations:
+      - name: runExperiment
+        method: POST
+        description: Trigger a new experiment run.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: slug
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-experiments-runs-runid
+      path: /api/experiments/runs/{runId}
+      operations:
+      - name: getExperimentRun
+        method: GET
+        description: Retrieve an experiment run.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: runId
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: experiments-rest
+    port: 8080
+    description: REST adapter for LangWatch Experiments API.
+    resources:
+    - path: /v1/api/experiments/{slug}/run
+      name: runexperiment-resource
+      description: REST surface for runExperiment.
+      operations:
+      - method: POST
+        name: runExperiment
+        description: Trigger a new experiment run.
+        call: experiments.runExperiment
+        with:
+          slug: rest.path.slug
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/experiments/runs/{runId}
+      name: getexperimentrun-resource
+      description: REST surface for getExperimentRun.
+      operations:
+      - method: GET
+        name: getExperimentRun
+        description: Retrieve an experiment run.
+        call: experiments.getExperimentRun
+        with:
+          runId: rest.path.runId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: experiments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Experiments API. One tool per consumed operation.
+    tools:
+    - name: langwatch-runExperiment
+      description: Trigger a new experiment run.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: experiments.runExperiment
+      with:
+        slug: tools.slug
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getExperimentRun
+      description: Retrieve an experiment run.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: experiments.getExperimentRun
+      with:
+        runId: tools.runId
+      outputParameters:
+      - type: object
+        mapping: $.

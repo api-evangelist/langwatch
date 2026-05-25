@@ -1,0 +1,280 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Monitors API
+  description: 'Manage online monitors that automatically evaluate incoming production traces. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Monitors
+  - Online Evaluations
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: monitors
+    baseUri: https://app.langwatch.ai
+    description: Manage online monitors that automatically evaluate incoming production traces.
+    resources:
+    - name: api-monitors
+      path: /api/monitors
+      operations:
+      - name: listMonitors
+        method: GET
+        description: List monitors.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createMonitor
+        method: POST
+        description: Create a monitor.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-monitors-id
+      path: /api/monitors/{id}
+      operations:
+      - name: getMonitor
+        method: GET
+        description: Retrieve a monitor.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: updateMonitor
+        method: PATCH
+        description: Update a monitor.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteMonitor
+        method: DELETE
+        description: Delete a monitor.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    - name: api-monitors-id-toggle
+      path: /api/monitors/{id}/toggle
+      operations:
+      - name: toggleMonitor
+        method: POST
+        description: Toggle a monitor on or off.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: monitors-rest
+    port: 8080
+    description: REST adapter for LangWatch Monitors API.
+    resources:
+    - path: /v1/api/monitors
+      name: listmonitors-resource
+      description: REST surface for listMonitors.
+      operations:
+      - method: GET
+        name: listMonitors
+        description: List monitors.
+        call: monitors.listMonitors
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/monitors
+      name: createmonitor-resource
+      description: REST surface for createMonitor.
+      operations:
+      - method: POST
+        name: createMonitor
+        description: Create a monitor.
+        call: monitors.createMonitor
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/monitors/{id}
+      name: getmonitor-resource
+      description: REST surface for getMonitor.
+      operations:
+      - method: GET
+        name: getMonitor
+        description: Retrieve a monitor.
+        call: monitors.getMonitor
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/monitors/{id}
+      name: updatemonitor-resource
+      description: REST surface for updateMonitor.
+      operations:
+      - method: PATCH
+        name: updateMonitor
+        description: Update a monitor.
+        call: monitors.updateMonitor
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/monitors/{id}
+      name: deletemonitor-resource
+      description: REST surface for deleteMonitor.
+      operations:
+      - method: DELETE
+        name: deleteMonitor
+        description: Delete a monitor.
+        call: monitors.deleteMonitor
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/monitors/{id}/toggle
+      name: togglemonitor-resource
+      description: REST surface for toggleMonitor.
+      operations:
+      - method: POST
+        name: toggleMonitor
+        description: Toggle a monitor on or off.
+        call: monitors.toggleMonitor
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: monitors-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Monitors API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listMonitors
+      description: List monitors.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: monitors.listMonitors
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createMonitor
+      description: Create a monitor.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: monitors.createMonitor
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getMonitor
+      description: Retrieve a monitor.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: monitors.getMonitor
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateMonitor
+      description: Update a monitor.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: monitors.updateMonitor
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-deleteMonitor
+      description: Delete a monitor.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: monitors.deleteMonitor
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-toggleMonitor
+      description: Toggle a monitor on or off.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: monitors.toggleMonitor
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

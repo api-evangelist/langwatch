@@ -1,0 +1,184 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Simulation Runs API
+  description: 'Query and retrieve completed agent simulation runs and batches. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Simulations
+  - Agent Testing
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: simulation-runs
+    baseUri: https://app.langwatch.ai
+    description: Query and retrieve completed agent simulation runs and batches.
+    resources:
+    - name: api-simulation-runs
+      path: /api/simulation-runs
+      operations:
+      - name: listSimulationRuns
+        method: GET
+        description: List simulation runs.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-simulation-runs-scenariorunid
+      path: /api/simulation-runs/{scenarioRunId}
+      operations:
+      - name: getSimulationRun
+        method: GET
+        description: Retrieve a simulation run.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: scenarioRunId
+          in: path
+          type: string
+          required: true
+    - name: api-simulation-runs-batches-list
+      path: /api/simulation-runs/batches/list
+      operations:
+      - name: listBatches
+        method: GET
+        description: List simulation-run batches.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-scenario-events
+      path: /api/scenario-events
+      operations:
+      - name: postScenarioEvent
+        method: POST
+        description: Ingest a scenario event from a simulator runner.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: simulation-runs-rest
+    port: 8080
+    description: REST adapter for LangWatch Simulation Runs API.
+    resources:
+    - path: /v1/api/simulation-runs
+      name: listsimulationruns-resource
+      description: REST surface for listSimulationRuns.
+      operations:
+      - method: GET
+        name: listSimulationRuns
+        description: List simulation runs.
+        call: simulation-runs.listSimulationRuns
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/simulation-runs/{scenarioRunId}
+      name: getsimulationrun-resource
+      description: REST surface for getSimulationRun.
+      operations:
+      - method: GET
+        name: getSimulationRun
+        description: Retrieve a simulation run.
+        call: simulation-runs.getSimulationRun
+        with:
+          scenarioRunId: rest.path.scenarioRunId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/simulation-runs/batches/list
+      name: listbatches-resource
+      description: REST surface for listBatches.
+      operations:
+      - method: GET
+        name: listBatches
+        description: List simulation-run batches.
+        call: simulation-runs.listBatches
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/scenario-events
+      name: postscenarioevent-resource
+      description: REST surface for postScenarioEvent.
+      operations:
+      - method: POST
+        name: postScenarioEvent
+        description: Ingest a scenario event from a simulator runner.
+        call: simulation-runs.postScenarioEvent
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: simulation-runs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Simulation Runs API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listSimulationRuns
+      description: List simulation runs.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: simulation-runs.listSimulationRuns
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getSimulationRun
+      description: Retrieve a simulation run.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: simulation-runs.getSimulationRun
+      with:
+        scenarioRunId: tools.scenarioRunId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-listBatches
+      description: List simulation-run batches.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: simulation-runs.listBatches
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-postScenarioEvent
+      description: Ingest a scenario event from a simulator runner.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: simulation-runs.postScenarioEvent
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

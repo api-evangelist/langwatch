@@ -1,0 +1,232 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Workflows API
+  description: 'Compose, version, and run optimization-studio workflows. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Workflows
+  - Optimization Studio
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: workflows
+    baseUri: https://app.langwatch.ai
+    description: Compose, version, and run optimization-studio workflows.
+    resources:
+    - name: api-workflows
+      path: /api/workflows
+      operations:
+      - name: listWorkflows
+        method: GET
+        description: List workflows.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createWorkflow
+        method: POST
+        description: Create a workflow.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-workflows-id
+      path: /api/workflows/{id}
+      operations:
+      - name: getWorkflow
+        method: GET
+        description: Retrieve a workflow.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: updateWorkflow
+        method: PATCH
+        description: Update a workflow.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteWorkflow
+        method: DELETE
+        description: Delete a workflow.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: workflows-rest
+    port: 8080
+    description: REST adapter for LangWatch Workflows API.
+    resources:
+    - path: /v1/api/workflows
+      name: listworkflows-resource
+      description: REST surface for listWorkflows.
+      operations:
+      - method: GET
+        name: listWorkflows
+        description: List workflows.
+        call: workflows.listWorkflows
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/workflows
+      name: createworkflow-resource
+      description: REST surface for createWorkflow.
+      operations:
+      - method: POST
+        name: createWorkflow
+        description: Create a workflow.
+        call: workflows.createWorkflow
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/workflows/{id}
+      name: getworkflow-resource
+      description: REST surface for getWorkflow.
+      operations:
+      - method: GET
+        name: getWorkflow
+        description: Retrieve a workflow.
+        call: workflows.getWorkflow
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/workflows/{id}
+      name: updateworkflow-resource
+      description: REST surface for updateWorkflow.
+      operations:
+      - method: PATCH
+        name: updateWorkflow
+        description: Update a workflow.
+        call: workflows.updateWorkflow
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/workflows/{id}
+      name: deleteworkflow-resource
+      description: REST surface for deleteWorkflow.
+      operations:
+      - method: DELETE
+        name: deleteWorkflow
+        description: Delete a workflow.
+        call: workflows.deleteWorkflow
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: workflows-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Workflows API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listWorkflows
+      description: List workflows.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: workflows.listWorkflows
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createWorkflow
+      description: Create a workflow.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: workflows.createWorkflow
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getWorkflow
+      description: Retrieve a workflow.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: workflows.getWorkflow
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateWorkflow
+      description: Update a workflow.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: workflows.updateWorkflow
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-deleteWorkflow
+      description: Delete a workflow.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: workflows.deleteWorkflow
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,232 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Scenarios API
+  description: 'Manage multi-turn agent test scenarios used by the open-source scenario framework. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Scenarios
+  - Agent Testing
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: scenarios
+    baseUri: https://app.langwatch.ai
+    description: Manage multi-turn agent test scenarios used by the open-source scenario framework.
+    resources:
+    - name: api-scenarios
+      path: /api/scenarios
+      operations:
+      - name: listScenarios
+        method: GET
+        description: List scenarios.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createScenario
+        method: POST
+        description: Create a scenario.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-scenarios-id
+      path: /api/scenarios/{id}
+      operations:
+      - name: getScenario
+        method: GET
+        description: Retrieve a scenario.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: updateScenario
+        method: PATCH
+        description: Update a scenario.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: archiveScenario
+        method: DELETE
+        description: Archive a scenario.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: scenarios-rest
+    port: 8080
+    description: REST adapter for LangWatch Scenarios API.
+    resources:
+    - path: /v1/api/scenarios
+      name: listscenarios-resource
+      description: REST surface for listScenarios.
+      operations:
+      - method: GET
+        name: listScenarios
+        description: List scenarios.
+        call: scenarios.listScenarios
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/scenarios
+      name: createscenario-resource
+      description: REST surface for createScenario.
+      operations:
+      - method: POST
+        name: createScenario
+        description: Create a scenario.
+        call: scenarios.createScenario
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/scenarios/{id}
+      name: getscenario-resource
+      description: REST surface for getScenario.
+      operations:
+      - method: GET
+        name: getScenario
+        description: Retrieve a scenario.
+        call: scenarios.getScenario
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/scenarios/{id}
+      name: updatescenario-resource
+      description: REST surface for updateScenario.
+      operations:
+      - method: PATCH
+        name: updateScenario
+        description: Update a scenario.
+        call: scenarios.updateScenario
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/scenarios/{id}
+      name: archivescenario-resource
+      description: REST surface for archiveScenario.
+      operations:
+      - method: DELETE
+        name: archiveScenario
+        description: Archive a scenario.
+        call: scenarios.archiveScenario
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: scenarios-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Scenarios API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listScenarios
+      description: List scenarios.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: scenarios.listScenarios
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createScenario
+      description: Create a scenario.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: scenarios.createScenario
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getScenario
+      description: Retrieve a scenario.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: scenarios.getScenario
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateScenario
+      description: Update a scenario.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: scenarios.updateScenario
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-archiveScenario
+      description: Archive a scenario.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: scenarios.archiveScenario
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,232 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Agents API
+  description: 'Define and update agent records used by simulations and scenarios. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Agents
+  - Configuration
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: agents
+    baseUri: https://app.langwatch.ai
+    description: Define and update agent records used by simulations and scenarios.
+    resources:
+    - name: api-agents
+      path: /api/agents
+      operations:
+      - name: listAgents
+        method: GET
+        description: List agents.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createAgent
+        method: POST
+        description: Create an agent.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-agents-id
+      path: /api/agents/{id}
+      operations:
+      - name: getAgent
+        method: GET
+        description: Retrieve an agent.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: updateAgent
+        method: PATCH
+        description: Update an agent.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteAgent
+        method: DELETE
+        description: Delete an agent.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: agents-rest
+    port: 8080
+    description: REST adapter for LangWatch Agents API.
+    resources:
+    - path: /v1/api/agents
+      name: listagents-resource
+      description: REST surface for listAgents.
+      operations:
+      - method: GET
+        name: listAgents
+        description: List agents.
+        call: agents.listAgents
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/agents
+      name: createagent-resource
+      description: REST surface for createAgent.
+      operations:
+      - method: POST
+        name: createAgent
+        description: Create an agent.
+        call: agents.createAgent
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/agents/{id}
+      name: getagent-resource
+      description: REST surface for getAgent.
+      operations:
+      - method: GET
+        name: getAgent
+        description: Retrieve an agent.
+        call: agents.getAgent
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/agents/{id}
+      name: updateagent-resource
+      description: REST surface for updateAgent.
+      operations:
+      - method: PATCH
+        name: updateAgent
+        description: Update an agent.
+        call: agents.updateAgent
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/agents/{id}
+      name: deleteagent-resource
+      description: REST surface for deleteAgent.
+      operations:
+      - method: DELETE
+        name: deleteAgent
+        description: Delete an agent.
+        call: agents.deleteAgent
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: agents-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Agents API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listAgents
+      description: List agents.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: agents.listAgents
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createAgent
+      description: Create an agent.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: agents.createAgent
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getAgent
+      description: Retrieve an agent.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: agents.getAgent
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateAgent
+      description: Update an agent.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: agents.updateAgent
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-deleteAgent
+      description: Delete an agent.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: agents.deleteAgent
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,66 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: LangWatch
+providerId: langwatch
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: false
+tags:
+  - LLM Observability
+  - Rate Limiting
+  - Quotas
+description: >-
+  LangWatch does not publish per-second or per-minute REST rate limits in its
+  public documentation. Usage is gated primarily by per-plan event quotas
+  (Developer 50k/mo, Growth 200k/mo with metered overage, Enterprise custom)
+  rather than by request-rate throttling. AI Gateway provider bindings can
+  enforce per-virtual-key budgets and semantic-cache rules as a separate
+  governance layer.
+sources:
+  - https://langwatch.ai/pricing
+  - https://langwatch.ai/docs/
+headers:
+  limit: x-ratelimit-limit
+  remaining: x-ratelimit-remaining
+  reset: x-ratelimit-reset
+  retryAfter: retry-after
+responseCodes:
+  throttled: 429
+  quotaExceeded: 402
+algorithm: quota-based
+limits:
+  - id: langwatch-developer-events
+    plan: Developer
+    metric: events
+    period: month
+    limit: 50000
+    enforcement: hard
+    overage: blocked
+    description: Free-tier monthly event quota.
+  - id: langwatch-growth-events
+    plan: Growth
+    metric: events
+    period: month
+    limit: 200000
+    enforcement: soft
+    overage: metered
+    overageUnitPrice: 0.0005
+    overageCurrency: EUR
+    description: Growth plan included events; overage billed at EUR 0.0005 per event.
+  - id: langwatch-enterprise-events
+    plan: Enterprise
+    metric: events
+    period: month
+    limit: -1
+    enforcement: contractual
+    description: Enterprise event volume is contract-defined.
+  - id: langwatch-gateway-budget
+    plan: All
+    metric: gateway-spend
+    period: configurable
+    limit: -1
+    enforcement: configurable
+    description: >-
+      Per-virtual-key budgets can be configured via the AI Gateway API
+      (/api/gateway/v1/budgets) to cap spend per project, team, or service.

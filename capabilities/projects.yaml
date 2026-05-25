@@ -1,0 +1,149 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Projects API
+  description: 'Provision and manage projects (workspaces) — the top-level isolation boundary. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Projects
+  - Provisioning
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: projects
+    baseUri: https://app.langwatch.ai
+    description: Provision and manage projects (workspaces) — the top-level isolation boundary.
+    resources:
+    - name: api-projects
+      path: /api/projects
+      operations:
+      - name: listProjects
+        method: GET
+        description: List projects.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createProject
+        method: POST
+        description: Create a project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-projects-id
+      path: /api/projects/{id}
+      operations:
+      - name: getProject
+        method: GET
+        description: Get a project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: projects-rest
+    port: 8080
+    description: REST adapter for LangWatch Projects API.
+    resources:
+    - path: /v1/api/projects
+      name: listprojects-resource
+      description: REST surface for listProjects.
+      operations:
+      - method: GET
+        name: listProjects
+        description: List projects.
+        call: projects.listProjects
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/projects
+      name: createproject-resource
+      description: REST surface for createProject.
+      operations:
+      - method: POST
+        name: createProject
+        description: Create a project.
+        call: projects.createProject
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/projects/{id}
+      name: getproject-resource
+      description: REST surface for getProject.
+      operations:
+      - method: GET
+        name: getProject
+        description: Get a project.
+        call: projects.getProject
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: projects-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Projects API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listProjects
+      description: List projects.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: projects.listProjects
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createProject
+      description: Create a project.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: projects.createProject
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getProject
+      description: Get a project.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: projects.getProject
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

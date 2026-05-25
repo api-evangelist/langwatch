@@ -1,0 +1,97 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: LangWatch
+providerId: langwatch
+created: '2026-05-25'
+modified: '2026-05-25'
+reconciled: true
+tags:
+  - FinOps
+  - LLM Observability
+  - Cost Management
+  - FOCUS
+description: >-
+  FOCUS-aligned FinOps definition for the LangWatch Cloud offering. Two
+  primary billing dimensions — a per-core-seat subscription (Growth plan) and
+  metered event ingestion overage — plus an optional extended-retention
+  storage dimension. Self-hosted deployments incur infrastructure cost but
+  no software license cost on the Apache-2.0 core.
+sources:
+  - https://langwatch.ai/pricing
+  - https://langwatch.ai/docs/self-hosting/overview
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: LangWatch
+serviceCategory: AI and Machine Learning
+billingModel:
+  pricingCategory: Subscription + Usage-Based
+  pricingUnits:
+    - core seat / month
+    - event ingested
+    - GB-month of extended retention
+  billingCurrency:
+    - EUR
+    - USD
+  invoiceFrequency: Monthly
+  marketplaceChannels:
+    - LangWatch direct
+    - AWS Marketplace (Enterprise)
+    - Google Cloud Marketplace (Enterprise)
+    - Azure Marketplace (Enterprise)
+costDimensions:
+  - id: core-seat
+    label: Core seat subscription
+    metric: seat
+    unitPrice: 59
+    unitCurrency: EUR
+    period: month
+    description: Growth-plan per-core-seat subscription; volume discount above 20 seats.
+  - id: events
+    label: Event ingestion overage
+    metric: events
+    unitPrice: 0.0005
+    unitCurrency: EUR
+    description: >-
+      Growth-plan per-event price beyond the included 200,000 events per month.
+      Developer plan has a hard 50,000-event quota with no overage option.
+  - id: extended-retention
+    label: Extended retention storage
+    metric: GB
+    unitPrice: 3
+    unitCurrency: EUR
+    period: month
+    description: Per-GB storage for retention beyond the included 30 days.
+  - id: enterprise-custom
+    label: Enterprise custom
+    metric: contract
+    unitPrice: null
+    unitCurrency: USD
+    description: Custom contract terms with SLAs, audit logs, and dedicated support.
+focusMapping:
+  ServiceCategory: AI and Machine Learning
+  ServiceSubcategory: LLM Observability and Evaluation
+  ChargeCategory:
+    - Usage
+    - Purchase
+  PricingUnit:
+    - Seat
+    - Event
+    - GB-Month
+  CommitmentDiscountStatus: Available above 20 seats
+governance:
+  budgets:
+    supported: true
+    api: /api/gateway/v1/budgets
+    description: Per-virtual-key and per-project spend caps configurable via the AI Gateway.
+  cacheRules:
+    supported: true
+    api: /api/gateway/v1/cache-rules
+    description: Semantic cache rules reduce upstream provider spend.
+  usageReporting:
+    supported: true
+    surface: LangWatch Dashboards and Analytics API

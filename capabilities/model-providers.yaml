@@ -1,0 +1,197 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Model Providers API
+  description: 'Configure model-provider credentials and per-project model defaults. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Model Providers
+  - Configuration
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: model-providers
+    baseUri: https://app.langwatch.ai
+    description: Configure model-provider credentials and per-project model defaults.
+    resources:
+    - name: api-model-providers
+      path: /api/model-providers
+      operations:
+      - name: listProviders
+        method: GET
+        description: List configured model providers.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-model-providers-provider
+      path: /api/model-providers/{provider}
+      operations:
+      - name: upsertProvider
+        method: PUT
+        description: Configure a model provider.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: provider
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-model-defaults
+      path: /api/model-defaults
+      operations:
+      - name: listModelDefaults
+        method: GET
+        description: List per-project model defaults.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-model-defaults-id
+      path: /api/model-defaults/{id}
+      operations:
+      - name: updateModelDefault
+        method: PATCH
+        description: Update a model default.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: model-providers-rest
+    port: 8080
+    description: REST adapter for LangWatch Model Providers API.
+    resources:
+    - path: /v1/api/model-providers
+      name: listproviders-resource
+      description: REST surface for listProviders.
+      operations:
+      - method: GET
+        name: listProviders
+        description: List configured model providers.
+        call: model-providers.listProviders
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/model-providers/{provider}
+      name: upsertprovider-resource
+      description: REST surface for upsertProvider.
+      operations:
+      - method: PUT
+        name: upsertProvider
+        description: Configure a model provider.
+        call: model-providers.upsertProvider
+        with:
+          provider: rest.path.provider
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/model-defaults
+      name: listmodeldefaults-resource
+      description: REST surface for listModelDefaults.
+      operations:
+      - method: GET
+        name: listModelDefaults
+        description: List per-project model defaults.
+        call: model-providers.listModelDefaults
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/model-defaults/{id}
+      name: updatemodeldefault-resource
+      description: REST surface for updateModelDefault.
+      operations:
+      - method: PATCH
+        name: updateModelDefault
+        description: Update a model default.
+        call: model-providers.updateModelDefault
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: model-providers-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Model Providers API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listProviders
+      description: List configured model providers.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: model-providers.listProviders
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-upsertProvider
+      description: Configure a model provider.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: model-providers.upsertProvider
+      with:
+        provider: tools.provider
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-listModelDefaults
+      description: List per-project model defaults.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: model-providers.listModelDefaults
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateModelDefault
+      description: Update a model default.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: model-providers.updateModelDefault
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,235 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Evaluators API
+  description: 'CRUD on evaluator definitions used to score traces, datasets, and runs. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Evaluators
+  - Evaluations
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: evaluators
+    baseUri: https://app.langwatch.ai
+    description: CRUD on evaluator definitions used to score traces, datasets, and runs.
+    resources:
+    - name: api-evaluators
+      path: /api/evaluators
+      operations:
+      - name: listEvaluators
+        method: GET
+        description: List evaluators.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createEvaluator
+        method: POST
+        description: Create an evaluator.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-evaluators-idorslug
+      path: /api/evaluators/{idOrSlug}
+      operations:
+      - name: getEvaluator
+        method: GET
+        description: Retrieve an evaluator by id or slug.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: idOrSlug
+          in: path
+          type: string
+          required: true
+    - name: api-evaluators-id
+      path: /api/evaluators/{id}
+      operations:
+      - name: updateEvaluator
+        method: PUT
+        description: Update an evaluator.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteEvaluator
+        method: DELETE
+        description: Delete an evaluator.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: evaluators-rest
+    port: 8080
+    description: REST adapter for LangWatch Evaluators API.
+    resources:
+    - path: /v1/api/evaluators
+      name: listevaluators-resource
+      description: REST surface for listEvaluators.
+      operations:
+      - method: GET
+        name: listEvaluators
+        description: List evaluators.
+        call: evaluators.listEvaluators
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/evaluators
+      name: createevaluator-resource
+      description: REST surface for createEvaluator.
+      operations:
+      - method: POST
+        name: createEvaluator
+        description: Create an evaluator.
+        call: evaluators.createEvaluator
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/evaluators/{idOrSlug}
+      name: getevaluator-resource
+      description: REST surface for getEvaluator.
+      operations:
+      - method: GET
+        name: getEvaluator
+        description: Retrieve an evaluator by id or slug.
+        call: evaluators.getEvaluator
+        with:
+          idOrSlug: rest.path.idOrSlug
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/evaluators/{id}
+      name: updateevaluator-resource
+      description: REST surface for updateEvaluator.
+      operations:
+      - method: PUT
+        name: updateEvaluator
+        description: Update an evaluator.
+        call: evaluators.updateEvaluator
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/evaluators/{id}
+      name: deleteevaluator-resource
+      description: REST surface for deleteEvaluator.
+      operations:
+      - method: DELETE
+        name: deleteEvaluator
+        description: Delete an evaluator.
+        call: evaluators.deleteEvaluator
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: evaluators-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Evaluators API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listEvaluators
+      description: List evaluators.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: evaluators.listEvaluators
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createEvaluator
+      description: Create an evaluator.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: evaluators.createEvaluator
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getEvaluator
+      description: Retrieve an evaluator by id or slug.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: evaluators.getEvaluator
+      with:
+        idOrSlug: tools.idOrSlug
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updateEvaluator
+      description: Update an evaluator.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: evaluators.updateEvaluator
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-deleteEvaluator
+      description: Delete an evaluator.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: evaluators.deleteEvaluator
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

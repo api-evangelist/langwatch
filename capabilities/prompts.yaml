@@ -1,0 +1,553 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: LangWatch Prompts API
+  description: 'Version, tag, sync, and restore prompts across projects. Self-contained Naftiko capability covering one LangWatch business surface.'
+  tags:
+  - LangWatch
+  - Prompts
+  - Versioning
+  created: '2026-05-25'
+  modified: '2026-05-25'
+binds:
+- namespace: env
+  keys:
+    LANGWATCH_API_KEY: LANGWATCH_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: prompts
+    baseUri: https://app.langwatch.ai
+    description: Version, tag, sync, and restore prompts across projects.
+    resources:
+    - name: api-prompts
+      path: /api/prompts
+      operations:
+      - name: listPrompts
+        method: GET
+        description: List prompts.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createPrompt
+        method: POST
+        description: Create a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-prompts-tags
+      path: /api/prompts/tags
+      operations:
+      - name: listTags
+        method: GET
+        description: List prompt tags.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: api-prompts-tags-tag
+      path: /api/prompts/tags/{tag}
+      operations:
+      - name: createTag
+        method: POST
+        description: Create or apply a tag.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tag
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-prompts-id
+      path: /api/prompts/{id}
+      operations:
+      - name: getPrompt
+        method: GET
+        description: Get a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: updatePrompt
+        method: PATCH
+        description: Update a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deletePrompt
+        method: DELETE
+        description: Delete a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    - name: api-prompts-id-sync
+      path: /api/prompts/{id}/sync
+      operations:
+      - name: syncPrompt
+        method: POST
+        description: Sync local prompt state to the server.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: api-prompts-id-tags-tag
+      path: /api/prompts/{id}/tags/{tag}
+      operations:
+      - name: tagPrompt
+        method: POST
+        description: Tag a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: tag
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: untagPrompt
+        method: DELETE
+        description: Untag a prompt.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: tag
+          in: path
+          type: string
+          required: true
+    - name: api-prompts-id-versions
+      path: /api/prompts/{id}/versions
+      operations:
+      - name: listVersions
+        method: GET
+        description: List prompt versions.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    - name: api-prompts-id-versions-versionid-restore
+      path: /api/prompts/{id}/versions/{versionId}/restore
+      operations:
+      - name: restoreVersion
+        method: POST
+        description: Restore a prompt version.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: versionId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    authentication:
+      type: bearer
+      value: '{{env.LANGWATCH_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: prompts-rest
+    port: 8080
+    description: REST adapter for LangWatch Prompts API.
+    resources:
+    - path: /v1/api/prompts
+      name: listprompts-resource
+      description: REST surface for listPrompts.
+      operations:
+      - method: GET
+        name: listPrompts
+        description: List prompts.
+        call: prompts.listPrompts
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts
+      name: createprompt-resource
+      description: REST surface for createPrompt.
+      operations:
+      - method: POST
+        name: createPrompt
+        description: Create a prompt.
+        call: prompts.createPrompt
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/tags
+      name: listtags-resource
+      description: REST surface for listTags.
+      operations:
+      - method: GET
+        name: listTags
+        description: List prompt tags.
+        call: prompts.listTags
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/tags/{tag}
+      name: createtag-resource
+      description: REST surface for createTag.
+      operations:
+      - method: POST
+        name: createTag
+        description: Create or apply a tag.
+        call: prompts.createTag
+        with:
+          tag: rest.path.tag
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}
+      name: getprompt-resource
+      description: REST surface for getPrompt.
+      operations:
+      - method: GET
+        name: getPrompt
+        description: Get a prompt.
+        call: prompts.getPrompt
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}
+      name: updateprompt-resource
+      description: REST surface for updatePrompt.
+      operations:
+      - method: PATCH
+        name: updatePrompt
+        description: Update a prompt.
+        call: prompts.updatePrompt
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}
+      name: deleteprompt-resource
+      description: REST surface for deletePrompt.
+      operations:
+      - method: DELETE
+        name: deletePrompt
+        description: Delete a prompt.
+        call: prompts.deletePrompt
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}/sync
+      name: syncprompt-resource
+      description: REST surface for syncPrompt.
+      operations:
+      - method: POST
+        name: syncPrompt
+        description: Sync local prompt state to the server.
+        call: prompts.syncPrompt
+        with:
+          id: rest.path.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}/tags/{tag}
+      name: tagprompt-resource
+      description: REST surface for tagPrompt.
+      operations:
+      - method: POST
+        name: tagPrompt
+        description: Tag a prompt.
+        call: prompts.tagPrompt
+        with:
+          id: rest.path.id
+          tag: rest.path.tag
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}/tags/{tag}
+      name: untagprompt-resource
+      description: REST surface for untagPrompt.
+      operations:
+      - method: DELETE
+        name: untagPrompt
+        description: Untag a prompt.
+        call: prompts.untagPrompt
+        with:
+          id: rest.path.id
+          tag: rest.path.tag
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}/versions
+      name: listversions-resource
+      description: REST surface for listVersions.
+      operations:
+      - method: GET
+        name: listVersions
+        description: List prompt versions.
+        call: prompts.listVersions
+        with:
+          id: rest.path.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/prompts/{id}/versions/{versionId}/restore
+      name: restoreversion-resource
+      description: REST surface for restoreVersion.
+      operations:
+      - method: POST
+        name: restoreVersion
+        description: Restore a prompt version.
+        call: prompts.restoreVersion
+        with:
+          id: rest.path.id
+          versionId: rest.path.versionId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: prompts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for LangWatch Prompts API. One tool per consumed operation.
+    tools:
+    - name: langwatch-listPrompts
+      description: List prompts.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: prompts.listPrompts
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createPrompt
+      description: Create a prompt.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.createPrompt
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-listTags
+      description: List prompt tags.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: prompts.listTags
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-createTag
+      description: Create or apply a tag.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.createTag
+      with:
+        tag: tools.tag
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-getPrompt
+      description: Get a prompt.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: prompts.getPrompt
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-updatePrompt
+      description: Update a prompt.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.updatePrompt
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-deletePrompt
+      description: Delete a prompt.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: prompts.deletePrompt
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-syncPrompt
+      description: Sync local prompt state to the server.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.syncPrompt
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-tagPrompt
+      description: Tag a prompt.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.tagPrompt
+      with:
+        id: tools.id
+        tag: tools.tag
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-untagPrompt
+      description: Untag a prompt.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: prompts.untagPrompt
+      with:
+        id: tools.id
+        tag: tools.tag
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-listVersions
+      description: List prompt versions.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: prompts.listVersions
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: langwatch-restoreVersion
+      description: Restore a prompt version.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: prompts.restoreVersion
+      with:
+        id: tools.id
+        versionId: tools.versionId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
