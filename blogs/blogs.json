@@ -2,10 +2,17 @@
   "repo": "langwatch",
   "feeds": [
     {
+      "source": "https://langwatch.ai/blog",
+      "feed_url": "https://langwatch.ai/blog",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
       "source": "https://langwatch.ai/privacy",
       "error": "HTTPError"
     }
   ],
-  "post_count": 0,
-  "fetched": "2026-06-01T23:35:02Z"
+  "post_count": 1,
+  "fetched": "2026-06-14T20:42:17Z"
 }
