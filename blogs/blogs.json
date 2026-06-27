@@ -3,16 +3,12 @@
   "feeds": [
     {
       "source": "https://langwatch.ai/blog",
-      "feed_url": "https://langwatch.ai/blog",
-      "title": "",
+      "feed_url": "",
       "saved": 0,
-      "method": "none"
-    },
-    {
-      "source": "https://langwatch.ai/privacy",
-      "error": "HTTPError"
+      "method": "agent-scrape"
     }
   ],
-  "post_count": 1,
-  "fetched": "2026-06-14T20:42:17Z"
+  "post_count": 6,
+  "fetched": "2026-06-27T12:50:31Z",
+  "agent_pulled": "2026-06-27"
 }

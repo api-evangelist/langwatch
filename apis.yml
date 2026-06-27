@@ -358,7 +358,7 @@ common:
   - type: Application
     name: LangWatch Cloud Dashboard
     url: https://app.langwatch.ai
-  - type: SignUp
+  - type: Signup
     url: https://app.langwatch.ai/auth/signup
   - type: Pricing
     url: https://langwatch.ai/pricing
@@ -406,10 +406,10 @@ common:
   - type: SourceCode
     name: skills — Reusable Agent Skills
     url: https://github.com/langwatch/skills
-  - type: SDK
+  - type: SDKs
     name: Python SDK (PyPI — `langwatch`)
     url: https://pypi.org/project/langwatch/
-  - type: SDK
+  - type: SDKs
     name: TypeScript SDK (npm — `langwatch`)
     url: https://www.npmjs.com/package/langwatch
   - type: MCP
@@ -426,7 +426,7 @@ common:
     url: https://langwatch.ai/blog
   - type: ChangeLog
     url: https://langwatch.ai/docs/changelog
-  - type: Forum
+  - type: Forums
     name: Discord Community
     url: https://discord.gg/langwatch
   - type: LinkedIn
