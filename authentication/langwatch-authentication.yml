@@ -1,0 +1,26 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/langwatch-openapi.json
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: project_api_key
+  type: apiKey
+  in: header
+  parameter: X-Auth-Token
+  description: 'Project API key for sending traces and accessing project-scoped resources. Format:
+    sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch
+    UI.'
+  sources:
+  - openapi/langwatch-openapi.json
+- name: admin_api_key
+  type: http
+  scheme: bearer
+  description: 'Admin API key for organization-level operations (managing projects, API keys).
+    Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+  sources:
+  - openapi/langwatch-openapi.json

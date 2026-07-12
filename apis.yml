@@ -343,6 +343,12 @@ apis:
       Create and manage event-driven triggers that fire actions (alerts, webhooks, eval runs) when trace conditions or
       monitor scores match.
 common:
+  - type: TrustCenter
+    url: security/langwatch-trust-center.yml
+  - type: DomainSecurity
+    url: security/langwatch-domain-security.yml
+  - type: Authentication
+    url: authentication/langwatch-authentication.yml
   - type: Portal
     url: https://langwatch.ai
   - type: Documentation
