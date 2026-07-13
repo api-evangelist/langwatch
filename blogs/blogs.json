@@ -2,13 +2,14 @@
   "repo": "langwatch",
   "feeds": [
     {
-      "source": "https://langwatch.ai/blog",
-      "feed_url": "",
+      "source": "https://langwatch.ai/privacy",
+      "feed_url": "https://langwatch.ai/privacy",
+      "title": "",
       "saved": 0,
-      "method": "agent-scrape"
+      "method": "none"
     }
   ],
   "post_count": 6,
-  "fetched": "2026-06-27T12:50:31Z",
+  "fetched": "2026-07-11T11:50:51Z",
   "agent_pulled": "2026-06-27"
 }
