@@ -343,6 +343,8 @@ apis:
       Create and manage event-driven triggers that fire actions (alerts, webhooks, eval runs) when trace conditions or
       monitor scores match.
 common:
+  - type: AgenticAccess
+    url: agentic-access/langwatch-agentic-access.yml
   - type: TrustCenter
     url: security/langwatch-trust-center.yml
   - type: DomainSecurity
