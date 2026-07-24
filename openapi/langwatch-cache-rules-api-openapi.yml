@@ -1,0 +1,706 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Cache Rules API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Cache Rules
+paths:
+  /api/gateway/v1/cache-rules:
+    get:
+      responses:
+        '200':
+          description: Cache rules for the organisation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        organization_id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        priority:
+                          type: integer
+                        enabled:
+                          type: boolean
+                        matchers:
+                          type: object
+                          additionalProperties: {}
+                        action:
+                          type: object
+                          properties:
+                            mode:
+                              type: string
+                              enum:
+                              - respect
+                              - force
+                              - disable
+                            ttl:
+                              type: integer
+                            salt:
+                              type: string
+                          required:
+                          - mode
+                        mode_enum:
+                          type: string
+                          enum:
+                          - RESPECT
+                          - FORCE
+                          - DISABLE
+                        archived_at:
+                          type:
+                          - string
+                          - 'null'
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                      required:
+                      - id
+                      - organization_id
+                      - name
+                      - description
+                      - priority
+                      - enabled
+                      - matchers
+                      - action
+                      - mode_enum
+                      - archived_at
+                      - created_at
+                      - updated_at
+                required:
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Cache-rules
+      tags:
+      - Cache Rules
+      parameters: []
+      summary: List cache-control rules
+      description: Organization-scoped operator-authored rules. Returned sorted priority DESC; archived rules excluded. Matchers and action are returned verbatim as JSON.
+    post:
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cache_rule:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      priority:
+                        type: integer
+                      enabled:
+                        type: boolean
+                      matchers:
+                        type: object
+                        additionalProperties: {}
+                      action:
+                        type: object
+                        properties:
+                          mode:
+                            type: string
+                            enum:
+                            - respect
+                            - force
+                            - disable
+                          ttl:
+                            type: integer
+                          salt:
+                            type: string
+                        required:
+                        - mode
+                      mode_enum:
+                        type: string
+                        enum:
+                        - RESPECT
+                        - FORCE
+                        - DISABLE
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                    required:
+                    - id
+                    - organization_id
+                    - name
+                    - description
+                    - priority
+                    - enabled
+                    - matchers
+                    - action
+                    - mode_enum
+                    - archived_at
+                    - created_at
+                    - updated_at
+                required:
+                - cache_rule
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - type
+                    - code
+                    - message
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Cache-rules
+      tags:
+      - Cache Rules
+      parameters: []
+      summary: Create a cache rule
+      description: Matchers are ANDed across non-null fields; at least one matcher is required. Mode is one of respect/force/disable. TTL is clamped to [0, 86400]. Salt is an optional cache-bust tag (max 64 chars). All writes emit a ChangeEvent so the gateway picks up the new rule within 30 s via its /changes long-poll.
+  /api/gateway/v1/cache-rules/{id}:
+    get:
+      responses:
+        '200':
+          description: The rule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cache_rule:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      priority:
+                        type: integer
+                      enabled:
+                        type: boolean
+                      matchers:
+                        type: object
+                        additionalProperties: {}
+                      action:
+                        type: object
+                        properties:
+                          mode:
+                            type: string
+                            enum:
+                            - respect
+                            - force
+                            - disable
+                          ttl:
+                            type: integer
+                          salt:
+                            type: string
+                        required:
+                        - mode
+                      mode_enum:
+                        type: string
+                        enum:
+                        - RESPECT
+                        - FORCE
+                        - DISABLE
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                    required:
+                    - id
+                    - organization_id
+                    - name
+                    - description
+                    - priority
+                    - enabled
+                    - matchers
+                    - action
+                    - mode_enum
+                    - archived_at
+                    - created_at
+                    - updated_at
+                required:
+                - cache_rule
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Cache-rulesById
+      tags:
+      - Cache Rules
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Get a cache rule
+      description: Returns the rule if it belongs to the caller's organisation; 404 otherwise. Archived rules are NOT returned (use the audit log to inspect removed rules).
+    patch:
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cache_rule:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      priority:
+                        type: integer
+                      enabled:
+                        type: boolean
+                      matchers:
+                        type: object
+                        additionalProperties: {}
+                      action:
+                        type: object
+                        properties:
+                          mode:
+                            type: string
+                            enum:
+                            - respect
+                            - force
+                            - disable
+                          ttl:
+                            type: integer
+                          salt:
+                            type: string
+                        required:
+                        - mode
+                      mode_enum:
+                        type: string
+                        enum:
+                        - RESPECT
+                        - FORCE
+                        - DISABLE
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                    required:
+                    - id
+                    - organization_id
+                    - name
+                    - description
+                    - priority
+                    - enabled
+                    - matchers
+                    - action
+                    - mode_enum
+                    - archived_at
+                    - created_at
+                    - updated_at
+                required:
+                - cache_rule
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiGatewayV1Cache-rulesById
+      tags:
+      - Cache Rules
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Update a cache rule
+      description: Partial update. `matchers` and `action` REPLACE the stored value when provided (not merged field-by-field). Omitting them leaves the stored value untouched. The rule id + organisation are immutable.
+    delete:
+      responses:
+        '200':
+          description: Archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cache_rule:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      priority:
+                        type: integer
+                      enabled:
+                        type: boolean
+                      matchers:
+                        type: object
+                        additionalProperties: {}
+                      action:
+                        type: object
+                        properties:
+                          mode:
+                            type: string
+                            enum:
+                            - respect
+                            - force
+                            - disable
+                          ttl:
+                            type: integer
+                          salt:
+                            type: string
+                        required:
+                        - mode
+                      mode_enum:
+                        type: string
+                        enum:
+                        - RESPECT
+                        - FORCE
+                        - DISABLE
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+                    required:
+                    - id
+                    - organization_id
+                    - name
+                    - description
+                    - priority
+                    - enabled
+                    - matchers
+                    - action
+                    - mode_enum
+                    - archived_at
+                    - created_at
+                    - updated_at
+                required:
+                - cache_rule
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiGatewayV1Cache-rulesById
+      tags:
+      - Cache Rules
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Archive a cache rule
+      description: Soft-delete — sets archivedAt. The rule stops matching new requests. Audit log retains before/after snapshots. Returns the archived row.
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

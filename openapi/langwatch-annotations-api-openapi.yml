@@ -1,0 +1,248 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Annotations API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Annotations
+paths:
+  /api/annotations:
+    get:
+      description: Returns all annotations for project
+      responses:
+        '200':
+          description: Annotation response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+  /api/annotations/trace/{id}:
+    get:
+      description: Returns all annotations for single trace
+      parameters:
+      - name: id
+        in: path
+        description: ID of trace to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Annotation response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+    post:
+      description: Create an annotation for a single trace
+      parameters:
+      - name: id
+        in: path
+        description: ID of the trace to annotate
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Annotation data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                isThumbsUp:
+                  type: boolean
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Annotation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+  /api/annotations/{id}:
+    get:
+      description: Returns a single annotation based on the ID supplied
+      parameters:
+      - name: id
+        in: path
+        description: ID of annotation to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Annotation response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+    delete:
+      description: Deletes a single annotation based on the ID supplied
+      parameters:
+      - name: id
+        in: path
+        description: ID of annotation to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Annotation response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+    patch:
+      description: Updates a single annotation based on the ID supplied
+      parameters:
+      - name: id
+        in: path
+        description: ID of annotation to delete
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                isThumbsUp:
+                  type: boolean
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Annotation response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Annotations
+components:
+  schemas:
+    Annotation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          description: The ID of the annotation
+          type: string
+        projectId:
+          description: The ID of the project
+          type: string
+        traceId:
+          description: The ID of the trace
+          type: string
+        comment:
+          description: The comment of the annotation
+          type: string
+        isThumbsUp:
+          description: The thumbs up status of the annotation
+          type: boolean
+        userId:
+          description: The ID of the user
+          type: string
+        createdAt:
+          description: The created at of the annotation
+          type: string
+        updatedAt:
+          description: The updated at of the annotation
+          type: string
+        email:
+          description: The email of the user
+          type: string
+    Error:
+      required:
+      - error
+      - message
+      type: object
+      properties:
+        error:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

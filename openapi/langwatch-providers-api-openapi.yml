@@ -1,0 +1,389 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Providers API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Providers
+paths:
+  /api/gateway/v1/providers:
+    get:
+      responses:
+        '200':
+          description: Provider bindings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        model_provider_id:
+                          type: string
+                        model_provider_name:
+                          type: string
+                        slot:
+                          type: string
+                        rate_limit_rpm:
+                          type:
+                          - number
+                          - 'null'
+                        rate_limit_tpm:
+                          type:
+                          - number
+                          - 'null'
+                        rate_limit_rpd:
+                          type:
+                          - number
+                          - 'null'
+                        rotation_policy:
+                          type: string
+                        fallback_priority_global:
+                          type:
+                          - number
+                          - 'null'
+                        health_status:
+                          type: string
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        created_at:
+                          type: string
+                      required:
+                      - id
+                      - model_provider_id
+                      - model_provider_name
+                      - slot
+                      - rate_limit_rpm
+                      - rate_limit_tpm
+                      - rate_limit_rpd
+                      - rotation_policy
+                      - fallback_priority_global
+                      - health_status
+                      - disabled_at
+                      - created_at
+                required:
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Providers
+      tags:
+      - Providers
+      parameters: []
+      summary: List provider bindings
+      description: Lists every gateway-bound model-provider credential for the caller's project, including health and rate-limit settings.
+    post:
+      responses:
+        '201':
+          description: Binding created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  provider_credential:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                    required:
+                    - id
+                required:
+                - provider_credential
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Providers
+      tags:
+      - Providers
+      parameters: []
+      summary: Bind a model provider to the gateway
+      description: Creates a GatewayProviderCredential binding. Reuses the ModelProvider API key already configured in project settings; this only adds gateway-specific settings (rate limits, rotation, fallback priority).
+  /api/gateway/v1/providers/{id}:
+    patch:
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  provider_credential:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                    required:
+                    - id
+                required:
+                - provider_credential
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiGatewayV1ProvidersById
+      tags:
+      - Providers
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Update provider binding
+      description: Partial update of gateway-specific settings (rate limits, rotation, slot, extra headers). The underlying ModelProvider credentials are managed in project settings, not here.
+    delete:
+      responses:
+        '200':
+          description: Disabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  provider_credential:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      disabled_at:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - disabled_at
+                required:
+                - provider_credential
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiGatewayV1ProvidersById
+      tags:
+      - Providers
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Disable provider binding
+      description: Marks the binding disabled. Requests routing to this slot are skipped (fallback chain continues). Historical ledger rows are retained.
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

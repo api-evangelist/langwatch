@@ -1,0 +1,510 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Budgets API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Budgets
+paths:
+  /api/gateway/v1/budgets:
+    get:
+      responses:
+        '200':
+          description: Applicable budgets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        organization_id:
+                          type: string
+                        scope_type:
+                          type: string
+                        scope_id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        window:
+                          type: string
+                        on_breach:
+                          type: string
+                          enum:
+                          - BLOCK
+                          - WARN
+                        limit_usd:
+                          type: string
+                        spent_usd:
+                          type: string
+                        resets_at:
+                          type: string
+                        archived_at:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - organization_id
+                      - scope_type
+                      - scope_id
+                      - name
+                      - description
+                      - window
+                      - on_breach
+                      - limit_usd
+                      - spent_usd
+                      - resets_at
+                      - archived_at
+                required:
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Budgets
+      tags:
+      - Budgets
+      parameters: []
+      summary: List budgets applicable to the project
+      description: Returns every budget that could apply to requests routed through this project — org, team, and project scope. VK and principal-scoped budgets are returned via their detail pages.
+    post:
+      responses:
+        '201':
+          description: Budget created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  budget:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      scope_type:
+                        type: string
+                      scope_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      window:
+                        type: string
+                      on_breach:
+                        type: string
+                        enum:
+                        - BLOCK
+                        - WARN
+                      limit_usd:
+                        type: string
+                      spent_usd:
+                        type: string
+                      resets_at:
+                        type: string
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - organization_id
+                    - scope_type
+                    - scope_id
+                    - name
+                    - description
+                    - window
+                    - on_breach
+                    - limit_usd
+                    - spent_usd
+                    - resets_at
+                    - archived_at
+                required:
+                - budget
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - type
+                    - code
+                    - message
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Budgets
+      tags:
+      - Budgets
+      parameters: []
+      summary: Create budget
+      description: Creates an organization-owned budget. The scope discriminates which resource the budget covers (organization / team / project / virtual_key / principal).
+  /api/gateway/v1/budgets/{id}:
+    patch:
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  budget:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      scope_type:
+                        type: string
+                      scope_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      window:
+                        type: string
+                      on_breach:
+                        type: string
+                        enum:
+                        - BLOCK
+                        - WARN
+                      limit_usd:
+                        type: string
+                      spent_usd:
+                        type: string
+                      resets_at:
+                        type: string
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - organization_id
+                    - scope_type
+                    - scope_id
+                    - name
+                    - description
+                    - window
+                    - on_breach
+                    - limit_usd
+                    - spent_usd
+                    - resets_at
+                    - archived_at
+                required:
+                - budget
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiGatewayV1BudgetsById
+      tags:
+      - Budgets
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Update budget
+      description: Partial update — scope and window are immutable after create. Use explicit null to clear timezone / description.
+    delete:
+      responses:
+        '200':
+          description: Archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  budget:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      organization_id:
+                        type: string
+                      scope_type:
+                        type: string
+                      scope_id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      window:
+                        type: string
+                      on_breach:
+                        type: string
+                        enum:
+                        - BLOCK
+                        - WARN
+                      limit_usd:
+                        type: string
+                      spent_usd:
+                        type: string
+                      resets_at:
+                        type: string
+                      archived_at:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - organization_id
+                    - scope_type
+                    - scope_id
+                    - name
+                    - description
+                    - window
+                    - on_breach
+                    - limit_usd
+                    - spent_usd
+                    - resets_at
+                    - archived_at
+                required:
+                - budget
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiGatewayV1BudgetsById
+      tags:
+      - Budgets
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Archive budget
+      description: Soft-delete — the row is marked archived and no longer counted by the budget engine. Historical ledger entries are retained.
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

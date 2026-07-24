@@ -1,0 +1,632 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Graphs API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Graphs
+paths:
+  /api/graphs:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    graph:
+                      type: object
+                      additionalProperties: {}
+                    filters:
+                      type:
+                      - object
+                      - 'null'
+                      additionalProperties: {}
+                    dashboardId:
+                      type:
+                      - string
+                      - 'null'
+                    gridColumn:
+                      type: number
+                    gridRow:
+                      type: number
+                    colSpan:
+                      type: number
+                    rowSpan:
+                      type: number
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                  required:
+                  - id
+                  - name
+                  - graph
+                  - filters
+                  - dashboardId
+                  - gridColumn
+                  - gridRow
+                  - colSpan
+                  - rowSpan
+                  - createdAt
+                  - updatedAt
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGraphs
+      parameters:
+      - in: query
+        name: dashboardId
+        schema:
+          type: string
+      description: List all custom graphs, optionally filtered by dashboard
+      tags:
+      - Graphs
+    post:
+      responses:
+        '201':
+          description: Graph created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  graph:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties: {}
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: number
+                  gridRow:
+                    type: number
+                  colSpan:
+                    type: number
+                  rowSpan:
+                    type: number
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                - id
+                - name
+                - graph
+                - filters
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                - createdAt
+                - updatedAt
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGraphs
+      parameters: []
+      description: Create a custom graph on a dashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                graph:
+                  type: object
+                  additionalProperties: {}
+                dashboardId:
+                  type: string
+                filters:
+                  type: object
+                  additionalProperties: {}
+                gridColumn:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                gridRow:
+                  type: number
+                  minimum: 0
+                colSpan:
+                  type: number
+                  minimum: 1
+                  maximum: 2
+                rowSpan:
+                  type: number
+                  minimum: 1
+                  maximum: 2
+              required:
+              - name
+              - graph
+      tags:
+      - Graphs
+  /api/graphs/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  graph:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties: {}
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: number
+                  gridRow:
+                    type: number
+                  colSpan:
+                    type: number
+                  rowSpan:
+                    type: number
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                - id
+                - name
+                - graph
+                - filters
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                - createdAt
+                - updatedAt
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Graph not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGraphsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a custom graph by its ID
+      tags:
+      - Graphs
+    patch:
+      responses:
+        '200':
+          description: Graph updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  graph:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties: {}
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: number
+                  gridRow:
+                    type: number
+                  colSpan:
+                    type: number
+                  rowSpan:
+                    type: number
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                - id
+                - name
+                - graph
+                - filters
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                - createdAt
+                - updatedAt
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Graph not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiGraphsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update a custom graph's name, definition, or filters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                graph:
+                  type: object
+                  additionalProperties: {}
+                filters:
+                  type: object
+                  additionalProperties: {}
+      tags:
+      - Graphs
+    delete:
+      responses:
+        '200':
+          description: Graph deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - id
+                - deleted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Graph not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiGraphsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Delete a custom graph
+      tags:
+      - Graphs
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

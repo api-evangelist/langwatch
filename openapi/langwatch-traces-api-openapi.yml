@@ -1,0 +1,923 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Traces API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Traces
+paths:
+  /api/trace/search:
+    post:
+      summary: Search traces
+      description: Search for traces based on given criteria
+      tags:
+      - Traces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+  /api/traces/search:
+    post:
+      responses:
+        '200':
+          description: Matching traces with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  traces:
+                    type: array
+                    items: {}
+                  pagination:
+                    type: object
+                    properties:
+                      totalHits:
+                        type: number
+                      scrollId:
+                        type: string
+                    required:
+                    - totalHits
+                required:
+                - traces
+                - pagination
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiTracesSearch
+      parameters: []
+      description: Search traces for a project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                filters:
+                  type: object
+                  properties:
+                    topics.topics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    topics.subtopics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.user_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.thread_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.customer_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.labels:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.prompt_ids:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.origin:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.error:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.name:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.model:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.guardrails_only:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.state:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_details.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    annotations.hasAnnotation:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  additionalProperties: false
+                  default: {}
+                traceIds:
+                  type: array
+                  items:
+                    type: string
+                negateFilters:
+                  type: boolean
+                pageOffset:
+                  type: number
+                pageSize:
+                  type: number
+                groupBy:
+                  type: string
+                sortBy:
+                  type: string
+                sortDirection:
+                  type: string
+                updatedAt:
+                  type: number
+                scrollId:
+                  type:
+                  - string
+                  - 'null'
+                startDate:
+                  anyOf:
+                  - type: number
+                  - type: string
+                endDate:
+                  anyOf:
+                  - type: number
+                  - type: string
+                format:
+                  type: string
+                  enum:
+                  - digest
+                  - json
+                  description: 'Output format: ''digest'' (AI-readable trace digest) or ''json'' (full raw data)'
+                includeSpans:
+                  type: boolean
+                  description: When true, fetches full span data for each trace. Useful for bulk export. Default false.
+                llmMode:
+                  type: boolean
+              required:
+              - startDate
+              - endDate
+      tags:
+      - Traces
+  /api/traces/{traceId}:
+    get:
+      responses:
+        '200':
+          description: Trace detail with spans, evaluations, and ASCII tree
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Trace not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '409':
+          description: Ambiguous trace ID prefix — the prefix matches more than one trace
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  candidateTraceIds:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - message
+                - candidateTraceIds
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiTracesByTraceId
+      parameters:
+      - name: traceId
+        in: path
+        description: The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project.
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: 'Output format: ''digest'' (default, AI-readable) or ''json'' (full raw data)'
+        required: false
+        schema:
+          type: string
+          enum:
+          - digest
+          - json
+      - name: llmMode
+        in: query
+        description: 'Deprecated: use format=digest instead'
+        required: false
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - '1'
+          - '0'
+      description: Get a single trace by ID.
+      tags:
+      - Traces
+components:
+  schemas:
+    EvaluationTimestamps:
+      type: object
+      properties:
+        finished_at:
+          type: integer
+        updated_at:
+          type: integer
+    Metadata:
+      type: object
+      properties:
+        sdk_language:
+          type: string
+        sdk_version:
+          type: string
+    Output:
+      type: object
+      properties:
+        value:
+          type: string
+    Metrics:
+      type: object
+      properties:
+        tokens_estimated:
+          type: boolean
+        completion_tokens:
+          type: integer
+        prompt_tokens:
+          type: integer
+        total_cost:
+          type: number
+        total_time_ms:
+          type: integer
+        first_token_ms:
+          type: integer
+          nullable: true
+    Trace:
+      type: object
+      properties:
+        trace_id:
+          type: string
+        project_id:
+          type: string
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        input:
+          $ref: '#/components/schemas/Input'
+        output:
+          $ref: '#/components/schemas/Output'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        indexing_md5s:
+          type: array
+          items:
+            type: string
+        error:
+          type: string
+          nullable: true
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evaluation'
+        contexts:
+          type: array
+          items: {}
+    Timestamps:
+      type: object
+      properties:
+        inserted_at:
+          type: integer
+        started_at:
+          type: integer
+        updated_at:
+          type: integer
+    SearchResponse:
+      type: object
+      properties:
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trace'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Input:
+      type: object
+      properties:
+        value:
+          type: string
+    SearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        pageSize:
+          type: integer
+          example: 1000
+        scrollId:
+          type: string
+          example: '123'
+        filters:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    Evaluation:
+      type: object
+      properties:
+        evaluation_id:
+          type: string
+        score:
+          type: number
+        timestamps:
+          $ref: '#/components/schemas/EvaluationTimestamps'
+        evaluator_id:
+          type: string
+        name:
+          type: string
+        details:
+          type: string
+        passed:
+          type: boolean
+        label:
+          type: string
+          nullable: true
+        type:
+          type: string
+        status:
+          type: string
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

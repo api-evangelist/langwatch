@@ -1,0 +1,490 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Simulation Runs API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Simulation Runs
+paths:
+  /api/simulation-runs:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        scenarioId:
+                          type: string
+                        batchRunId:
+                          type: string
+                        scenarioRunId:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                        results:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            verdict:
+                              type:
+                              - string
+                              - 'null'
+                            reasoning:
+                              type:
+                              - string
+                              - 'null'
+                            metCriteria:
+                              type: array
+                              items:
+                                type: string
+                            unmetCriteria:
+                              type: array
+                              items:
+                                type: string
+                            error:
+                              type:
+                              - string
+                              - 'null'
+                        messages:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              role:
+                                type: string
+                              content:
+                                type: string
+                            required:
+                            - role
+                            - content
+                        timestamp:
+                          type: number
+                        updatedAt:
+                          type: number
+                        durationInMs:
+                          type: number
+                        totalCost:
+                          type: number
+                        platformUrl:
+                          type: string
+                          format: uri
+                      required:
+                      - scenarioId
+                      - batchRunId
+                      - scenarioRunId
+                      - name
+                      - description
+                      - status
+                      - results
+                      - messages
+                      - timestamp
+                      - updatedAt
+                      - durationInMs
+                      - platformUrl
+                  hasMore:
+                    type: boolean
+                  nextCursor:
+                    type: string
+                required:
+                - runs
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiSimulation-runs
+      parameters:
+      - in: query
+        name: scenarioSetId
+        schema:
+          type: string
+      - in: query
+        name: batchRunId
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 100
+          default: 20
+      - in: query
+        name: cursor
+        schema:
+          type: string
+      description: List simulation runs, optionally filtered by scenarioSetId or batchRunId
+      tags:
+      - Simulation Runs
+  /api/simulation-runs/batches/list:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batches:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        batchRunId:
+                          type: string
+                        totalCount:
+                          type: number
+                        passCount:
+                          type: number
+                        failCount:
+                          type: number
+                        runningCount:
+                          type: number
+                        stalledCount:
+                          type: number
+                        lastRunAt:
+                          type: number
+                        lastUpdatedAt:
+                          type: number
+                        firstCompletedAt:
+                          type:
+                          - number
+                          - 'null'
+                        allCompletedAt:
+                          type:
+                          - number
+                          - 'null'
+                      required:
+                      - batchRunId
+                      - totalCount
+                      - passCount
+                      - failCount
+                      - runningCount
+                      - stalledCount
+                      - lastRunAt
+                      - lastUpdatedAt
+                      - firstCompletedAt
+                      - allCompletedAt
+                  hasMore:
+                    type: boolean
+                  nextCursor:
+                    type: string
+                required:
+                - batches
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiSimulation-runsBatchesList
+      parameters:
+      - in: query
+        name: scenarioSetId
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 50
+          default: 10
+        required: false
+      - in: query
+        name: cursor
+        schema:
+          type: string
+        required: false
+      description: List batch summaries for a scenario set (pass/fail counts per batch)
+      tags:
+      - Simulation Runs
+  /api/simulation-runs/{scenarioRunId}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioId:
+                    type: string
+                  batchRunId:
+                    type: string
+                  scenarioRunId:
+                    type: string
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                  results:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      verdict:
+                        type:
+                        - string
+                        - 'null'
+                      reasoning:
+                        type:
+                        - string
+                        - 'null'
+                      metCriteria:
+                        type: array
+                        items:
+                          type: string
+                      unmetCriteria:
+                        type: array
+                        items:
+                          type: string
+                      error:
+                        type:
+                        - string
+                        - 'null'
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                        content:
+                          type: string
+                      required:
+                      - role
+                      - content
+                  timestamp:
+                    type: number
+                  updatedAt:
+                    type: number
+                  durationInMs:
+                    type: number
+                  totalCost:
+                    type: number
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - scenarioId
+                - batchRunId
+                - scenarioRunId
+                - name
+                - description
+                - status
+                - results
+                - messages
+                - timestamp
+                - updatedAt
+                - durationInMs
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Run not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiSimulation-runsByScenarioRunId
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: scenarioRunId
+        required: true
+      description: Get a single simulation run by its ID
+      tags:
+      - Simulation Runs
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

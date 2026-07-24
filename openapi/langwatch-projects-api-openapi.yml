@@ -1,0 +1,279 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Projects API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Projects
+paths:
+  /api/projects:
+    get:
+      operationId: listProjects
+      summary: List projects
+      description: List all non-archived projects for the organization (paginated). Requires an admin API key with project:view permission.
+      security:
+      - admin_api_key: []
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 50
+      responses:
+        '200':
+          description: Paginated list of projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          description: Invalid or missing API key token
+        '403':
+          description: Insufficient permissions for this operation
+      tags:
+      - Projects
+    post:
+      operationId: createProject
+      summary: Create a project
+      description: Create a new project in the organization. Returns the project with its API key (sk-lw-...) for sending traces. Provide either teamId (existing team) or newTeamName (creates a new team). Requires project:create permission.
+      security:
+      - admin_api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: Project name
+                teamId:
+                  type: string
+                  description: ID of an existing team to assign the project to
+                newTeamName:
+                  type: string
+                  maxLength: 255
+                  description: Name for a new team to create and assign the project to
+                language:
+                  type: string
+                  description: Programming language (e.g. python, typescript)
+                framework:
+                  type: string
+                  description: Framework (e.g. langchain, vercel-ai, openai)
+              required:
+              - name
+              - language
+              - framework
+      responses:
+        '201':
+          description: Project created. Returns a scoped service API key for this project.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Project'
+                - type: object
+                  properties:
+                    serviceApiKey:
+                      type: string
+                      description: Scoped service API key with ADMIN on this project (sk-lw-..._...). Store securely — shown only once.
+                    serviceApiKeyId:
+                      type: string
+                      description: ID of the auto-created service key, for management via DELETE /api/api-keys/{id}.
+        '400':
+          description: Team does not belong to this organization
+        '401':
+          description: Invalid or missing API key token
+        '403':
+          description: Insufficient permissions (requires project:create)
+        '409':
+          description: A project with this name already exists in the team
+        '422':
+          description: Validation error (missing required fields)
+      tags:
+      - Projects
+  /api/projects/{id}:
+    get:
+      operationId: getProject
+      summary: Get a project
+      description: Get a project by ID, including its API key. Requires project:view permission.
+      security:
+      - admin_api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Project ID (project_...)
+      responses:
+        '200':
+          description: Project details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          description: Invalid or missing API key token
+        '403':
+          description: Insufficient permissions for this operation
+        '404':
+          description: Project not found
+      tags:
+      - Projects
+    patch:
+      operationId: updateProject
+      summary: Update a project
+      description: Update project fields. Only provided fields are changed. Requires project:update permission.
+      security:
+      - admin_api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Project ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                language:
+                  type: string
+                framework:
+                  type: string
+                piiRedactionLevel:
+                  type: string
+                  enum:
+                  - STRICT
+                  - ESSENTIAL
+                  - DISABLED
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          description: Invalid or missing API key token
+        '403':
+          description: Insufficient permissions (requires project:update)
+        '404':
+          description: Project not found
+      tags:
+      - Projects
+    delete:
+      operationId: archiveProject
+      summary: Archive a project
+      description: Soft-delete (archive) a project. Archived projects are excluded from list responses. Requires project:delete permission.
+      security:
+      - admin_api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Project ID
+      responses:
+        '200':
+          description: Project archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  archivedAt:
+                    type: string
+                    format: date-time
+        '401':
+          description: Invalid or missing API key token
+        '403':
+          description: Insufficient permissions (requires project:delete)
+        '404':
+          description: Project not found
+      tags:
+      - Projects
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Project ID (project_...)
+        name:
+          type: string
+        slug:
+          type: string
+        language:
+          type: string
+        framework:
+          type: string
+        teamId:
+          type: string
+        piiRedactionLevel:
+          type: string
+          enum:
+          - STRICT
+          - ESSENTIAL
+          - DISABLED
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

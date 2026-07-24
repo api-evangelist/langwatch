@@ -1,0 +1,464 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Workflows API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Workflows
+paths:
+  /api/workflows:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    icon:
+                      type:
+                      - string
+                      - 'null'
+                    description:
+                      type:
+                      - string
+                      - 'null'
+                    isEvaluator:
+                      type: boolean
+                    isComponent:
+                      type: boolean
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    platformUrl:
+                      type: string
+                      format: uri
+                  required:
+                  - id
+                  - name
+                  - icon
+                  - description
+                  - isEvaluator
+                  - isComponent
+                  - createdAt
+                  - updatedAt
+                  - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiWorkflows
+      parameters: []
+      description: List all non-archived workflows for the project
+      tags:
+      - Workflows
+  /api/workflows/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  icon:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  isEvaluator:
+                    type: boolean
+                  isComponent:
+                    type: boolean
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - icon
+                - description
+                - isEvaluator
+                - isComponent
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Workflow not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiWorkflowsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a workflow by its ID
+      tags:
+      - Workflows
+    patch:
+      responses:
+        '200':
+          description: Workflow updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  icon:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  isEvaluator:
+                    type: boolean
+                  isComponent:
+                    type: boolean
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - icon
+                - description
+                - isEvaluator
+                - isComponent
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Workflow not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiWorkflowsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update a workflow's metadata (name, icon, description)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                icon:
+                  type: string
+                description:
+                  type: string
+      tags:
+      - Workflows
+    delete:
+      responses:
+        '200':
+          description: Workflow archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  archived:
+                    type: boolean
+                required:
+                - id
+                - archived
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Workflow not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiWorkflowsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Archive (soft-delete) a workflow
+      tags:
+      - Workflows
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

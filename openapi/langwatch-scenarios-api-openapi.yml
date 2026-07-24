@@ -1,0 +1,557 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Scenarios API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Scenarios
+paths:
+  /api/scenarios:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    situation:
+                      type: string
+                    criteria:
+                      type: array
+                      items:
+                        type: string
+                    labels:
+                      type: array
+                      items:
+                        type: string
+                    platformUrl:
+                      type: string
+                      format: uri
+                  required:
+                  - id
+                  - name
+                  - situation
+                  - criteria
+                  - labels
+                  - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiScenarios
+      parameters: []
+      description: Get all scenarios for a project
+      tags:
+      - Scenarios
+    post:
+      responses:
+        '201':
+          description: Scenario created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  situation:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      type: string
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - situation
+                - criteria
+                - labels
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiScenarios
+      parameters: []
+      description: Create a new scenario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                situation:
+                  type: string
+                criteria:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                labels:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+              required:
+              - name
+              - situation
+      tags:
+      - Scenarios
+  /api/scenarios/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  situation:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      type: string
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - situation
+                - criteria
+                - labels
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiScenariosById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a specific scenario by ID
+      tags:
+      - Scenarios
+    put:
+      responses:
+        '200':
+          description: Scenario updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  situation:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      type: string
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - situation
+                - criteria
+                - labels
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: putApiScenariosById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update an existing scenario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                situation:
+                  type: string
+                criteria:
+                  type: array
+                  items:
+                    type: string
+                labels:
+                  type: array
+                  items:
+                    type: string
+      tags:
+      - Scenarios
+    delete:
+      responses:
+        '200':
+          description: Scenario archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  archived:
+                    type: boolean
+                required:
+                - id
+                - archived
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiScenariosById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Archive (soft-delete) a scenario
+      tags:
+      - Scenarios
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

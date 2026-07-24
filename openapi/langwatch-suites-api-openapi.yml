@@ -1,0 +1,1030 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Suites API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Suites
+paths:
+  /api/suites:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    slug:
+                      type: string
+                    description:
+                      type:
+                      - string
+                      - 'null'
+                    scenarioIds:
+                      type: array
+                      items:
+                        type: string
+                    targets:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - prompt
+                            - http
+                            - code
+                            - workflow
+                          referenceId:
+                            type: string
+                        required:
+                        - type
+                        - referenceId
+                    repeatCount:
+                      type: number
+                    labels:
+                      type: array
+                      items:
+                        type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    platformUrl:
+                      type: string
+                      format: uri
+                  required:
+                  - id
+                  - name
+                  - slug
+                  - description
+                  - scenarioIds
+                  - targets
+                  - repeatCount
+                  - labels
+                  - createdAt
+                  - updatedAt
+                  - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiSuites
+      parameters: []
+      description: List all non-archived suites (run plans) for the project
+      tags:
+      - Suites
+    post:
+      responses:
+        '201':
+          description: Suite created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - prompt
+                          - http
+                          - code
+                          - workflow
+                        referenceId:
+                          type: string
+                      required:
+                      - type
+                      - referenceId
+                  repeatCount:
+                    type: number
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - description
+                - scenarioIds
+                - targets
+                - repeatCount
+                - labels
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiSuites
+      parameters: []
+      description: Create a new suite (run plan)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                description:
+                  type: string
+                scenarioIds:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                targets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - prompt
+                        - http
+                        - code
+                        - workflow
+                      referenceId:
+                        type: string
+                    required:
+                    - type
+                    - referenceId
+                  minItems: 1
+                repeatCount:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  default: 1
+                labels:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+              required:
+              - name
+              - scenarioIds
+              - targets
+      tags:
+      - Suites
+  /api/suites/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - prompt
+                          - http
+                          - code
+                          - workflow
+                        referenceId:
+                          type: string
+                      required:
+                      - type
+                      - referenceId
+                  repeatCount:
+                    type: number
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - description
+                - scenarioIds
+                - targets
+                - repeatCount
+                - labels
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Suite not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiSuitesById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a suite (run plan) by its ID
+      tags:
+      - Suites
+    patch:
+      responses:
+        '200':
+          description: Suite updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - prompt
+                          - http
+                          - code
+                          - workflow
+                        referenceId:
+                          type: string
+                      required:
+                      - type
+                      - referenceId
+                  repeatCount:
+                    type: number
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - description
+                - scenarioIds
+                - targets
+                - repeatCount
+                - labels
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Suite not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiSuitesById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update a suite (run plan)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                description:
+                  type:
+                  - string
+                  - 'null'
+                scenarioIds:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                targets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - prompt
+                        - http
+                        - code
+                        - workflow
+                      referenceId:
+                        type: string
+                    required:
+                    - type
+                    - referenceId
+                  minItems: 1
+                repeatCount:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                labels:
+                  type: array
+                  items:
+                    type: string
+      tags:
+      - Suites
+    delete:
+      responses:
+        '200':
+          description: Suite archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  archived:
+                    type: boolean
+                required:
+                - id
+                - archived
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Suite not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiSuitesById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Archive (soft-delete) a suite (run plan)
+      tags:
+      - Suites
+  /api/suites/{id}/duplicate:
+    post:
+      responses:
+        '201':
+          description: Suite duplicated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - prompt
+                          - http
+                          - code
+                          - workflow
+                        referenceId:
+                          type: string
+                      required:
+                      - type
+                      - referenceId
+                  repeatCount:
+                    type: number
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - description
+                - scenarioIds
+                - targets
+                - repeatCount
+                - labels
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Suite not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiSuitesByIdDuplicate
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Duplicate a suite (run plan)
+      tags:
+      - Suites
+  /api/suites/{id}/run:
+    post:
+      responses:
+        '200':
+          description: Suite run scheduled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scheduled:
+                    type: boolean
+                  batchRunId:
+                    type: string
+                  setId:
+                    type: string
+                  jobCount:
+                    type: number
+                  skippedArchived:
+                    type: object
+                    properties:
+                      scenarios:
+                        type: array
+                        items:
+                          type: string
+                      targets:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - scenarios
+                    - targets
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        scenarioRunId:
+                          type: string
+                        scenarioId:
+                          type: string
+                        target:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - prompt
+                              - http
+                              - code
+                              - workflow
+                            referenceId:
+                              type: string
+                          required:
+                          - type
+                          - referenceId
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - scenarioRunId
+                      - scenarioId
+                      - target
+                      - name
+                required:
+                - scheduled
+                - batchRunId
+                - setId
+                - jobCount
+                - skippedArchived
+                - items
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Suite not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiSuitesByIdRun
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Trigger a suite run. Schedules scenario executions for all active scenarios × targets × repeatCount.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotencyKey:
+                  type: string
+      tags:
+      - Suites
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

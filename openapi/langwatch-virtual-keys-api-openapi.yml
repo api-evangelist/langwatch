@@ -1,0 +1,814 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Virtual Keys API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Virtual Keys
+paths:
+  /api/gateway/v1/virtual-keys:
+    get:
+      responses:
+        '200':
+          description: Virtual keys for the project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        display_prefix:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        environment:
+                          type: string
+                          enum:
+                          - live
+                          - test
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - revoked
+                        principal_user_id:
+                          type:
+                          - string
+                          - 'null'
+                        provider_credential_ids:
+                          type: array
+                          items:
+                            type: string
+                        revision:
+                          type: string
+                        last_used_at:
+                          type:
+                          - string
+                          - 'null'
+                        created_at:
+                          type: string
+                      required:
+                      - id
+                      - display_prefix
+                      - name
+                      - description
+                      - environment
+                      - status
+                      - principal_user_id
+                      - provider_credential_ids
+                      - revision
+                      - last_used_at
+                      - created_at
+                required:
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Virtual-keys
+      tags:
+      - Virtual Keys
+      parameters: []
+      summary: List virtual keys
+      description: Returns every non-archived virtual key in the caller's project, ordered by creation time.
+    post:
+      responses:
+        '201':
+          description: Virtual key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtual_key:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      display_prefix:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      environment:
+                        type: string
+                        enum:
+                        - live
+                        - test
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - revoked
+                      principal_user_id:
+                        type:
+                        - string
+                        - 'null'
+                      provider_credential_ids:
+                        type: array
+                        items:
+                          type: string
+                      revision:
+                        type: string
+                      last_used_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                    required:
+                    - id
+                    - display_prefix
+                    - name
+                    - description
+                    - environment
+                    - status
+                    - principal_user_id
+                    - provider_credential_ids
+                    - revision
+                    - last_used_at
+                    - created_at
+                  secret:
+                    type: string
+                required:
+                - virtual_key
+                - secret
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - type
+                    - code
+                    - message
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Virtual-keys
+      tags:
+      - Virtual Keys
+      parameters: []
+      summary: Create virtual key
+      description: Mints a new virtual key and returns the secret exactly once. The caller MUST persist the `secret` value — LangWatch stores only a hash.
+  /api/gateway/v1/virtual-keys/{id}:
+    get:
+      responses:
+        '200':
+          description: Virtual key detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtual_key:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      display_prefix:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      environment:
+                        type: string
+                        enum:
+                        - live
+                        - test
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - revoked
+                      principal_user_id:
+                        type:
+                        - string
+                        - 'null'
+                      provider_credential_ids:
+                        type: array
+                        items:
+                          type: string
+                      revision:
+                        type: string
+                      last_used_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                    required:
+                    - id
+                    - display_prefix
+                    - name
+                    - description
+                    - environment
+                    - status
+                    - principal_user_id
+                    - provider_credential_ids
+                    - revision
+                    - last_used_at
+                    - created_at
+                required:
+                - virtual_key
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - type
+                    - code
+                    - message
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiGatewayV1Virtual-keysById
+      tags:
+      - Virtual Keys
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Get virtual key
+    patch:
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtual_key:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      display_prefix:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      environment:
+                        type: string
+                        enum:
+                        - live
+                        - test
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - revoked
+                      principal_user_id:
+                        type:
+                        - string
+                        - 'null'
+                      provider_credential_ids:
+                        type: array
+                        items:
+                          type: string
+                      revision:
+                        type: string
+                      last_used_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                    required:
+                    - id
+                    - display_prefix
+                    - name
+                    - description
+                    - environment
+                    - status
+                    - principal_user_id
+                    - provider_credential_ids
+                    - revision
+                    - last_used_at
+                    - created_at
+                required:
+                - virtual_key
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - type
+                    - code
+                    - message
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiGatewayV1Virtual-keysById
+      tags:
+      - Virtual Keys
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Update virtual key
+      description: Partial update — send only the fields you want to change. `provider_credential_ids` replaces the entire fallback chain. `config` is deep-merged.
+  /api/gateway/v1/virtual-keys/{id}/revoke:
+    post:
+      responses:
+        '200':
+          description: Revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtual_key:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      display_prefix:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      environment:
+                        type: string
+                        enum:
+                        - live
+                        - test
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - revoked
+                      principal_user_id:
+                        type:
+                        - string
+                        - 'null'
+                      provider_credential_ids:
+                        type: array
+                        items:
+                          type: string
+                      revision:
+                        type: string
+                      last_used_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                    required:
+                    - id
+                    - display_prefix
+                    - name
+                    - description
+                    - environment
+                    - status
+                    - principal_user_id
+                    - provider_credential_ids
+                    - revision
+                    - last_used_at
+                    - created_at
+                required:
+                - virtual_key
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Virtual-keysByIdRevoke
+      tags:
+      - Virtual Keys
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Revoke virtual key
+      description: Marks the virtual key as revoked. Clients using it start receiving 401 within ~60s (the gateway's change-event long-poll period).
+  /api/gateway/v1/virtual-keys/{id}/rotate:
+    post:
+      responses:
+        '200':
+          description: Rotated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  virtual_key:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      display_prefix:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      environment:
+                        type: string
+                        enum:
+                        - live
+                        - test
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - revoked
+                      principal_user_id:
+                        type:
+                        - string
+                        - 'null'
+                      provider_credential_ids:
+                        type: array
+                        items:
+                          type: string
+                      revision:
+                        type: string
+                      last_used_at:
+                        type:
+                        - string
+                        - 'null'
+                      created_at:
+                        type: string
+                    required:
+                    - id
+                    - display_prefix
+                    - name
+                    - description
+                    - environment
+                    - status
+                    - principal_user_id
+                    - provider_credential_ids
+                    - revision
+                    - last_used_at
+                    - created_at
+                  secret:
+                    type: string
+                required:
+                - virtual_key
+                - secret
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiGatewayV1Virtual-keysByIdRotate
+      tags:
+      - Virtual Keys
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      summary: Rotate virtual key secret
+      description: Mints a fresh secret for an existing VK. The old secret remains valid for 24h (grace window) so in-flight clients can roll over.
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

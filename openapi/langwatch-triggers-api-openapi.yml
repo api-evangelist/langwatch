@@ -1,0 +1,687 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Triggers API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Triggers
+paths:
+  /api/triggers:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    action:
+                      type: string
+                      enum:
+                      - SEND_EMAIL
+                      - ADD_TO_DATASET
+                      - ADD_TO_ANNOTATION_QUEUE
+                      - SEND_SLACK_MESSAGE
+                    actionParams:
+                      type: object
+                      additionalProperties: {}
+                    filters:
+                      type: object
+                      additionalProperties: {}
+                    active:
+                      type: boolean
+                    message:
+                      type:
+                      - string
+                      - 'null'
+                    alertType:
+                      type:
+                      - string
+                      - 'null'
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                      - null
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    platformUrl:
+                      type: string
+                      format: uri
+                  required:
+                  - id
+                  - name
+                  - action
+                  - actionParams
+                  - filters
+                  - active
+                  - message
+                  - alertType
+                  - createdAt
+                  - updatedAt
+                  - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiTriggers
+      parameters: []
+      description: List all active triggers (automations) for the project
+      tags:
+      - Triggers
+    post:
+      responses:
+        '201':
+          description: Trigger created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  action:
+                    type: string
+                    enum:
+                    - SEND_EMAIL
+                    - ADD_TO_DATASET
+                    - ADD_TO_ANNOTATION_QUEUE
+                    - SEND_SLACK_MESSAGE
+                  actionParams:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type: object
+                    additionalProperties: {}
+                  active:
+                    type: boolean
+                  message:
+                    type:
+                    - string
+                    - 'null'
+                  alertType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                    - null
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - action
+                - actionParams
+                - filters
+                - active
+                - message
+                - alertType
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiTriggers
+      parameters: []
+      description: Create a new trigger (automation)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                action:
+                  type: string
+                  enum:
+                  - SEND_EMAIL
+                  - ADD_TO_DATASET
+                  - ADD_TO_ANNOTATION_QUEUE
+                  - SEND_SLACK_MESSAGE
+                actionParams:
+                  type: object
+                  additionalProperties: {}
+                  default: {}
+                filters:
+                  type: object
+                  additionalProperties: {}
+                  default: {}
+                message:
+                  type: string
+                alertType:
+                  type: string
+                  enum:
+                  - CRITICAL
+                  - WARNING
+                  - INFO
+              required:
+              - name
+              - action
+      tags:
+      - Triggers
+  /api/triggers/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  action:
+                    type: string
+                    enum:
+                    - SEND_EMAIL
+                    - ADD_TO_DATASET
+                    - ADD_TO_ANNOTATION_QUEUE
+                    - SEND_SLACK_MESSAGE
+                  actionParams:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type: object
+                    additionalProperties: {}
+                  active:
+                    type: boolean
+                  message:
+                    type:
+                    - string
+                    - 'null'
+                  alertType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                    - null
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - action
+                - actionParams
+                - filters
+                - active
+                - message
+                - alertType
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Trigger not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiTriggersById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a trigger by its ID
+      tags:
+      - Triggers
+    patch:
+      responses:
+        '200':
+          description: Trigger updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  action:
+                    type: string
+                    enum:
+                    - SEND_EMAIL
+                    - ADD_TO_DATASET
+                    - ADD_TO_ANNOTATION_QUEUE
+                    - SEND_SLACK_MESSAGE
+                  actionParams:
+                    type: object
+                    additionalProperties: {}
+                  filters:
+                    type: object
+                    additionalProperties: {}
+                  active:
+                    type: boolean
+                  message:
+                    type:
+                    - string
+                    - 'null'
+                  alertType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                    - null
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - action
+                - actionParams
+                - filters
+                - active
+                - message
+                - alertType
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Trigger not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiTriggersById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update a trigger (name, active state, message, filters)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                active:
+                  type: boolean
+                message:
+                  type:
+                  - string
+                  - 'null'
+                alertType:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - CRITICAL
+                  - WARNING
+                  - INFO
+                  - null
+                filters:
+                  type: object
+                  additionalProperties: {}
+                actionParams:
+                  type: object
+                  additionalProperties: {}
+      tags:
+      - Triggers
+    delete:
+      responses:
+        '200':
+          description: Trigger deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - id
+                - deleted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Trigger not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiTriggersById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Delete (soft-delete) a trigger
+      tags:
+      - Triggers
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

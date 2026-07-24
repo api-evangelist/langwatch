@@ -1,0 +1,138 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Agents
+paths:
+  /api/agents:
+    get:
+      responses: {}
+      operationId: getApiAgents
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+          default: 50
+      description: List all non-archived agents for the project (paginated)
+      tags:
+      - Agents
+    post:
+      responses: {}
+      operationId: postApiAgents
+      parameters: []
+      description: Create a new agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                type:
+                  type: string
+                  enum:
+                  - signature
+                  - code
+                  - workflow
+                  - http
+                config:
+                  type: object
+                  additionalProperties: {}
+                workflowId:
+                  type: string
+              required:
+              - name
+              - type
+              - config
+      tags:
+      - Agents
+  /api/agents/{id}:
+    get:
+      responses: {}
+      operationId: getApiAgentsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get an agent by its id
+      tags:
+      - Agents
+    patch:
+      responses: {}
+      operationId: patchApiAgentsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update an agent by its id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                type:
+                  type: string
+                  enum:
+                  - signature
+                  - code
+                  - workflow
+                  - http
+                config:
+                  type: object
+                  additionalProperties: {}
+                workflowId:
+                  type:
+                  - string
+                  - 'null'
+      tags:
+      - Agents
+    delete:
+      responses: {}
+      operationId: deleteApiAgentsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Archive an agent (soft-delete)
+      tags:
+      - Agents
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

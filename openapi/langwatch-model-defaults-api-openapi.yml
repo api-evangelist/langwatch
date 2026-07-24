@@ -1,0 +1,475 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Model Defaults API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Model Defaults
+paths:
+  /api/model-defaults:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scope:
+                    type: object
+                    properties:
+                      projectId:
+                        type: string
+                      teamId:
+                        type:
+                        - string
+                        - 'null'
+                      organizationId:
+                        type:
+                        - string
+                        - 'null'
+                      organizationName:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - projectId
+                    - teamId
+                    - organizationId
+                    - organizationName
+                  effective:
+                    type: object
+                    properties:
+                      DEFAULT:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          model:
+                            type: string
+                          source:
+                            type: string
+                          scope:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - model
+                        - source
+                        - scope
+                      FAST:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          model:
+                            type: string
+                          source:
+                            type: string
+                          scope:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - model
+                        - source
+                        - scope
+                      EMBEDDINGS:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          model:
+                            type: string
+                          source:
+                            type: string
+                          scope:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - model
+                        - source
+                        - scope
+                    required:
+                    - DEFAULT
+                    - FAST
+                    - EMBEDDINGS
+                  configs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        config:
+                          type: object
+                          additionalProperties:
+                            type: string
+                        scopes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                enum:
+                                - ORGANIZATION
+                                - TEAM
+                                - PROJECT
+                              id:
+                                type: string
+                              name:
+                                type: string
+                            required:
+                            - type
+                            - id
+                            - name
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                      required:
+                      - id
+                      - config
+                      - scopes
+                      - createdAt
+                      - updatedAt
+                required:
+                - scope
+                - effective
+                - configs
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiModel-defaults
+      parameters: []
+      description: 'Snapshot of the default-model cascade for this project: effective resolution per role, plus the configs the caller can read.'
+      tags:
+      - Model Defaults
+    post:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                - id
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiModel-defaults
+      parameters: []
+      description: Create a default-model config attached to one or more scopes. JSON keys may be roles (DEFAULT, FAST, EMBEDDINGS) or registered feature keys; missing keys inherit from a higher scope.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                config:
+                  type: object
+                  additionalProperties:
+                    type: string
+                scopes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - scopeType
+                    - scopeId
+                  minItems: 1
+              required:
+              - config
+              - scopes
+      tags:
+      - Model Defaults
+  /api/model-defaults/{id}:
+    put:
+      responses:
+        '204':
+          description: Updated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: putApiModel-defaultsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: 'Update a config''s JSON payload and/or its scope attachments. Sending `scopes: []` deletes the config.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                config:
+                  type: object
+                  additionalProperties:
+                    type: string
+                scopes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - scopeType
+                    - scopeId
+      tags:
+      - Model Defaults
+    delete:
+      responses:
+        '204':
+          description: Deleted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiModel-defaultsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Delete a default-model config. Scope attachments cascade.
+      tags:
+      - Model Defaults
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

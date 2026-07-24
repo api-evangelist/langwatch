@@ -1,0 +1,1003 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Monitors API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Monitors
+paths:
+  /api/monitors:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    slug:
+                      type: string
+                    checkType:
+                      type: string
+                    enabled:
+                      type: boolean
+                    executionMode:
+                      type: string
+                      enum:
+                      - ON_MESSAGE
+                      - AS_GUARDRAIL
+                      - MANUALLY
+                    sample:
+                      type: number
+                    level:
+                      type: string
+                    evaluatorId:
+                      type:
+                      - string
+                      - 'null'
+                    preconditions: {}
+                    parameters: {}
+                    mappings:
+                      type: 'null'
+                    threadIdleTimeout:
+                      type:
+                      - number
+                      - 'null'
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    platformUrl:
+                      type: string
+                      format: uri
+                  required:
+                  - id
+                  - name
+                  - slug
+                  - checkType
+                  - enabled
+                  - executionMode
+                  - sample
+                  - level
+                  - evaluatorId
+                  - threadIdleTimeout
+                  - createdAt
+                  - updatedAt
+                  - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiMonitors
+      parameters: []
+      description: List all online evaluation monitors for the project
+      tags:
+      - Monitors
+    post:
+      responses:
+        '201':
+          description: Monitor created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  checkType:
+                    type: string
+                  enabled:
+                    type: boolean
+                  executionMode:
+                    type: string
+                    enum:
+                    - ON_MESSAGE
+                    - AS_GUARDRAIL
+                    - MANUALLY
+                  sample:
+                    type: number
+                  level:
+                    type: string
+                  evaluatorId:
+                    type:
+                    - string
+                    - 'null'
+                  preconditions: {}
+                  parameters: {}
+                  mappings:
+                    type: 'null'
+                  threadIdleTimeout:
+                    type:
+                    - number
+                    - 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - checkType
+                - enabled
+                - executionMode
+                - sample
+                - level
+                - evaluatorId
+                - threadIdleTimeout
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiMonitors
+      parameters: []
+      description: Create a new online evaluation monitor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                checkType:
+                  type: string
+                  minLength: 1
+                executionMode:
+                  type: string
+                  enum:
+                  - ON_MESSAGE
+                  - AS_GUARDRAIL
+                  - MANUALLY
+                  default: ON_MESSAGE
+                preconditions:
+                  type: array
+                  items: {}
+                  default: []
+                parameters:
+                  type: object
+                  additionalProperties: {}
+                  default: {}
+                mappings:
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    mapping:
+                      type: object
+                      additionalProperties:
+                        anyOf:
+                        - type: object
+                          properties:
+                            source:
+                              anyOf:
+                              - type: string
+                                enum:
+                                - trace_id
+                                - thread_id
+                                - timestamp
+                                - input
+                                - output
+                                - contexts
+                                - contexts.string_list
+                                - metrics.total_cost
+                                - metrics.first_token_ms
+                                - metrics.total_time_ms
+                                - metrics.prompt_tokens
+                                - metrics.completion_tokens
+                                - metrics.total_tokens
+                                - spans
+                                - spans.llm.input
+                                - spans.llm.output
+                                - metadata
+                                - evaluations
+                                - annotations
+                                - events
+                                - threads
+                                - threads_until_current
+                                - formatted_trace
+                              - type: string
+                                const: ''
+                            key:
+                              type: string
+                            subkey:
+                              type: string
+                            selectedFields:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              const: trace
+                          required:
+                          - source
+                        - type: object
+                          properties:
+                            source:
+                              anyOf:
+                              - type: string
+                                enum:
+                                - thread_id
+                                - traces
+                                - formatted_traces
+                              - type: string
+                                const: ''
+                            key:
+                              type: string
+                            subkey:
+                              type: string
+                            selectedFields:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              const: thread
+                          required:
+                          - source
+                          - type
+                    expansions:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                        - spans.llm.span_id
+                        - spans.all.span_id
+                        - annotations.id
+                        - events.event_id
+                  required:
+                  - mapping
+                  - expansions
+                sample:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 1
+                evaluatorId:
+                  type: string
+                level:
+                  type: string
+                  enum:
+                  - trace
+                  - thread
+                  default: trace
+                threadIdleTimeout:
+                  type:
+                  - integer
+                  - 'null'
+                  exclusiveMinimum: 0
+              required:
+              - name
+              - checkType
+      tags:
+      - Monitors
+  /api/monitors/{id}:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  checkType:
+                    type: string
+                  enabled:
+                    type: boolean
+                  executionMode:
+                    type: string
+                    enum:
+                    - ON_MESSAGE
+                    - AS_GUARDRAIL
+                    - MANUALLY
+                  sample:
+                    type: number
+                  level:
+                    type: string
+                  evaluatorId:
+                    type:
+                    - string
+                    - 'null'
+                  preconditions: {}
+                  parameters: {}
+                  mappings:
+                    type: 'null'
+                  threadIdleTimeout:
+                    type:
+                    - number
+                    - 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - checkType
+                - enabled
+                - executionMode
+                - sample
+                - level
+                - evaluatorId
+                - threadIdleTimeout
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: getApiMonitorsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a monitor by its ID
+      tags:
+      - Monitors
+    patch:
+      responses:
+        '200':
+          description: Monitor updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  checkType:
+                    type: string
+                  enabled:
+                    type: boolean
+                  executionMode:
+                    type: string
+                    enum:
+                    - ON_MESSAGE
+                    - AS_GUARDRAIL
+                    - MANUALLY
+                  sample:
+                    type: number
+                  level:
+                    type: string
+                  evaluatorId:
+                    type:
+                    - string
+                    - 'null'
+                  preconditions: {}
+                  parameters: {}
+                  mappings:
+                    type: 'null'
+                  threadIdleTimeout:
+                    type:
+                    - number
+                    - 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - slug
+                - checkType
+                - enabled
+                - executionMode
+                - sample
+                - level
+                - evaluatorId
+                - threadIdleTimeout
+                - createdAt
+                - updatedAt
+                - platformUrl
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: patchApiMonitorsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Update a monitor (name, enabled state, settings, etc.)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                enabled:
+                  type: boolean
+                checkType:
+                  type: string
+                executionMode:
+                  type: string
+                  enum:
+                  - ON_MESSAGE
+                  - AS_GUARDRAIL
+                  - MANUALLY
+                preconditions:
+                  type: array
+                  items: {}
+                parameters:
+                  type: object
+                  additionalProperties: {}
+                mappings:
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    mapping:
+                      type: object
+                      additionalProperties:
+                        anyOf:
+                        - type: object
+                          properties:
+                            source:
+                              anyOf:
+                              - type: string
+                                enum:
+                                - trace_id
+                                - thread_id
+                                - timestamp
+                                - input
+                                - output
+                                - contexts
+                                - contexts.string_list
+                                - metrics.total_cost
+                                - metrics.first_token_ms
+                                - metrics.total_time_ms
+                                - metrics.prompt_tokens
+                                - metrics.completion_tokens
+                                - metrics.total_tokens
+                                - spans
+                                - spans.llm.input
+                                - spans.llm.output
+                                - metadata
+                                - evaluations
+                                - annotations
+                                - events
+                                - threads
+                                - threads_until_current
+                                - formatted_trace
+                              - type: string
+                                const: ''
+                            key:
+                              type: string
+                            subkey:
+                              type: string
+                            selectedFields:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              const: trace
+                          required:
+                          - source
+                        - type: object
+                          properties:
+                            source:
+                              anyOf:
+                              - type: string
+                                enum:
+                                - thread_id
+                                - traces
+                                - formatted_traces
+                              - type: string
+                                const: ''
+                            key:
+                              type: string
+                            subkey:
+                              type: string
+                            selectedFields:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              const: thread
+                          required:
+                          - source
+                          - type
+                    expansions:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                        - spans.llm.span_id
+                        - spans.all.span_id
+                        - annotations.id
+                        - events.event_id
+                  required:
+                  - mapping
+                  - expansions
+                sample:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                evaluatorId:
+                  type:
+                  - string
+                  - 'null'
+                level:
+                  type: string
+                  enum:
+                  - trace
+                  - thread
+                threadIdleTimeout:
+                  type:
+                  - integer
+                  - 'null'
+                  exclusiveMinimum: 0
+      tags:
+      - Monitors
+    delete:
+      responses:
+        '200':
+          description: Monitor deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - id
+                - deleted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: deleteApiMonitorsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Delete a monitor
+      tags:
+      - Monitors
+  /api/monitors/{id}/toggle:
+    post:
+      responses:
+        '200':
+          description: Monitor toggled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  enabled:
+                    type: boolean
+                required:
+                - id
+                - enabled
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      operationId: postApiMonitorsByIdToggle
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Enable or disable a monitor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+              required:
+              - enabled
+      tags:
+      - Monitors
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'

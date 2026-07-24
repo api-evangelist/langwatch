@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  title: LangWatch Agents Dashboards API
+  version: 1.0.0
+  description: LangWatch openapi spec
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Dashboards
+paths:
+  /api/dashboards:
+    get:
+      responses: {}
+      operationId: getApiDashboards
+      parameters: []
+      description: List all dashboards for the project with graph counts
+      tags:
+      - Dashboards
+    post:
+      responses: {}
+      operationId: postApiDashboards
+      parameters: []
+      description: Create a new dashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+              required:
+              - name
+      tags:
+      - Dashboards
+  /api/dashboards/reorder:
+    put:
+      responses: {}
+      operationId: putApiDashboardsReorder
+      parameters: []
+      description: Reorder dashboards by providing an ordered list of IDs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dashboardIds:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                  minItems: 1
+              required:
+              - dashboardIds
+      tags:
+      - Dashboards
+  /api/dashboards/{id}:
+    get:
+      responses: {}
+      operationId: getApiDashboardsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Get a dashboard by its id, including its graphs
+      tags:
+      - Dashboards
+    patch:
+      responses: {}
+      operationId: patchApiDashboardsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Rename a dashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+              required:
+              - name
+      tags:
+      - Dashboards
+    delete:
+      responses: {}
+      operationId: deleteApiDashboardsById
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      description: Delete a dashboard and its graphs (hard delete, cascade)
+      tags:
+      - Dashboards
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
