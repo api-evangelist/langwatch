@@ -1500,7 +1500,7 @@ common:
   - type: SDKs
     name: TypeScript SDK (npm — `langwatch`)
     url: https://www.npmjs.com/package/langwatch
-  - type: MCP
+  - type: Documentation
     name: LangWatch MCP Server (`@langwatch/mcp-server`)
     url: https://www.npmjs.com/package/@langwatch/mcp-server
   - type: License
