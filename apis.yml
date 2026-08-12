@@ -1423,6 +1423,14 @@ apis:
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
 common:
+  - type: IssueTracker
+    url: https://github.com/langwatch/langwatch/issues
+  - type: Releases
+    url: https://github.com/langwatch/langwatch/releases
+  - type: SecurityPolicy
+    url: https://github.com/langwatch/langwatch/blob/main/SECURITY.md
+  - type: ContributionGuide
+    url: https://github.com/langwatch/langwatch/blob/main/CONTRIBUTING.md
   - type: AgenticAccess
     url: agentic-access/langwatch-agentic-access.yml
   - type: TrustCenter
@@ -1442,7 +1450,7 @@ common:
     url: https://langwatch.ai/docs/api-reference
   - type: OpenAPI
     name: Canonical OpenAPI 3.1 spec
-    url: openapi/langwatch-openapi.json
+    url: openapi/_original/langwatch-openapi.json
   - type: Application
     name: LangWatch Cloud Dashboard
     url: https://app.langwatch.ai
