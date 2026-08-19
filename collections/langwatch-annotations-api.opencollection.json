@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Annotations API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Annotations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /api/annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/annotations"
+          },
+          "docs": "Returns all annotations for project"
+        },
+        {
+          "info": {
+            "name": "GET /api/annotations/trace/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/annotations/trace/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of trace to fetch"
+              }
+            ]
+          },
+          "docs": "Returns all annotations for single trace"
+        },
+        {
+          "info": {
+            "name": "POST /api/annotations/trace/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/annotations/trace/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the trace to annotate"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an annotation for a single trace"
+        },
+        {
+          "info": {
+            "name": "GET /api/annotations/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of annotation to fetch"
+              }
+            ]
+          },
+          "docs": "Returns a single annotation based on the ID supplied"
+        },
+        {
+          "info": {
+            "name": "PATCH /api/annotations/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of annotation to delete"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a single annotation based on the ID supplied"
+        },
+        {
+          "info": {
+            "name": "DELETE /api/annotations/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of annotation to delete"
+              }
+            ]
+          },
+          "docs": "Deletes a single annotation based on the ID supplied"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

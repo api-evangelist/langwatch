@@ -1,0 +1,272 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Dataset API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Dataset",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiDataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/dataset",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List all non-archived datasets for the project (paginated)"
+        },
+        {
+          "info": {
+            "name": "postApiDataset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/dataset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new dataset"
+        },
+        {
+          "info": {
+            "name": "postApiDatasetUpload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/dataset/upload"
+          },
+          "docs": "Create a new dataset from an uploaded file (CSV, JSON, JSONL)"
+        },
+        {
+          "info": {
+            "name": "getApiDatasetBySlugOrId",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a dataset by its slug or id."
+        },
+        {
+          "info": {
+            "name": "patchApiDatasetBySlugOrId",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a dataset by its slug or id"
+        },
+        {
+          "info": {
+            "name": "deleteApiDatasetBySlugOrId",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Archive a dataset (soft-delete)"
+        },
+        {
+          "info": {
+            "name": "getApiDatasetBySlugOrIdRecords",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId/records",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List records for a dataset (paginated)"
+        },
+        {
+          "info": {
+            "name": "postApiDatasetBySlugOrIdRecords",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId/records",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create records in a dataset in batch"
+        },
+        {
+          "info": {
+            "name": "deleteApiDatasetBySlugOrIdRecords",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId/records",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete records from a dataset by IDs"
+        },
+        {
+          "info": {
+            "name": "patchApiDatasetBySlugOrIdRecordsByRecordId",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId/records/:recordId",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update or create a record in a dataset"
+        },
+        {
+          "info": {
+            "name": "postApiDatasetBySlugOrIdUpload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/dataset/:slugOrId/upload",
+            "params": [
+              {
+                "name": "slugOrId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Upload a file (CSV, JSON, JSONL) to an existing dataset"
+        },
+        {
+          "info": {
+            "name": "postApiDatasetBySlugEntries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/dataset/:slug/entries",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add entries to a dataset"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

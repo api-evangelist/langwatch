@@ -1,0 +1,132 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Monitors API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Monitors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiMonitors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/monitors"
+          },
+          "docs": "List all online evaluation monitors for the project"
+        },
+        {
+          "info": {
+            "name": "postApiMonitors",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/monitors",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new online evaluation monitor"
+        },
+        {
+          "info": {
+            "name": "getApiMonitorsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/monitors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a monitor by its ID"
+        },
+        {
+          "info": {
+            "name": "patchApiMonitorsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/monitors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a monitor (name, enabled state, settings, etc.)"
+        },
+        {
+          "info": {
+            "name": "deleteApiMonitorsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/monitors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a monitor"
+        },
+        {
+          "info": {
+            "name": "postApiMonitorsByIdToggle",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/monitors/:id/toggle",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enable or disable a monitor"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

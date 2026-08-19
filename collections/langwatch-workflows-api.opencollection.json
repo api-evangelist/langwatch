@@ -1,0 +1,95 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Workflows API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiWorkflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/workflows"
+          },
+          "docs": "List all non-archived workflows for the project"
+        },
+        {
+          "info": {
+            "name": "getApiWorkflowsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/workflows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a workflow by its ID"
+        },
+        {
+          "info": {
+            "name": "patchApiWorkflowsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/workflows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a workflow's metadata (name, icon, description)"
+        },
+        {
+          "info": {
+            "name": "deleteApiWorkflowsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/workflows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Archive (soft-delete) a workflow"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

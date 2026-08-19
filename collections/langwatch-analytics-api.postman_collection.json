@@ -1,0 +1,364 @@
+{
+  "item": [
+    {
+      "id": "bbab9383-30c4-436d-8556-d580ca576479",
+      "name": "Analytics",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "141a2688-1ea4-4453-b68a-031339772bf2",
+          "name": "post Api Analytics Timeseries",
+          "request": {
+            "name": "post Api Analytics Timeseries",
+            "description": {
+              "content": "Query analytics timeseries data with metrics, aggregations, and filters",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "analytics",
+                "timeseries"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "28a94c53-0318-485e-ba80-8ec2bed7d826",
+              "name": "Timeseries analytics data with current and previous periods",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "analytics",
+                    "timeseries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"currentPeriod\": [\n    {\n      \"key_0\": {},\n      \"key_1\": {}\n    },\n    {\n      \"key_0\": {}\n    }\n  ],\n  \"previousPeriod\": [\n    {\n      \"key_0\": {},\n      \"key_1\": {},\n      \"key_2\": {}\n    },\n    {\n      \"key_0\": {},\n      \"key_1\": {},\n      \"key_2\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c81c5ca9-ecc9-4c0a-ae3b-6fa5e3ecf74e",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "analytics",
+                    "timeseries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aede5e49-2826-40d7-a3d5-87f6a7f909e7",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "analytics",
+                    "timeseries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d9b34582-abde-4b09-a0f8-1ad44b1cd3f2",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "analytics",
+                    "timeseries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "73927b64-9dca-4429-ac01-accc75098513",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "analytics",
+                    "timeseries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"series\": [\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    },\n    {\n      \"metric\": \"<string>\",\n      \"aggregation\": \"<string>\",\n      \"key\": \"<string>\",\n      \"subkey\": \"<string>\",\n      \"pipeline\": {\n        \"field\": \"<string>\",\n        \"aggregation\": \"<string>\"\n      },\n      \"filters\": {\n        \"topics.topics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"topics.subtopics\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.user_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.thread_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.customer_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.labels\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"metadata.prompt_ids\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.origin\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.error\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"traces.name\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"spans.model\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.guardrails_only\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.evaluator_id.has_label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.passed\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.score\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.state\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"evaluations.label\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_type\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.metrics.value\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"events.event_details.key\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"annotations.hasAnnotation\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      \"asPercent\": \"<boolean>\"\n    }\n  ],\n  \"timeZone\": \"<string>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"groupBy\": \"<string>\",\n  \"groupByKey\": \"<string>\",\n  \"timeScale\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.langwatch.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Auth-Token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "284b67ea-116e-4bb5-be18-8f7c823689c0",
+    "name": "LangWatch Agents Analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "LangWatch openapi spec",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Suites API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Suites",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiSuites",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/suites"
+          },
+          "docs": "List all non-archived suites (run plans) for the project"
+        },
+        {
+          "info": {
+            "name": "postApiSuites",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/suites",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new suite (run plan)"
+        },
+        {
+          "info": {
+            "name": "getApiSuitesById",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/suites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a suite (run plan) by its ID"
+        },
+        {
+          "info": {
+            "name": "patchApiSuitesById",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/suites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a suite (run plan)"
+        },
+        {
+          "info": {
+            "name": "deleteApiSuitesById",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/suites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Archive (soft-delete) a suite (run plan)"
+        },
+        {
+          "info": {
+            "name": "postApiSuitesByIdDuplicate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/suites/:id/duplicate",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Duplicate a suite (run plan)"
+        },
+        {
+          "info": {
+            "name": "postApiSuitesByIdRun",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/suites/:id/run",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Trigger a suite run. Schedules scenario executions for all active scenarios × targets × repeatCount."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

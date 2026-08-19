@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Evaluations V3 API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Evaluations V3",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getEvaluationsV3RunStatus",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/experiments/runs/:runId",
+            "params": [
+              {
+                "name": "runId",
+                "value": "",
+                "type": "path",
+                "description": "The run ID returned from POST /api/experiments/{slug}/run"
+              }
+            ]
+          },
+          "docs": "Get the current status of an evaluation run for polling. Returns progress while running, and summary when completed."
+        },
+        {
+          "info": {
+            "name": "postEvaluationsV3Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/experiments/:slug/run",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "The slug of the evaluation to run"
+              }
+            ]
+          },
+          "docs": "Start execution of a saved Evaluations V3 experiment by slug. Returns immediately with a runId for polling, or streams SSE events if Accept: text/event-stream header is provided."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

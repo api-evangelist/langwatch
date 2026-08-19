@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Traces API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Traces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search traces",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/trace/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for traces based on given criteria"
+        },
+        {
+          "info": {
+            "name": "postApiTracesSearch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/traces/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search traces for a project"
+        },
+        {
+          "info": {
+            "name": "getApiTracesByTraceId",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/traces/:traceId",
+            "params": [
+              {
+                "name": "traceId",
+                "value": "",
+                "type": "path",
+                "description": "The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Output format: 'digest' (default, AI-readable) or 'json' (full raw data)"
+              },
+              {
+                "name": "llmMode",
+                "value": "",
+                "type": "query",
+                "description": "Deprecated: use format=digest instead"
+              }
+            ]
+          },
+          "docs": "Get a single trace by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

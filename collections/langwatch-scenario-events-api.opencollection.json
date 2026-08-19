@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Scenario Events API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Scenario Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "postApiScenario-events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/scenario-events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new scenario event"
+        },
+        {
+          "info": {
+            "name": "deleteApiScenario-events",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/scenario-events"
+          },
+          "docs": "Delete all events"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

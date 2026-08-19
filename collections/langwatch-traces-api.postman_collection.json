@@ -1,0 +1,959 @@
+{
+  "item": [
+    {
+      "id": "1ced67fa-c1fe-4d80-ab3e-94c692b30e24",
+      "name": "Traces",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "37483e67-4b66-43c6-95f5-7cdd64347727",
+          "name": "Search traces",
+          "request": {
+            "name": "Search traces",
+            "description": {
+              "content": "Search for traces based on given criteria",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "trace",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"endDate\": \"<dateTime>\",\n  \"pageSize\": \"<integer>\",\n  \"scrollId\": \"<string>\",\n  \"filters\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1abef163-8749-4a69-966d-4f50443304f5",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"endDate\": \"<dateTime>\",\n  \"pageSize\": 1000,\n  \"scrollId\": \"123\",\n  \"filters\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"key_1\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"traces\": [\n    {\n      \"trace_id\": \"string\",\n      \"project_id\": \"string\",\n      \"timestamps\": {\n        \"inserted_at\": 6687,\n        \"started_at\": 34,\n        \"updated_at\": 5303\n      },\n      \"input\": {\n        \"value\": \"string\"\n      },\n      \"output\": {\n        \"value\": \"string\"\n      },\n      \"metadata\": {\n        \"sdk_language\": \"string\",\n        \"sdk_version\": \"string\"\n      },\n      \"metrics\": {\n        \"tokens_estimated\": false,\n        \"completion_tokens\": 7239,\n        \"prompt_tokens\": 7440,\n        \"total_cost\": 322.4330206710091,\n        \"total_time_ms\": 836,\n        \"first_token_ms\": 9290\n      },\n      \"indexing_md5s\": [\n        \"string\",\n        \"string\"\n      ],\n      \"error\": \"string\",\n      \"evaluations\": [\n        {\n          \"evaluation_id\": \"string\",\n          \"score\": 6742.897679550365,\n          \"timestamps\": {\n            \"finished_at\": 8496,\n            \"updated_at\": 7327\n          },\n          \"evaluator_id\": \"string\",\n          \"name\": \"string\",\n          \"details\": \"string\",\n          \"passed\": false,\n          \"label\": \"string\",\n          \"type\": \"string\",\n          \"status\": \"string\"\n        },\n        {\n          \"evaluation_id\": \"string\",\n          \"score\": 1777.9810941928843,\n          \"timestamps\": {\n            \"finished_at\": 1735,\n            \"updated_at\": 6179\n          },\n          \"evaluator_id\": \"string\",\n          \"name\": \"string\",\n          \"details\": \"string\",\n          \"passed\": false,\n          \"label\": \"string\",\n          \"type\": \"string\",\n          \"status\": \"string\"\n        }\n      ]\n    },\n    {\n      \"trace_id\": \"string\",\n      \"project_id\": \"string\",\n      \"timestamps\": {\n        \"inserted_at\": 2124,\n        \"started_at\": 8206,\n        \"updated_at\": 1753\n      },\n      \"input\": {\n        \"value\": \"string\"\n      },\n      \"output\": {\n        \"value\": \"string\"\n      },\n      \"metadata\": {\n        \"sdk_language\": \"string\",\n        \"sdk_version\": \"string\"\n      },\n      \"metrics\": {\n        \"tokens_estimated\": false,\n        \"completion_tokens\": 2003,\n        \"prompt_tokens\": 2177,\n        \"total_cost\": 5648.088990379003,\n        \"total_time_ms\": 9806,\n        \"first_token_ms\": 5416\n      },\n      \"indexing_md5s\": [\n        \"string\",\n        \"string\"\n      ],\n      \"error\": \"string\",\n      \"evaluations\": [\n        {\n          \"evaluation_id\": \"string\",\n          \"score\": 2059.880070255977,\n          \"timestamps\": {\n            \"finished_at\": 4243,\n            \"updated_at\": 1820\n          },\n          \"evaluator_id\": \"string\",\n          \"name\": \"string\",\n          \"details\": \"string\",\n          \"passed\": false,\n          \"label\": \"string\",\n          \"type\": \"string\",\n          \"status\": \"string\"\n        },\n        {\n          \"evaluation_id\": \"string\",\n          \"score\": 2126.252748218306,\n          \"timestamps\": {\n            \"finished_at\": 90,\n            \"updated_at\": 9963\n          },\n          \"evaluator_id\": \"string\",\n          \"name\": \"string\",\n          \"details\": \"string\",\n          \"passed\": true,\n          \"label\": \"string\",\n          \"type\": \"string\",\n          \"status\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"page\": 8607,\n    \"limit\": 1714,\n    \"total\": 8917\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ca76c7a1-bd07-484b-9acc-4086651fd28e",
+          "name": "post Api Traces Search",
+          "request": {
+            "name": "post Api Traces Search",
+            "description": {
+              "content": "Search traces for a project",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "traces",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a1e16ef7-93fe-4b88-afad-7a261f3ea1fd",
+              "name": "Matching traces with pagination",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"traces\": [],\n  \"pagination\": {\n    \"totalHits\": 2840.4727162264167,\n    \"scrollId\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ef247269-2e7f-4ff4-b1e0-c98c37a078ca",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "30fbb77a-3322-4700-a673-4515f776c6a9",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8d8c8588-2eff-461c-94bc-9def883f1574",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "30d2f658-78b1-4783-871e-6c25a749bffd",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"startDate\": \"<number>\",\n  \"endDate\": \"<number>\",\n  \"query\": \"<string>\",\n  \"filters\": {},\n  \"traceIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"negateFilters\": \"<boolean>\",\n  \"pageOffset\": \"<number>\",\n  \"pageSize\": \"<number>\",\n  \"groupBy\": \"<string>\",\n  \"sortBy\": \"<string>\",\n  \"sortDirection\": \"<string>\",\n  \"updatedAt\": \"<number>\",\n  \"scrollId\": \"<string,null>\",\n  \"format\": \"<string>\",\n  \"includeSpans\": \"<boolean>\",\n  \"llmMode\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4cc510ac-80ea-4a4a-a3e0-166d9f3603a6",
+          "name": "get Api Traces By Trace Id",
+          "request": {
+            "name": "get Api Traces By Trace Id",
+            "description": {
+              "content": "Get a single trace by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "traces",
+                ":traceId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "Output format: 'digest' (default, AI-readable) or 'json' (full raw data)"
+                },
+                {
+                  "disabled": false,
+                  "key": "llmMode",
+                  "value": "<string>",
+                  "description": "Deprecated: use format=digest instead"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "traceId",
+                  "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f3f7865d-1403-41d2-8a72-3ab7847cf955",
+              "name": "Trace detail with spans, evaluations, and ASCII tree",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 411,\n  \"key_1\": 942.0742601924403\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32fe3cbf-b71f-4dc8-89aa-9f873ad10f1b",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3897e3d8-4984-4e36-9543-32b98481cdf2",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "004c442b-8c24-4bf8-9de4-2549e1ce5e16",
+              "name": "Trace not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d9bd935d-ee70-4090-8f65-d916ec9c8e0a",
+              "name": "Ambiguous trace ID prefix — the prefix matches more than one trace",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"candidateTraceIds\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2bf29807-eb12-4c32-90a7-b4ab667fc9e7",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f2d5c895-aab6-4bff-9136-b8110f3698eb",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "traces",
+                    ":traceId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "llmMode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "traceId",
+                      "description": "(Required) The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.langwatch.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Auth-Token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b7a15d1e-1f1d-497d-884e-fb2a30845216",
+    "name": "LangWatch Agents Traces API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "LangWatch openapi spec",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Evaluators API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Evaluators",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiEvaluators",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/evaluators"
+          },
+          "docs": "Get all evaluators for a project"
+        },
+        {
+          "info": {
+            "name": "postApiEvaluators",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/evaluators",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new evaluator"
+        },
+        {
+          "info": {
+            "name": "getApiEvaluatorsByIdOrSlug",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/evaluators/:idOrSlug",
+            "params": [
+              {
+                "name": "idOrSlug",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a specific evaluator by ID or slug"
+        },
+        {
+          "info": {
+            "name": "putApiEvaluatorsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.langwatch.ai/api/evaluators/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing evaluator"
+        },
+        {
+          "info": {
+            "name": "deleteApiEvaluatorsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/evaluators/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Archive (soft-delete) an evaluator"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

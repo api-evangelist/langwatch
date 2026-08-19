@@ -1,0 +1,120 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Virtual Keys API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Virtual Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List virtual keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys"
+          },
+          "docs": "Returns every non-archived virtual key in the caller's project, ordered by creation time."
+        },
+        {
+          "info": {
+            "name": "Create virtual key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys"
+          },
+          "docs": "Mints a new virtual key and returns the secret exactly once. The caller MUST persist the `secret` value — LangWatch stores only a hash."
+        },
+        {
+          "info": {
+            "name": "Get virtual key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get virtual key"
+        },
+        {
+          "info": {
+            "name": "Update virtual key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Partial update — send only the fields you want to change. `provider_credential_ids` replaces the entire fallback chain. `config` is deep-merged."
+        },
+        {
+          "info": {
+            "name": "Revoke virtual key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys/:id/revoke",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Marks the virtual key as revoked. Clients using it start receiving 401 within ~60s (the gateway's change-event long-poll period)."
+        },
+        {
+          "info": {
+            "name": "Rotate virtual key secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/gateway/v1/virtual-keys/:id/rotate",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Mints a fresh secret for an existing VK. The old secret remains valid for 24h (grace window) so in-flight clients can roll over."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

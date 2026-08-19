@@ -1,0 +1,508 @@
+{
+  "item": [
+    {
+      "id": "fcf9dc7a-03af-4e3d-80c4-20d13bccaddc",
+      "name": "Trace",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "921e70a0-8ce5-49b8-a58d-1b2f8aba1e2e",
+          "name": "Returns single trace details based on the ID supplied",
+          "request": {
+            "name": "Returns single trace details based on the ID supplied",
+            "description": {
+              "content": "Returns single trace details based on the ID supplied",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "trace",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) ID of trace to share"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ca56a59b-f339-4211-a2a2-1b84f73b4582",
+              "name": "Trace details with spans and evaluations",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to share"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"trace_id\": \"trace_BKZL_X0TKSD4oa1aBJTc_\",\n  \"project_id\": \"KAXYxPR8MUgTcP8CF193y\",\n  \"metadata\": {\n    \"sdk_version\": \"0.1.11\",\n    \"sdk_language\": \"python\"\n  },\n  \"timestamps\": {\n    \"started_at\": 1721382486868,\n    \"inserted_at\": 1721382492894,\n    \"updated_at\": 1721382492894\n  },\n  \"input\": {\n    \"value\": \"hi\"\n  },\n  \"output\": {\n    \"value\": \"Hey there! 👋😊\"\n  },\n  \"metrics\": {\n    \"first_token_ms\": 1449,\n    \"total_time_ms\": 1543,\n    \"prompt_tokens\": 20,\n    \"completion_tokens\": 7,\n    \"tokens_estimated\": true\n  },\n  \"error\": null,\n  \"indexing_md5s\": [\n    \"cccd21e0b70c706034dfd9f7772816a3\"\n  ],\n  \"spans\": [\n    {\n      \"trace_id\": \"trace_BKZL_X0TKSD4oa1aBJTc_\",\n      \"span_id\": \"span_h1xUkcUJilhudDrLeQbR_\",\n      \"timestamps\": {\n        \"finished_at\": 1721382488392,\n        \"updated_at\": 1721382492027,\n        \"started_at\": 1721382486895,\n        \"first_token_at\": 1721382488317,\n        \"inserted_at\": 1721382492027\n      },\n      \"type\": \"llm\",\n      \"error\": null,\n      \"params\": {\n        \"stream\": true,\n        \"temperature\": 1\n      },\n      \"project_id\": \"KAXYxPR8MUgTcP8CF193y\",\n      \"parent_id\": \"span_ijZNjUMTz3ys0Z0YKwF_T\",\n      \"name\": null,\n      \"model\": \"openai/gpt-4o\",\n      \"metrics\": {\n        \"tokens_estimated\": true,\n        \"completion_tokens\": 7,\n        \"prompt_tokens\": 20\n      },\n      \"input\": {\n        \"type\": \"chat_messages\",\n        \"value\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"You are a helpful assistant that only reply in short tweet-like responses, using lots of emojis.\"\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"hi\"\n          }\n        ]\n      },\n      \"output\": {\n        \"type\": \"chat_messages\",\n        \"value\": [\n          {\n            \"role\": \"assistant\",\n            \"content\": \"Hey there! 👋😊\"\n          }\n        ]\n      }\n    },\n    {\n      \"trace_id\": \"trace_BKZL_X0TKSD4oa1aBJTc_\",\n      \"span_id\": \"span_h1xUkcUJilhudDrLeQbR_\",\n      \"timestamps\": {\n        \"finished_at\": 1721382488392,\n        \"updated_at\": 1721382492027,\n        \"started_at\": 1721382486895,\n        \"first_token_at\": 1721382488317,\n        \"inserted_at\": 1721382492027\n      },\n      \"type\": \"llm\",\n      \"error\": null,\n      \"params\": {\n        \"stream\": true,\n        \"temperature\": 1\n      },\n      \"project_id\": \"KAXYxPR8MUgTcP8CF193y\",\n      \"parent_id\": \"span_ijZNjUMTz3ys0Z0YKwF_T\",\n      \"name\": null,\n      \"model\": \"openai/gpt-4o\",\n      \"metrics\": {\n        \"tokens_estimated\": true,\n        \"completion_tokens\": 7,\n        \"prompt_tokens\": 20\n      },\n      \"input\": {\n        \"type\": \"chat_messages\",\n        \"value\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"You are a helpful assistant that only reply in short tweet-like responses, using lots of emojis.\"\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"hi\"\n          }\n        ]\n      },\n      \"output\": {\n        \"type\": \"chat_messages\",\n        \"value\": [\n          {\n            \"role\": \"assistant\",\n            \"content\": \"Hey there! 👋😊\"\n          }\n        ]\n      }\n    }\n  ],\n  \"evaluations\": [\n    {\n      \"evaluation_id\": \"check_VCagriZHNWICSOM09dXjM\",\n      \"name\": \"Ragas Answer Relevancy\",\n      \"type\": \"ragas/answer_relevancy\",\n      \"trace_id\": \"trace_BKZL_X0TKSD4oa1aBJTc_\",\n      \"project_id\": \"KAXYxPR8MUgTcP8CF193y\",\n      \"status\": \"error\",\n      \"timestamps\": {\n        \"updated_at\": 1721383657788,\n        \"inserted_at\": 1721382493358\n      },\n      \"error\": {\n        \"stacktrace\": [\n          \"TypeError: fetch failed\"\n        ],\n        \"message\": \"fetch failed\",\n        \"has_error\": true\n      }\n    },\n    {\n      \"evaluation_id\": \"check_VCagriZHNWICSOM09dXjM\",\n      \"name\": \"Ragas Answer Relevancy\",\n      \"type\": \"ragas/answer_relevancy\",\n      \"trace_id\": \"trace_BKZL_X0TKSD4oa1aBJTc_\",\n      \"project_id\": \"KAXYxPR8MUgTcP8CF193y\",\n      \"status\": \"error\",\n      \"timestamps\": {\n        \"updated_at\": 1721383657788,\n        \"inserted_at\": 1721382493358\n      },\n      \"error\": {\n        \"stacktrace\": [\n          \"TypeError: fetch failed\"\n        ],\n        \"message\": \"fetch failed\",\n        \"has_error\": true\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f66237ee-49d6-4304-95ef-4f1fd78f6ce0",
+              "name": "Unexpected error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to share"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 403,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ebad0d6b-ba05-4734-9c96-b4021b1fab9e",
+          "name": "Returns a public path for a trace",
+          "request": {
+            "name": "Returns a public path for a trace",
+            "description": {
+              "content": "Returns a public path for a trace",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "trace",
+                ":id",
+                "share"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) ID of trace to share"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "adfce38f-4b12-4c9e-b2b8-afb38559752b",
+              "name": "Public path created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id",
+                    "share"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to share"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"path\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fcd9fd67-cd65-48ac-8814-cb443e2084a2",
+              "name": "Unexpected error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id",
+                    "share"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to share"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 403,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "76e146df-5ea5-43a9-bf1c-78b2db549ea0",
+          "name": "Deletes a public path for a trace",
+          "request": {
+            "name": "Deletes a public path for a trace",
+            "description": {
+              "content": "Deletes a public path for a trace",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "trace",
+                ":id",
+                "unshare"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) ID of trace to unshare"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "38c144ad-4db1-49c1-9e16-21c1a1f76c88",
+              "name": "Public path deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id",
+                    "unshare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to unshare"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f191d363-001c-4d86-8fc9-1eba031dc708",
+              "name": "Unexpected error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "trace",
+                    ":id",
+                    "unshare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) ID of trace to unshare"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 403,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.langwatch.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Auth-Token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e65c712e-32d2-4848-921f-609583099fff",
+    "name": "LangWatch Agents Trace API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "LangWatch openapi spec",
+      "type": "text/plain"
+    }
+  }
+}

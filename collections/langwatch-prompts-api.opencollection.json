@@ -1,0 +1,280 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Prompts API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Prompts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiPrompts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/prompts"
+          },
+          "docs": "Get all prompts for a project"
+        },
+        {
+          "info": {
+            "name": "postApiPrompts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/prompts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new prompt with default initial version"
+        },
+        {
+          "info": {
+            "name": "getApiPromptsTags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/prompts/tags"
+          },
+          "docs": "List all prompt tag definitions for the organization"
+        },
+        {
+          "info": {
+            "name": "postApiPromptsTags",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/prompts/tags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a custom prompt tag definition for the organization"
+        },
+        {
+          "info": {
+            "name": "putApiPromptsTagsByTag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.langwatch.ai/api/prompts/tags/:tag",
+            "params": [
+              {
+                "name": "tag",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Rename a prompt tag definition"
+        },
+        {
+          "info": {
+            "name": "deleteApiPromptsTagsByTag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/prompts/tags/:tag",
+            "params": [
+              {
+                "name": "tag",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a prompt tag definition and cascade to assignments"
+        },
+        {
+          "info": {
+            "name": "getApiPromptsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/prompts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Prompt slug or shorthand. Supports three formats: (1) bare slug — \"pizza-prompt\" returns the latest version; (2) slug:tag — \"pizza-prompt:production\" returns the version pointed to by that tag; (3) slug:version — \"pizza-prompt:2\" returns that specific version number. \"slug:latest\" is equivalent to the bare slug. Cannot be combined with the tag or version query parameters."
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Specific version number to retrieve. Cannot be used when the id path already contains a shorthand suffix."
+              },
+              {
+                "name": "tag",
+                "value": "",
+                "type": "query",
+                "description": "Fetch the version pointed to by this tag (e.g., \"production\", \"staging\"). Cannot be used when the id path already contains a shorthand suffix."
+              }
+            ]
+          },
+          "docs": "Get a specific prompt by slug, with optional shorthand syntax for tags and versions. Pass a bare slug like \"pizza-prompt\" to get the latest version, \"pizza-prompt:production\" to resolve a tagged version, or \"pizza-prompt:2\" to fetch version 2. Alternatively, use the tag or version query parameters with a bare slug."
+        },
+        {
+          "info": {
+            "name": "putApiPromptsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.langwatch.ai/api/prompts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a prompt"
+        },
+        {
+          "info": {
+            "name": "deleteApiPromptsById",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/prompts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a prompt"
+        },
+        {
+          "info": {
+            "name": "postApiPromptsByIdSync",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/prompts/:id/sync",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sync/upsert a prompt with local content"
+        },
+        {
+          "info": {
+            "name": "putApiPromptsByIdTagsByTag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app.langwatch.ai/api/prompts/:id/tags/:tag",
+            "params": [
+              {
+                "name": "tag",
+                "value": "",
+                "type": "path",
+                "description": "The tag to assign (e.g., \"production\", \"staging\", or a custom tag)"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign a tag (e.g. \"production\", \"staging\") to a specific prompt version"
+        },
+        {
+          "info": {
+            "name": "getApiPromptsByIdVersions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/prompts/:id/versions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get all versions for a prompt. Does not include base prompt data, only versioned data."
+        },
+        {
+          "info": {
+            "name": "postApiPromptsByIdVersionsByVersionIdRestore",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/prompts/:id/versions/:versionId/restore",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "versionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Restore a prompt to a previous version. Creates a new version with the same config data as the specified version."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

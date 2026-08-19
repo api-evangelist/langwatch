@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Budgets API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Budgets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List budgets applicable to the project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/gateway/v1/budgets"
+          },
+          "docs": "Returns every budget that could apply to requests routed through this project — org, team, and project scope. VK and principal-scoped budgets are returned via their detail pages."
+        },
+        {
+          "info": {
+            "name": "Create budget",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/gateway/v1/budgets"
+          },
+          "docs": "Creates an organization-owned budget. The scope discriminates which resource the budget covers (organization / team / project / virtual_key / principal)."
+        },
+        {
+          "info": {
+            "name": "Update budget",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app.langwatch.ai/api/gateway/v1/budgets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Partial update — scope and window are immutable after create. Use explicit null to clear timezone / description."
+        },
+        {
+          "info": {
+            "name": "Archive budget",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app.langwatch.ai/api/gateway/v1/budgets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Soft-delete — the row is marked archived and no longer counted by the budget engine. Historical ledger entries are retained."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

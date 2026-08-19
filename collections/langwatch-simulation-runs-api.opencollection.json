@@ -1,0 +1,105 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Simulation Runs API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Simulation Runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "getApiSimulation-runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/simulation-runs",
+            "params": [
+              {
+                "name": "scenarioSetId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "batchRunId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List simulation runs, optionally filtered by scenarioSetId or batchRunId"
+        },
+        {
+          "info": {
+            "name": "getApiSimulation-runsBatchesList",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/simulation-runs/batches/list",
+            "params": [
+              {
+                "name": "scenarioSetId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List batch summaries for a scenario set (pass/fail counts per batch)"
+        },
+        {
+          "info": {
+            "name": "getApiSimulation-runsByScenarioRunId",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/simulation-runs/:scenarioRunId",
+            "params": [
+              {
+                "name": "scenarioRunId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single simulation run by its ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,296 @@
+{
+  "item": [
+    {
+      "id": "f1337e84-f5b8-46a1-825d-cb5dea4f11b0",
+      "name": "Dashboards",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ab5c8b15-37a2-476c-be17-ba5b29f4d550",
+          "name": "get Api Dashboards",
+          "request": {
+            "name": "get Api Dashboards",
+            "description": {
+              "content": "List all dashboards for the project with graph counts",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b8f38165-a188-4ffb-a0d8-16b0d7b6bf37",
+          "name": "post Api Dashboards",
+          "request": {
+            "name": "post Api Dashboards",
+            "description": {
+              "content": "Create a new dashboard",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6b0fee33-3cce-464d-ac43-9142da6d2492",
+          "name": "put Api Dashboards Reorder",
+          "request": {
+            "name": "put Api Dashboards Reorder",
+            "description": {
+              "content": "Reorder dashboards by providing an ordered list of IDs",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards",
+                "reorder"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dashboardIds\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd969ac9-6663-41c8-abf6-cdfee5160a4e",
+          "name": "get Api Dashboards By Id",
+          "request": {
+            "name": "get Api Dashboards By Id",
+            "description": {
+              "content": "Get a dashboard by its id, including its graphs",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b473303b-6204-4f18-81f0-abf2f7903eee",
+          "name": "patch Api Dashboards By Id",
+          "request": {
+            "name": "patch Api Dashboards By Id",
+            "description": {
+              "content": "Rename a dashboard",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "719ddda1-c8ca-4383-b13f-28ef47693e1a",
+          "name": "delete Api Dashboards By Id",
+          "request": {
+            "name": "delete Api Dashboards By Id",
+            "description": {
+              "content": "Delete a dashboard and its graphs (hard delete, cascade)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "dashboards",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.langwatch.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Auth-Token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b260d750-401e-4235-a7ef-f1558368ff8e",
+    "name": "LangWatch Agents Dashboards API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "LangWatch openapi spec",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,668 @@
+{
+  "item": [
+    {
+      "id": "6df4026d-1b20-4d11-adb0-1d7be6b3b9d7",
+      "name": "Model Providers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8a74ea53-2eec-44ec-b60e-ac5fa0785cb0",
+          "name": "get Api Model-providers",
+          "request": {
+            "name": "get Api Model-providers",
+            "description": {
+              "content": "List all model providers for a project with masked API keys",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "model-providers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b99c522a-cd02-4a0c-b2c7-ee2c6afea0ae",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": {\n    \"provider\": \"string\",\n    \"enabled\": true,\n    \"customKeys\": {\n      \"key_0\": {},\n      \"key_1\": {}\n    },\n    \"id\": \"string\",\n    \"deploymentMapping\": null,\n    \"models\": [\n      \"string\",\n      \"string\"\n    ],\n    \"embeddingsModels\": null,\n    \"customModels\": null,\n    \"customEmbeddingsModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"frequency_penalty\",\n          \"top_p\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"image\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"min_p\",\n          \"frequency_penalty\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      }\n    ],\n    \"disabledByDefault\": true,\n    \"extraHeaders\": null\n  },\n  \"key_1\": {\n    \"provider\": \"string\",\n    \"enabled\": true,\n    \"customKeys\": {\n      \"key_0\": {}\n    },\n    \"id\": \"string\",\n    \"deploymentMapping\": null,\n    \"models\": null,\n    \"embeddingsModels\": [\n      \"string\",\n      \"string\"\n    ],\n    \"customModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"strin\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": 1656.6491064548288,\n        \"supportedParameters\": [\n          \"top_p\",\n          \"temperature\"\n        ],\n        \"multimodalInputs\": [\n          \"image\",\n          \"file\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": 7578.477385734364,\n        \"supportedParameters\": [\n          \"reasoning\",\n          \"reasoning\"\n        ],\n        \"multimodalInputs\": [\n          \"image\",\n          \"file\"\n        ]\n      }\n    ],\n    \"customEmbeddingsModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"repetition_penalty\",\n          \"presence_penalty\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"frequency_penalty\",\n          \"top_p\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      }\n    ],\n    \"disabledByDefault\": false,\n    \"extraHeaders\": null\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76825994-1cee-4baf-a52b-97f792985b7d",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bdedc655-0daf-4820-a997-951e7e70cb6f",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8d53e14e-b2b7-437d-bffa-7c622c057023",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b075804-742c-402a-b38f-50e13cbcb663",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2b0115bd-4369-4c4b-8c6f-25d9c573f422",
+          "name": "put Api Model-providers By Provider",
+          "request": {
+            "name": "put Api Model-providers By Provider",
+            "description": {
+              "content": "Create or update a model provider",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "model-providers",
+                ":provider"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "provider",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d35f9d6c-b34f-48ad-b2fd-01869ffe1d21",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers",
+                    ":provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {},\n    \"key_1\": {},\n    \"key_2\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": {\n    \"provider\": \"string\",\n    \"enabled\": true,\n    \"customKeys\": {\n      \"key_0\": {},\n      \"key_1\": {}\n    },\n    \"id\": \"string\",\n    \"deploymentMapping\": null,\n    \"models\": [\n      \"string\",\n      \"string\"\n    ],\n    \"embeddingsModels\": null,\n    \"customModels\": null,\n    \"customEmbeddingsModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"frequency_penalty\",\n          \"top_p\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"image\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"min_p\",\n          \"frequency_penalty\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      }\n    ],\n    \"disabledByDefault\": true,\n    \"extraHeaders\": null\n  },\n  \"key_1\": {\n    \"provider\": \"string\",\n    \"enabled\": true,\n    \"customKeys\": {\n      \"key_0\": {}\n    },\n    \"id\": \"string\",\n    \"deploymentMapping\": null,\n    \"models\": null,\n    \"embeddingsModels\": [\n      \"string\",\n      \"string\"\n    ],\n    \"customModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"strin\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": 1656.6491064548288,\n        \"supportedParameters\": [\n          \"top_p\",\n          \"temperature\"\n        ],\n        \"multimodalInputs\": [\n          \"image\",\n          \"file\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": 7578.477385734364,\n        \"supportedParameters\": [\n          \"reasoning\",\n          \"reasoning\"\n        ],\n        \"multimodalInputs\": [\n          \"image\",\n          \"file\"\n        ]\n      }\n    ],\n    \"customEmbeddingsModels\": [\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"embedding\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"repetition_penalty\",\n          \"presence_penalty\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      },\n      {\n        \"modelId\": \"string\",\n        \"displayName\": \"string\",\n        \"mode\": \"chat\",\n        \"maxTokens\": null,\n        \"supportedParameters\": [\n          \"frequency_penalty\",\n          \"top_p\"\n        ],\n        \"multimodalInputs\": [\n          \"audio\",\n          \"audio\"\n        ]\n      }\n    ],\n    \"disabledByDefault\": false,\n    \"extraHeaders\": null\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "be1ea362-2f8c-4270-b2d5-528663bf6ab2",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers",
+                    ":provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {},\n    \"key_1\": {},\n    \"key_2\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b1ead78-e095-4e66-9851-ceef6ee5b3a2",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers",
+                    ":provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {},\n    \"key_1\": {},\n    \"key_2\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b5671b5c-07f5-471e-8095-840422eac37d",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers",
+                    ":provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {},\n    \"key_1\": {},\n    \"key_2\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0816f1b8-7798-446d-a7d7-122f02ddaa99",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "model-providers",
+                    ":provider"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Auth-Token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enabled\": \"<boolean>\",\n  \"customKeys\": {\n    \"key_0\": {},\n    \"key_1\": {},\n    \"key_2\": {}\n  },\n  \"customModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"customEmbeddingsModels\": [\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"modelId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"mode\": \"<string>\",\n      \"maxTokens\": \"<number,null>\",\n      \"supportedParameters\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"multimodalInputs\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"extraHeaders\": [\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"defaultModel\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.langwatch.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Auth-Token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "bf49084b-1afb-4312-95ad-ed129acbc6e8",
+    "name": "LangWatch Agents Model Providers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "LangWatch openapi spec",
+      "type": "text/plain"
+    }
+  }
+}

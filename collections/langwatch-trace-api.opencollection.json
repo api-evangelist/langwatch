@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LangWatch Agents Trace API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-Token",
+      "value": "{{X-Auth-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Trace",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /api/trace/{id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.langwatch.ai/api/trace/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of trace to share"
+              }
+            ]
+          },
+          "docs": "Returns single trace details based on the ID supplied"
+        },
+        {
+          "info": {
+            "name": "POST /api/trace/{id}/share",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/trace/:id/share",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of trace to share"
+              }
+            ]
+          },
+          "docs": "Returns a public path for a trace"
+        },
+        {
+          "info": {
+            "name": "POST /api/trace/{id}/unshare",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.langwatch.ai/api/trace/:id/unshare",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of trace to unshare"
+              }
+            ]
+          },
+          "docs": "Deletes a public path for a trace"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
