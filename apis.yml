@@ -28,6 +28,23 @@ position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langwatch.png
 tags:
+  - Artificial Intelligence
+  - LLM
+  - LLM Observability
+  - LLM Evaluation
+  - Agent Testing
+  - Agent Simulation
+  - Prompt Management
+  - Datasets
+  - Tracing
+  - OpenTelemetry
+  - AI Gateway
+  - DSPy
+  - LangChain
+  - Open-Source
+  - MCP
+  - FinOps
+tags_raw:
   - AI
   - Artificial Intelligence
   - LLM
@@ -202,6 +219,8 @@ apis:
   description: The Api Keys API from LangWatch — 2 operation(s) for api keys.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
+  - APIKeys
+  tags_raw:
   - Api Keys
   properties:
   - type: OpenAPI
@@ -790,6 +809,8 @@ apis:
   description: The Projects API from LangWatch — 2 operation(s) for projects.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
