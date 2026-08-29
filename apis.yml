@@ -11,6 +11,20 @@ description: >-
   under commercial license) — deployable as LangWatch Cloud or self-hosted via Docker Compose, Helm, Kind, or full
   Kubernetes.
 type: contract
+deliveryModel:
+  model: saas
+  license: Apache-2.0 (core); `ee/` modules commercial
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - license
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
