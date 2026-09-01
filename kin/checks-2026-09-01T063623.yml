@@ -1,19 +1,21 @@
 ---
 kin_checks:
   slug: langwatch
-  schema_version: 0.16.0
-  scored_at: '2026-08-29'
-  run_ts: 2026-08-29T230545
+  schema_version: 0.17.2
+  scored_at: '2026-09-01'
+  run_ts: 2026-09-01T063623
   note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.16.0.yml; counts below let you verify that.
+    in rubric/scoring-0.17.2.yml; counts below let you verify that.
   counts:
     total: 130
-    earned: 41
+    earned: 43
     partial: 12
-    missed: 53
-    na: 24
+    missed: 55
+    na: 20
   checks:
   - id: maintainer_present
+    status: missed
+  - id: multiple_apis
     status: missed
   - id: base_url_per_api
     status: missed
@@ -109,6 +111,8 @@ kin_checks:
   - id: reg_privacy_policy
     status: missed
     detail: pointer liveness 0.0
+  - id: os_code_of_conduct
+    status: missed
   - id: mcp_server
     status: missed
   - id: event_surface_described
