@@ -32,11 +32,12 @@ accessModel:
   try_now: true
   public: false
   label: Freemium · Self-serve signup
-  confidence: high
+  confidence: medium
   source:
   - plans
   - authentication
-  generated: '2026-07-22'
+  - security
+  generated: '2026-09-03'
   method: derived
 position: Consuming
 access: 3rd-Party
@@ -1458,6 +1459,9 @@ apis:
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
 common:
+  - type: CapabilityMap
+    url: capabilities/langwatch-capability-edges.yml
+    name: LangWatch Business Capability Map
   - type: IssueTracker
     url: https://github.com/langwatch/langwatch/issues
   - type: Releases
