@@ -1459,6 +1459,8 @@ apis:
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
 common:
+  - type: Website
+    url: https://www.langwatch.ai/
   - type: CapabilityMap
     url: capabilities/langwatch-capability-edges.yml
     name: LangWatch Business Capability Map
