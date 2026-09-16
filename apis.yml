@@ -1,15 +1,14 @@
 aid: langwatch
 name: LangWatch
-description: >-
-  LangWatch is an open-source LLM observability, evaluation, and AI agent testing platform. Built around
-  OpenTelemetry-native tracing, LangWatch lets teams instrument LLM applications (LangChain, LangGraph, DSPy, OpenAI
-  Agents, LiteLLM, Pydantic AI, CrewAI, AWS Bedrock, and more), run real-time and batch evaluations, version and deploy
-  prompts, simulate multi-turn agent conversations against scripted scenarios and Judge Agents, manage labeled datasets,
-  and govern model traffic through a virtual-key AI Gateway with budgets and semantic caching. The platform exposes a
-  REST API at app.langwatch.ai, ships Python and TypeScript SDKs plus an MCP server, publishes the companion `scenario`
-  agent-testing framework and `better-agents` standards, and runs on Apache-2.0 core (with `ee/` enterprise modules
-  under commercial license) — deployable as LangWatch Cloud or self-hosted via Docker Compose, Helm, Kind, or full
-  Kubernetes.
+description: LangWatch is an open-source LLM observability, evaluation, and AI agent testing platform.
+  Built around OpenTelemetry-native tracing, LangWatch lets teams instrument LLM applications (LangChain,
+  LangGraph, DSPy, OpenAI Agents, LiteLLM, Pydantic AI, CrewAI, AWS Bedrock, and more), run real-time
+  and batch evaluations, version and deploy prompts, simulate multi-turn agent conversations against scripted
+  scenarios and Judge Agents, manage labeled datasets, and govern model traffic through a virtual-key
+  AI Gateway with budgets and semantic caching. The platform exposes a REST API at app.langwatch.ai, ships
+  Python and TypeScript SDKs plus an MCP server, publishes the companion `scenario` agent-testing framework
+  and `better-agents` standards, and runs on Apache-2.0 core (with `ee/` enterprise modules under commercial
+  license) — deployable as LangWatch Cloud or self-hosted via Docker Compose, Helm, Kind, or full Kubernetes.
 type: contract
 deliveryModel:
   model: saas
@@ -43,43 +42,43 @@ position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langwatch.png
 tags:
-  - Artificial Intelligence
-  - LLM
-  - LLM Observability
-  - LLM Evaluation
-  - Agent Testing
-  - Agent Simulation
-  - Prompt Management
-  - Datasets
-  - Tracing
-  - OpenTelemetry
-  - AI Gateway
-  - DSPy
-  - LangChain
-  - Open-Source
-  - MCP
-  - FinOps
+- Artificial Intelligence
+- LLM
+- LLM Observability
+- LLM Evaluation
+- Agent Testing
+- Agent Simulation
+- Prompt Management
+- Datasets
+- Tracing
+- OpenTelemetry
+- AI Gateway
+- DSPy
+- LangChain
+- Open-Source
+- MCP
+- FinOps
 tags_raw:
-  - AI
-  - Artificial Intelligence
-  - LLM
-  - LLM Observability
-  - LLM Evaluation
-  - Agent Testing
-  - Agent Simulation
-  - Prompt Management
-  - Datasets
-  - Tracing
-  - OpenTelemetry
-  - AI Gateway
-  - DSPy
-  - LangChain
-  - Open Source
-  - MCP
-  - FinOps
+- AI
+- Artificial Intelligence
+- LLM
+- LLM Observability
+- LLM Evaluation
+- Agent Testing
+- Agent Simulation
+- Prompt Management
+- Datasets
+- Tracing
+- OpenTelemetry
+- AI Gateway
+- DSPy
+- LangChain
+- Open Source
+- MCP
+- FinOps
 url: https://raw.githubusercontent.com/api-evangelist/langwatch/refs/heads/main/apis.yml
 created: '2026-05-25'
-modified: '2026-05-25'
+modified: '2026-09-16'
 specificationVersion: '0.23'
 apis:
 - aid: langwatch:langwatch-agents-api
@@ -624,7 +623,7 @@ apis:
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
 - aid: langwatch:langwatch-langwatch-api-api
-  name: LangWatch LangWatch API API
+  name: LangWatch API
   description: The LangWatch API API from LangWatch — 1 operation(s) for langwatch api.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
@@ -1459,154 +1458,153 @@ apis:
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
 common:
-  - type: Website
-    url: https://www.langwatch.ai/
-  - type: CapabilityMap
-    url: capabilities/langwatch-capability-edges.yml
-    name: LangWatch Business Capability Map
-  - type: IssueTracker
-    url: https://github.com/langwatch/langwatch/issues
-  - type: Releases
-    url: https://github.com/langwatch/langwatch/releases
-  - type: SecurityPolicy
-    url: https://github.com/langwatch/langwatch/blob/main/SECURITY.md
-  - type: ContributionGuide
-    url: https://github.com/langwatch/langwatch/blob/main/CONTRIBUTING.md
-  - type: AgenticAccess
-    url: agentic-access/langwatch-agentic-access.yml
-  - type: TrustCenter
-    url: security/langwatch-trust-center.yml
-  - type: DomainSecurity
-    url: security/langwatch-domain-security.yml
-  - type: Authentication
-    url: authentication/langwatch-authentication.yml
-  - type: Portal
-    url: https://langwatch.ai
-  - type: Documentation
-    url: https://langwatch.ai/docs/
-  - type: GettingStarted
-    url: https://langwatch.ai/docs/integration/quickstart
-  - type: Documentation
-    name: API Reference
-    url: https://langwatch.ai/docs/api-reference
-  - type: OpenAPI
-    name: Canonical OpenAPI 3.1 spec
-    url: openapi/_original/langwatch-openapi.json
-  - type: Application
-    name: LangWatch Cloud Dashboard
-    url: https://app.langwatch.ai
-  - type: Signup
-    url: https://app.langwatch.ai/auth/signup
-  - type: Pricing
-    url: https://langwatch.ai/pricing
-  - type: Plans
-    url: plans/langwatch-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/langwatch-rate-limits.yml
-  - type: FinOps
-    url: finops/langwatch-finops.yml
-  - type: Documentation
-    name: Self-Hosting Overview
-    url: https://langwatch.ai/docs/self-hosting/overview
-  - type: Documentation
-    name: Observability
-    url: https://langwatch.ai/docs/observability
-  - type: Documentation
-    name: Evaluations
-    url: https://langwatch.ai/docs/evaluations
-  - type: Documentation
-    name: Prompt Management
-    url: https://langwatch.ai/docs/prompt-management
-  - type: Documentation
-    name: Agent Simulations
-    url: https://langwatch.ai/docs/simulations
-  - type: Documentation
-    name: LLM Index (llms.txt)
-    url: https://langwatch.ai/docs/llms.txt
-  - type: GitHubOrganization
-    url: https://github.com/langwatch
-  - type: SourceCode
-    name: LangWatch Monorepo
-    url: https://github.com/langwatch/langwatch
-  - type: SourceCode
-    name: scenario — Agent Testing Framework
-    url: https://github.com/langwatch/scenario
-  - type: SourceCode
-    name: better-agents — Standards for Building Agents
-    url: https://github.com/langwatch/better-agents
-  - type: SourceCode
-    name: langevals — Evaluator Aggregation Platform
-    url: https://github.com/langwatch/langevals
-  - type: SourceCode
-    name: cookbooks — Example Notebooks
-    url: https://github.com/langwatch/cookbooks
-  - type: SourceCode
-    name: skills — Reusable Agent Skills
-    url: https://github.com/langwatch/skills
-  - type: SDKs
-    name: Python SDK (PyPI — `langwatch`)
-    url: https://pypi.org/project/langwatch/
-  - type: SDKs
-    name: TypeScript SDK (npm — `langwatch`)
-    url: https://www.npmjs.com/package/langwatch
-  - type: Documentation
-    name: LangWatch MCP Server (`@langwatch/mcp-server`)
-    url: https://www.npmjs.com/package/@langwatch/mcp-server
-  - type: License
-    name: Apache-2.0 (core); `ee/` modules commercial
-    url: https://github.com/langwatch/langwatch/blob/main/LICENSE
-  - type: TermsOfService
-    url: https://langwatch.ai/terms
-  - type: PrivacyPolicy
-    url: https://langwatch.ai/privacy
-  - type: Blog
-    url: https://langwatch.ai/blog
-  - type: ChangeLog
-    url: https://langwatch.ai/docs/changelog
-  - type: Forums
-    name: Discord Community
-    url: https://discord.gg/langwatch
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/langwatch
-  - type: Twitter
-    url: https://twitter.com/langwatchai
-  - type: YouTube
-    url: https://www.youtube.com/@langwatch
-  - type: Features
-    data:
-      - OpenTelemetry-native trace ingestion via Python and TypeScript SDKs and any OTel-compliant client
-      - >-
-        Built-in evaluators — RAGAS, Azure Content Safety, OpenAI Moderation, PII, semantic similarity, language
-        detection, LLM-as-Judge
-      - Real-time online monitors that score production traces against configured evaluators
-      - Batch experiments, suites, and DSPy-driven optimization workflows
-      - Prompt versioning with feature-flag-style deployment and `prompts/sync`/`restore`
-      - Multi-turn agent simulations with User Simulator and Judge Agents (open-source `scenario` framework)
-      - Collaborative annotation and labeling for domain experts and PMs
-      - Datasets — CSV upload, programmatic CRUD, trace-to-record conversion
-      - AI Gateway with OpenAI/Anthropic-compatible proxy, virtual keys, budgets, and semantic cache rules
-      - Open-source Apache-2.0 core, MIT-licensed SDKs, commercial `ee/` enterprise modules
-      - Self-hostable via Docker Compose, Helm, Kind, or full Kubernetes (PostgreSQL + Redis + ClickHouse + OpenSearch)
-      - LangWatch Cloud with three plans — Developer (free), Growth (EUR 59 / core-seat / month), Enterprise (custom)
-      - 14-day data retention on free tier, 30-day default on Growth, configurable on Enterprise
-      - >-
-        MCP server (`@langwatch/mcp-server`) exposing observability, prompts, datasets, scenarios, and evaluator tools
-        to Claude / Cursor / other MCP clients
-      - >-
-        Integrations — OpenAI, Anthropic, Azure, AWS Bedrock, LiteLLM, LangChain, LangGraph, DSPy, OpenAI Agents,
-        Pydantic AI, CrewAI, Autogen, Haystack
-      - '`better-agents` standards repository for agent project scaffolding'
-      - SOC 2 / ISO 27001 reports and forward-deployed engineering available under Enterprise tier
-    sources:
-      - https://langwatch.ai
-      - https://langwatch.ai/docs/
-      - https://langwatch.ai/pricing
-      - https://github.com/langwatch/langwatch
-      - https://github.com/langwatch/scenario
-      - https://raw.githubusercontent.com/langwatch/langwatch/main/langwatch/src/app/api/openapiLangWatch.json
-    updated: '2026-05-25'
+- type: Website
+  url: https://www.langwatch.ai/
+- type: CapabilityMap
+  url: capabilities/langwatch-capability-edges.yml
+  name: LangWatch Business Capability Map
+- type: IssueTracker
+  url: https://github.com/langwatch/langwatch/issues
+- type: Releases
+  url: https://github.com/langwatch/langwatch/releases
+- type: SecurityPolicy
+  url: https://github.com/langwatch/langwatch/blob/main/SECURITY.md
+- type: ContributionGuide
+  url: https://github.com/langwatch/langwatch/blob/main/CONTRIBUTING.md
+- type: AgenticAccess
+  url: agentic-access/langwatch-agentic-access.yml
+- type: TrustCenter
+  url: security/langwatch-trust-center.yml
+- type: DomainSecurity
+  url: security/langwatch-domain-security.yml
+- type: Authentication
+  url: authentication/langwatch-authentication.yml
+- type: Portal
+  url: https://langwatch.ai
+- type: Documentation
+  url: https://langwatch.ai/docs/
+- type: GettingStarted
+  url: https://langwatch.ai/docs/integration/quickstart
+- type: Documentation
+  name: API Reference
+  url: https://langwatch.ai/docs/api-reference
+- type: OpenAPI
+  name: Canonical OpenAPI 3.1 spec
+  url: openapi/_original/langwatch-openapi.json
+- type: Application
+  name: LangWatch Cloud Dashboard
+  url: https://app.langwatch.ai
+- type: Signup
+  url: https://app.langwatch.ai/auth/signup
+- type: Pricing
+  url: https://langwatch.ai/pricing
+- type: Plans
+  url: plans/langwatch-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/langwatch-rate-limits.yml
+- type: FinOps
+  url: finops/langwatch-finops.yml
+- type: Documentation
+  name: Self-Hosting Overview
+  url: https://langwatch.ai/docs/self-hosting/overview
+- type: Documentation
+  name: Observability
+  url: https://langwatch.ai/docs/observability
+- type: Documentation
+  name: Evaluations
+  url: https://langwatch.ai/docs/evaluations
+- type: Documentation
+  name: Prompt Management
+  url: https://langwatch.ai/docs/prompt-management
+- type: Documentation
+  name: Agent Simulations
+  url: https://langwatch.ai/docs/simulations
+- type: Documentation
+  name: LLM Index (llms.txt)
+  url: https://langwatch.ai/docs/llms.txt
+- type: GitHubOrganization
+  url: https://github.com/langwatch
+- type: SourceCode
+  name: LangWatch Monorepo
+  url: https://github.com/langwatch/langwatch
+- type: SourceCode
+  name: scenario — Agent Testing Framework
+  url: https://github.com/langwatch/scenario
+- type: SourceCode
+  name: better-agents — Standards for Building Agents
+  url: https://github.com/langwatch/better-agents
+- type: SourceCode
+  name: langevals — Evaluator Aggregation Platform
+  url: https://github.com/langwatch/langevals
+- type: SourceCode
+  name: cookbooks — Example Notebooks
+  url: https://github.com/langwatch/cookbooks
+- type: SourceCode
+  name: skills — Reusable Agent Skills
+  url: https://github.com/langwatch/skills
+- type: SDKs
+  name: Python SDK (PyPI — `langwatch`)
+  url: https://pypi.org/project/langwatch/
+- type: SDKs
+  name: TypeScript SDK (npm — `langwatch`)
+  url: https://www.npmjs.com/package/langwatch
+- type: Documentation
+  name: LangWatch MCP Server (`@langwatch/mcp-server`)
+  url: https://www.npmjs.com/package/@langwatch/mcp-server
+- type: License
+  name: Apache-2.0 (core); `ee/` modules commercial
+  url: https://github.com/langwatch/langwatch/blob/main/LICENSE
+- type: TermsOfService
+  url: https://langwatch.ai/terms
+- type: PrivacyPolicy
+  url: https://langwatch.ai/privacy
+- type: Blog
+  url: https://langwatch.ai/blog
+- type: ChangeLog
+  url: https://langwatch.ai/docs/changelog
+- type: Forums
+  name: Discord Community
+  url: https://discord.gg/langwatch
+- type: LinkedIn
+  url: https://www.linkedin.com/company/langwatch
+- type: Twitter
+  url: https://twitter.com/langwatchai
+- type: YouTube
+  url: https://www.youtube.com/@langwatch
+- type: Features
+  data:
+  - OpenTelemetry-native trace ingestion via Python and TypeScript SDKs and any OTel-compliant client
+  - Built-in evaluators — RAGAS, Azure Content Safety, OpenAI Moderation, PII, semantic similarity, language
+    detection, LLM-as-Judge
+  - Real-time online monitors that score production traces against configured evaluators
+  - Batch experiments, suites, and DSPy-driven optimization workflows
+  - Prompt versioning with feature-flag-style deployment and `prompts/sync`/`restore`
+  - Multi-turn agent simulations with User Simulator and Judge Agents (open-source `scenario` framework)
+  - Collaborative annotation and labeling for domain experts and PMs
+  - Datasets — CSV upload, programmatic CRUD, trace-to-record conversion
+  - AI Gateway with OpenAI/Anthropic-compatible proxy, virtual keys, budgets, and semantic cache rules
+  - Open-source Apache-2.0 core, MIT-licensed SDKs, commercial `ee/` enterprise modules
+  - Self-hostable via Docker Compose, Helm, Kind, or full Kubernetes (PostgreSQL + Redis + ClickHouse
+    + OpenSearch)
+  - LangWatch Cloud with three plans — Developer (free), Growth (EUR 59 / core-seat / month), Enterprise
+    (custom)
+  - 14-day data retention on free tier, 30-day default on Growth, configurable on Enterprise
+  - MCP server (`@langwatch/mcp-server`) exposing observability, prompts, datasets, scenarios, and evaluator
+    tools to Claude / Cursor / other MCP clients
+  - Integrations — OpenAI, Anthropic, Azure, AWS Bedrock, LiteLLM, LangChain, LangGraph, DSPy, OpenAI
+    Agents, Pydantic AI, CrewAI, Autogen, Haystack
+  - '`better-agents` standards repository for agent project scaffolding'
+  - SOC 2 / ISO 27001 reports and forward-deployed engineering available under Enterprise tier
+  sources:
+  - https://langwatch.ai
+  - https://langwatch.ai/docs/
+  - https://langwatch.ai/pricing
+  - https://github.com/langwatch/langwatch
+  - https://github.com/langwatch/scenario
+  - https://raw.githubusercontent.com/langwatch/langwatch/main/langwatch/src/app/api/openapiLangWatch.json
+  updated: '2026-05-25'
 maintainers:
-  - FN: Kin Lane
-    email: info@apievangelist.com
-    X: apievangelist
-    url: https://apievangelist.com
+- FN: Kin Lane
+  email: info@apievangelist.com
+  X: apievangelist
+  url: https://apievangelist.com
