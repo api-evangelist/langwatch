@@ -184,6 +184,8 @@ apis:
   description: The Annotations API from LangWatch — 3 operation(s) for annotations.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
+  - Annotation
+  tags_raw:
   - Annotations
   properties:
   - type: OpenAPI
@@ -431,6 +433,8 @@ apis:
   description: The Dataset API from LangWatch — 7 operation(s) for dataset.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
+  - Datasets
+  tags_raw:
   - Dataset
   properties:
   - type: OpenAPI
