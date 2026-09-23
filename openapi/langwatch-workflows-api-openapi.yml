@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Workflows API
+  title: LangWatch Workflows API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -112,6 +112,8 @@ paths:
       description: List all non-archived workflows for the project
       tags:
       - Workflows
+      summary: Get api workflows
+      x-summary-source: derived
   /api/workflows/{id}:
     get:
       responses:
@@ -230,6 +232,8 @@ paths:
       description: Get a workflow by its ID
       tags:
       - Workflows
+      summary: Get api workflows by id
+      x-summary-source: derived
     patch:
       responses:
         '200':
@@ -360,6 +364,8 @@ paths:
                   type: string
       tags:
       - Workflows
+      summary: Patch api workflows by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -451,6 +457,8 @@ paths:
       description: Archive (soft-delete) a workflow
       tags:
       - Workflows
+      summary: Delete api workflows by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

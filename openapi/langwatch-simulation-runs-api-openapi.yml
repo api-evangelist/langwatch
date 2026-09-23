@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Simulation Runs API
+  title: LangWatch Simulation Runs API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -184,6 +184,8 @@ paths:
       description: List simulation runs, optionally filtered by scenarioSetId or batchRunId
       tags:
       - Simulation Runs
+      summary: Get api simulation runs
+      x-summary-source: derived
   /api/simulation-runs/batches/list:
     get:
       responses:
@@ -315,6 +317,8 @@ paths:
       description: List batch summaries for a scenario set (pass/fail counts per batch)
       tags:
       - Simulation Runs
+      summary: Get api simulation runs batches list
+      x-summary-source: derived
   /api/simulation-runs/{scenarioRunId}:
     get:
       responses:
@@ -477,6 +481,8 @@ paths:
       description: Get a single simulation run by its ID
       tags:
       - Simulation Runs
+      summary: Get api simulation runs by scenario run id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

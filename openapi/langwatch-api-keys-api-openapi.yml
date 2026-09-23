@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Api Keys API
+  title: LangWatch Api Keys API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -8,7 +8,7 @@ servers:
 security:
 - project_api_key: []
 tags:
-- name: Api Keys
+- name: API Keys
 paths:
   /api/api-keys:
     get:
@@ -34,7 +34,7 @@ paths:
         '403':
           description: Insufficient permissions (requires organization:view)
       tags:
-      - Api Keys
+      - API Keys
     post:
       operationId: createApiKey
       summary: Create an API key
@@ -134,7 +134,7 @@ paths:
         '422':
           description: Validation error (missing name, empty bindings, etc.)
       tags:
-      - Api Keys
+      - API Keys
   /api/api-keys/{id}:
     delete:
       operationId: revokeApiKey
@@ -168,7 +168,7 @@ paths:
         '409':
           description: API key is already revoked
       tags:
-      - Api Keys
+      - API Keys
 components:
   schemas:
     ApiKeyInfo:

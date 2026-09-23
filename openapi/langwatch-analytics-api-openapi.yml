@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Analytics API
+  title: LangWatch Analytics API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -1173,6 +1173,8 @@ paths:
               - timeZone
       tags:
       - Analytics
+      summary: Post api analytics timeseries
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Model Defaults API
+  title: LangWatch Model Defaults API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -201,6 +201,8 @@ paths:
       description: 'Snapshot of the default-model cascade for this project: effective resolution per role, plus the configs the caller can read.'
       tags:
       - Model Defaults
+      summary: Get api model defaults
+      x-summary-source: derived
     post:
       responses:
         '200':
@@ -302,6 +304,8 @@ paths:
               - scopes
       tags:
       - Model Defaults
+      summary: Post api model defaults
+      x-summary-source: derived
   /api/model-defaults/{id}:
     put:
       responses:
@@ -396,6 +400,8 @@ paths:
                     - scopeId
       tags:
       - Model Defaults
+      summary: Put api model defaults by id
+      x-summary-source: derived
     delete:
       responses:
         '204':
@@ -462,6 +468,8 @@ paths:
       description: Delete a default-model config. Scope attachments cascade.
       tags:
       - Model Defaults
+      summary: Delete api model defaults by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

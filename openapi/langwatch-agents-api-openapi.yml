@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: LangWatch Agents API
   version: 1.0.0
@@ -31,6 +31,8 @@ paths:
       description: List all non-archived agents for the project (paginated)
       tags:
       - Agents
+      summary: Get api agents
+      x-summary-source: derived
     post:
       responses: {}
       operationId: postApiAgents
@@ -64,6 +66,8 @@ paths:
               - config
       tags:
       - Agents
+      summary: Post api agents
+      x-summary-source: derived
   /api/agents/{id}:
     get:
       responses: {}
@@ -77,6 +81,8 @@ paths:
       description: Get an agent by its id
       tags:
       - Agents
+      summary: Get api agents by id
+      x-summary-source: derived
     patch:
       responses: {}
       operationId: patchApiAgentsById
@@ -113,6 +119,8 @@ paths:
                   - 'null'
       tags:
       - Agents
+      summary: Patch api agents by id
+      x-summary-source: derived
     delete:
       responses: {}
       operationId: deleteApiAgentsById
@@ -125,6 +133,8 @@ paths:
       description: Archive an agent (soft-delete)
       tags:
       - Agents
+      summary: Delete api agents by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

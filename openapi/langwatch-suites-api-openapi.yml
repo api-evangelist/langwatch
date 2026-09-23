@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Suites API
+  title: LangWatch Suites API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -135,6 +135,8 @@ paths:
       description: List all non-archived suites (run plans) for the project
       tags:
       - Suites
+      summary: Get api suites
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -305,6 +307,8 @@ paths:
               - targets
       tags:
       - Suites
+      summary: Post api suites
+      x-summary-source: derived
   /api/suites/{id}:
     get:
       responses:
@@ -446,6 +450,8 @@ paths:
       description: Get a suite (run plan) by its ID
       tags:
       - Suites
+      summary: Get api suites by id
+      x-summary-source: derived
     patch:
       responses:
         '200':
@@ -630,6 +636,8 @@ paths:
                     type: string
       tags:
       - Suites
+      summary: Patch api suites by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -721,6 +729,8 @@ paths:
       description: Archive (soft-delete) a suite (run plan)
       tags:
       - Suites
+      summary: Delete api suites by id
+      x-summary-source: derived
   /api/suites/{id}/duplicate:
     post:
       responses:
@@ -862,6 +872,8 @@ paths:
       description: Duplicate a suite (run plan)
       tags:
       - Suites
+      summary: Post api suites by id duplicate
+      x-summary-source: derived
   /api/suites/{id}/run:
     post:
       responses:
@@ -1017,6 +1029,8 @@ paths:
                   type: string
       tags:
       - Suites
+      summary: Post api suites by id run
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

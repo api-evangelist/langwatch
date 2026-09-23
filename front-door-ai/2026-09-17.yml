@@ -1,0 +1,32 @@
+# Front Door AI Index — langwatch — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: langwatch
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.langwatch.ai
+  final_host: langwatch.ai
+  ownership: own
+  owner: langwatch
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 38
+  host_score: 38
+  density: 33.75
+  words: 1126
+  tiers:
+    agentic: 10
+    core: 24
+    model: 4
+  ambiguous: 28
+  top_terms:
+    agent: 28
+    AI: 20
+    AI agent: 5
+    Claude: 4
+    prompts: 4
+    LLMs: 3
+    MCP: 1
+    gen ai: 1

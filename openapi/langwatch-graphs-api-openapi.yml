@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Graphs API
+  title: LangWatch Graphs API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -123,6 +123,8 @@ paths:
       description: List all custom graphs, optionally filtered by dashboard
       tags:
       - Graphs
+      summary: Get api graphs
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -264,6 +266,8 @@ paths:
               - graph
       tags:
       - Graphs
+      summary: Post api graphs
+      x-summary-source: derived
   /api/graphs/{id}:
     get:
       responses:
@@ -389,6 +393,8 @@ paths:
       description: Get a custom graph by its ID
       tags:
       - Graphs
+      summary: Get api graphs by id
+      x-summary-source: derived
     patch:
       responses:
         '200':
@@ -528,6 +534,8 @@ paths:
                   additionalProperties: {}
       tags:
       - Graphs
+      summary: Patch api graphs by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -619,6 +627,8 @@ paths:
       description: Delete a custom graph
       tags:
       - Graphs
+      summary: Delete api graphs by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

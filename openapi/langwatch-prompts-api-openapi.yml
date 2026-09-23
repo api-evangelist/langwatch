@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Prompts API
+  title: LangWatch Prompts API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -368,6 +368,8 @@ paths:
       description: Get all prompts for a project
       tags:
       - Prompts
+      summary: Get api prompts
+      x-summary-source: derived
     post:
       responses:
         '200':
@@ -844,6 +846,8 @@ paths:
               additionalProperties: false
       tags:
       - Prompts
+      summary: Post api prompts
+      x-summary-source: derived
   /api/prompts/tags:
     get:
       responses:
@@ -923,6 +927,8 @@ paths:
       description: List all prompt tag definitions for the organization
       tags:
       - Prompts
+      summary: Get api prompts tags
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -1009,6 +1015,8 @@ paths:
               - name
       tags:
       - Prompts
+      summary: Post api prompts tags
+      x-summary-source: derived
   /api/prompts/tags/{tag}:
     put:
       responses:
@@ -1101,6 +1109,8 @@ paths:
               - name
       tags:
       - Prompts
+      summary: Put api prompts tags by tag
+      x-summary-source: derived
     delete:
       responses:
         '204':
@@ -1167,6 +1177,8 @@ paths:
       description: Delete a prompt tag definition and cascade to assignments
       tags:
       - Prompts
+      summary: Delete api prompts tags by tag
+      x-summary-source: derived
   /api/prompts/{id}:
     get:
       responses:
@@ -1555,6 +1567,8 @@ paths:
       description: Get a specific prompt by slug, with optional shorthand syntax for tags and versions. Pass a bare slug like "pizza-prompt" to get the latest version, "pizza-prompt:production" to resolve a tagged version, or "pizza-prompt:2" to fetch version 2. Alternatively, use the tag or version query parameters with a bare slug.
       tags:
       - Prompts
+      summary: Get api prompts by id
+      x-summary-source: derived
     put:
       responses:
         '200':
@@ -2048,6 +2062,8 @@ paths:
               additionalProperties: false
       tags:
       - Prompts
+      summary: Put api prompts by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -2136,6 +2152,8 @@ paths:
       description: Delete a prompt
       tags:
       - Prompts
+      summary: Delete api prompts by id
+      x-summary-source: derived
   /api/prompts/{id}/sync:
     post:
       responses:
@@ -3054,6 +3072,8 @@ paths:
               - configData
       tags:
       - Prompts
+      summary: Post api prompts by id sync
+      x-summary-source: derived
   /api/prompts/{id}/tags/{tag}:
     put:
       responses:
@@ -3168,6 +3188,8 @@ paths:
               - versionId
       tags:
       - Prompts
+      summary: Put api prompts by id tags by tag
+      x-summary-source: derived
   /api/prompts/{id}/versions:
     get:
       responses:
@@ -3544,6 +3566,8 @@ paths:
       description: Get all versions for a prompt. Does not include base prompt data, only versioned data.
       tags:
       - Prompts
+      summary: Get api prompts by id versions
+      x-summary-source: derived
   /api/prompts/{id}/versions/{versionId}/restore:
     post:
       responses:
@@ -3923,6 +3947,8 @@ paths:
       description: Restore a prompt to a previous version. Creates a new version with the same config data as the specified version.
       tags:
       - Prompts
+      summary: Post api prompts by id versions by version id restore
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Triggers API
+  title: LangWatch Triggers API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -130,6 +130,8 @@ paths:
       description: List all active triggers (automations) for the project
       tags:
       - Triggers
+      summary: Get api triggers
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -282,6 +284,8 @@ paths:
               - action
       tags:
       - Triggers
+      summary: Post api triggers
+      x-summary-source: derived
   /api/triggers/{id}:
     get:
       responses:
@@ -418,6 +422,8 @@ paths:
       description: Get a trigger by its ID
       tags:
       - Triggers
+      summary: Get api triggers by id
+      x-summary-source: derived
     patch:
       responses:
         '200':
@@ -583,6 +589,8 @@ paths:
                   additionalProperties: {}
       tags:
       - Triggers
+      summary: Patch api triggers by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -674,6 +682,8 @@ paths:
       description: Delete (soft-delete) a trigger
       tags:
       - Triggers
+      summary: Delete api triggers by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Monitors API
+  title: LangWatch Monitors API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -132,6 +132,8 @@ paths:
       description: List all online evaluation monitors for the project
       tags:
       - Monitors
+      summary: Get api monitors
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -389,6 +391,8 @@ paths:
               - checkType
       tags:
       - Monitors
+      summary: Post api monitors
+      x-summary-source: derived
   /api/monitors/{id}:
     get:
       responses:
@@ -527,6 +531,8 @@ paths:
       description: Get a monitor by its ID
       tags:
       - Monitors
+      summary: Get api monitors by id
+      x-summary-source: derived
     patch:
       responses:
         '200':
@@ -797,6 +803,8 @@ paths:
                   exclusiveMinimum: 0
       tags:
       - Monitors
+      summary: Patch api monitors by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -888,6 +896,8 @@ paths:
       description: Delete a monitor
       tags:
       - Monitors
+      summary: Delete api monitors by id
+      x-summary-source: derived
   /api/monitors/{id}/toggle:
     post:
       responses:
@@ -990,6 +1000,8 @@ paths:
               - enabled
       tags:
       - Monitors
+      summary: Post api monitors by id toggle
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

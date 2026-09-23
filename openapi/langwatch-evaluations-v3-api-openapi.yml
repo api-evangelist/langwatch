@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Evaluations V3 API
+  title: LangWatch Evaluations V3 API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -101,6 +101,8 @@ paths:
                     type: string
                 required:
                 - error
+      summary: Get evaluations V3 run status
+      x-summary-source: derived
   /api/experiments/{slug}/run:
     post:
       description: 'Start execution of a saved Evaluations V3 experiment by slug. Returns immediately with a runId for polling, or streams SSE events if Accept: text/event-stream header is provided.'
@@ -166,6 +168,8 @@ paths:
                     type: string
                 required:
                 - error
+      summary: Post evaluations V3 run
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

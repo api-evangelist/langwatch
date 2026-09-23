@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Trace API
+  title: LangWatch Trace API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -281,6 +281,10 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Trace
+      summary: Get api trace by id
+      x-summary-source: derived
+      operationId: getApiTraceById
+      x-operation-id-source: derived
   /api/trace/{id}/share:
     post:
       description: Returns a public path for a trace
@@ -309,6 +313,10 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Trace
+      summary: Create api trace by id share
+      x-summary-source: derived
+      operationId: postApiTraceByIdShare
+      x-operation-id-source: derived
   /api/trace/{id}/unshare:
     post:
       description: Deletes a public path for a trace
@@ -337,6 +345,10 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Trace
+      summary: Create api trace by id unshare
+      x-summary-source: derived
+      operationId: postApiTraceByIdUnshare
+      x-operation-id-source: derived
 components:
   schemas:
     Error:

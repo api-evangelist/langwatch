@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Model Providers API
+  title: LangWatch Model Providers API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -226,6 +226,8 @@ paths:
       description: List all model providers for a project with masked API keys
       tags:
       - Model Providers
+      summary: Get api model providers
+      x-summary-source: derived
   /api/model-providers/{provider}:
     put:
       responses:
@@ -578,6 +580,8 @@ paths:
               - enabled
       tags:
       - Model Providers
+      summary: Put api model providers by provider
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

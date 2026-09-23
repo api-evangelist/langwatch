@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Evaluators API
+  title: LangWatch Evaluators API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -157,6 +157,8 @@ paths:
       description: Get all evaluators for a project
       tags:
       - Evaluators
+      summary: Get api evaluators
+      x-summary-source: derived
     post:
       responses:
         '200':
@@ -317,6 +319,8 @@ paths:
               - config
       tags:
       - Evaluators
+      summary: Post api evaluators
+      x-summary-source: derived
   /api/evaluators/{idOrSlug}:
     get:
       responses:
@@ -480,6 +484,8 @@ paths:
       description: Get a specific evaluator by ID or slug
       tags:
       - Evaluators
+      summary: Get api evaluators by id or slug
+      x-summary-source: derived
   /api/evaluators/{id}:
     put:
       responses:
@@ -656,6 +662,8 @@ paths:
                   additionalProperties: {}
       tags:
       - Evaluators
+      summary: Put api evaluators by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -744,6 +752,8 @@ paths:
       description: Archive (soft-delete) an evaluator
       tags:
       - Evaluators
+      summary: Delete api evaluators by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

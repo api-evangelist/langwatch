@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Dashboards API
+  title: LangWatch Dashboards API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -18,6 +18,8 @@ paths:
       description: List all dashboards for the project with graph counts
       tags:
       - Dashboards
+      summary: Get api dashboards
+      x-summary-source: derived
     post:
       responses: {}
       operationId: postApiDashboards
@@ -37,6 +39,8 @@ paths:
               - name
       tags:
       - Dashboards
+      summary: Post api dashboards
+      x-summary-source: derived
   /api/dashboards/reorder:
     put:
       responses: {}
@@ -59,6 +63,8 @@ paths:
               - dashboardIds
       tags:
       - Dashboards
+      summary: Put api dashboards reorder
+      x-summary-source: derived
   /api/dashboards/{id}:
     get:
       responses: {}
@@ -72,6 +78,8 @@ paths:
       description: Get a dashboard by its id, including its graphs
       tags:
       - Dashboards
+      summary: Get api dashboards by id
+      x-summary-source: derived
     patch:
       responses: {}
       operationId: patchApiDashboardsById
@@ -96,6 +104,8 @@ paths:
               - name
       tags:
       - Dashboards
+      summary: Patch api dashboards by id
+      x-summary-source: derived
     delete:
       responses: {}
       operationId: deleteApiDashboardsById
@@ -108,6 +118,8 @@ paths:
       description: Delete a dashboard and its graphs (hard delete, cascade)
       tags:
       - Dashboards
+      summary: Delete api dashboards by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:

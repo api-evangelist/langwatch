@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Traces API
+  title: LangWatch Traces API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -29,6 +29,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResponse'
+      operationId: postApiTraceSearch
+      x-operation-id-source: derived
   /api/traces/search:
     post:
       responses:
@@ -644,6 +646,8 @@ paths:
               - endDate
       tags:
       - Traces
+      summary: Post api traces search
+      x-summary-source: derived
   /api/traces/{traceId}:
     get:
       responses:
@@ -764,15 +768,34 @@ paths:
       description: Get a single trace by ID.
       tags:
       - Traces
+      summary: Get api traces by trace id
+      x-summary-source: derived
 components:
   schemas:
-    EvaluationTimestamps:
+    Evaluation:
       type: object
       properties:
-        finished_at:
-          type: integer
-        updated_at:
-          type: integer
+        evaluation_id:
+          type: string
+        score:
+          type: number
+        timestamps:
+          $ref: '#/components/schemas/EvaluationTimestamps'
+        evaluator_id:
+          type: string
+        name:
+          type: string
+        details:
+          type: string
+        passed:
+          type: boolean
+        label:
+          type: string
+          nullable: true
+        type:
+          type: string
+        status:
+          type: string
     Metadata:
       type: object
       properties:
@@ -780,27 +803,50 @@ components:
           type: string
         sdk_version:
           type: string
-    Output:
+    SearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        pageSize:
+          type: integer
+          example: 1000
+        scrollId:
+          type: string
+          example: '123'
+        filters:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    EvaluationTimestamps:
+      type: object
+      properties:
+        finished_at:
+          type: integer
+        updated_at:
+          type: integer
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+    Input:
       type: object
       properties:
         value:
           type: string
-    Metrics:
-      type: object
-      properties:
-        tokens_estimated:
-          type: boolean
-        completion_tokens:
-          type: integer
-        prompt_tokens:
-          type: integer
-        total_cost:
-          type: number
-        total_time_ms:
-          type: integer
-        first_token_ms:
-          type: integer
-          nullable: true
     Trace:
       type: object
       properties:
@@ -832,15 +878,27 @@ components:
         contexts:
           type: array
           items: {}
-    Timestamps:
+    Output:
       type: object
       properties:
-        inserted_at:
+        value:
+          type: string
+    Metrics:
+      type: object
+      properties:
+        tokens_estimated:
+          type: boolean
+        completion_tokens:
           type: integer
-        started_at:
+        prompt_tokens:
           type: integer
-        updated_at:
+        total_cost:
+          type: number
+        total_time_ms:
           type: integer
+        first_token_ms:
+          type: integer
+          nullable: true
     SearchResponse:
       type: object
       properties:
@@ -850,66 +908,14 @@ components:
             $ref: '#/components/schemas/Trace'
         pagination:
           $ref: '#/components/schemas/Pagination'
-    Input:
+    Timestamps:
       type: object
       properties:
-        value:
-          type: string
-    SearchRequest:
-      type: object
-      properties:
-        query:
-          type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        pageSize:
+        inserted_at:
           type: integer
-          example: 1000
-        scrollId:
-          type: string
-          example: '123'
-        filters:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-    Evaluation:
-      type: object
-      properties:
-        evaluation_id:
-          type: string
-        score:
-          type: number
-        timestamps:
-          $ref: '#/components/schemas/EvaluationTimestamps'
-        evaluator_id:
-          type: string
-        name:
-          type: string
-        details:
-          type: string
-        passed:
-          type: boolean
-        label:
-          type: string
-          nullable: true
-        type:
-          type: string
-        status:
-          type: string
-    Pagination:
-      type: object
-      properties:
-        page:
+        started_at:
           type: integer
-        limit:
-          type: integer
-        total:
+        updated_at:
           type: integer
   securitySchemes:
     project_api_key:

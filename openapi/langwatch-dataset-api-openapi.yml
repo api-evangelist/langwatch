@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Dataset API
+  title: LangWatch Dataset API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -31,6 +31,8 @@ paths:
       description: List all non-archived datasets for the project (paginated)
       tags:
       - Dataset
+      summary: Get api dataset
+      x-summary-source: derived
     post:
       responses: {}
       operationId: postApiDataset
@@ -86,6 +88,8 @@ paths:
               - name
       tags:
       - Dataset
+      summary: Post api dataset
+      x-summary-source: derived
   /api/dataset/upload:
     post:
       responses: {}
@@ -94,6 +98,8 @@ paths:
       description: Create a new dataset from an uploaded file (CSV, JSON, JSONL)
       tags:
       - Dataset
+      summary: Post api dataset upload
+      x-summary-source: derived
   /api/dataset/{slugOrId}:
     get:
       responses:
@@ -206,6 +212,8 @@ paths:
       description: Get a dataset by its slug or id.
       tags:
       - Dataset
+      summary: Get api dataset by slug or id
+      x-summary-source: derived
     patch:
       responses: {}
       operationId: patchApiDatasetBySlugOrId
@@ -263,6 +271,8 @@ paths:
                     - type
       tags:
       - Dataset
+      summary: Patch api dataset by slug or id
+      x-summary-source: derived
     delete:
       responses: {}
       operationId: deleteApiDatasetBySlugOrId
@@ -275,6 +285,8 @@ paths:
       description: Archive a dataset (soft-delete)
       tags:
       - Dataset
+      summary: Delete api dataset by slug or id
+      x-summary-source: derived
   /api/dataset/{slugOrId}/records:
     post:
       responses: {}
@@ -303,6 +315,8 @@ paths:
               - entries
       tags:
       - Dataset
+      summary: Post api dataset by slug or id records
+      x-summary-source: derived
     get:
       responses: {}
       operationId: getApiDatasetBySlugOrIdRecords
@@ -328,6 +342,8 @@ paths:
       description: List records for a dataset (paginated)
       tags:
       - Dataset
+      summary: Get api dataset by slug or id records
+      x-summary-source: derived
     delete:
       responses: {}
       operationId: deleteApiDatasetBySlugOrIdRecords
@@ -354,6 +370,8 @@ paths:
               - recordIds
       tags:
       - Dataset
+      summary: Delete api dataset by slug or id records
+      x-summary-source: derived
   /api/dataset/{slugOrId}/records/{recordId}:
     patch:
       responses: {}
@@ -383,6 +401,8 @@ paths:
               - entry
       tags:
       - Dataset
+      summary: Patch api dataset by slug or id records by record id
+      x-summary-source: derived
   /api/dataset/{slugOrId}/upload:
     post:
       responses: {}
@@ -396,6 +416,8 @@ paths:
       description: Upload a file (CSV, JSON, JSONL) to an existing dataset
       tags:
       - Dataset
+      summary: Post api dataset by slug or id upload
+      x-summary-source: derived
   /api/dataset/{slug}/entries:
     post:
       responses: {}
@@ -414,6 +436,8 @@ paths:
               $ref: '#/components/schemas/DatasetPostEntries'
       tags:
       - Dataset
+      summary: Post api dataset by slug entries
+      x-summary-source: derived
 components:
   schemas:
     DatasetPostEntries:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: LangWatch Agents Scenarios API
+  title: LangWatch Scenarios API
   version: 1.0.0
   description: LangWatch openapi spec
 servers:
@@ -103,6 +103,8 @@ paths:
       description: Get all scenarios for a project
       tags:
       - Scenarios
+      summary: Get api scenarios
+      x-summary-source: derived
     post:
       responses:
         '201':
@@ -217,6 +219,8 @@ paths:
               - situation
       tags:
       - Scenarios
+      summary: Post api scenarios
+      x-summary-source: derived
   /api/scenarios/{id}:
     get:
       responses:
@@ -326,6 +330,8 @@ paths:
       description: Get a specific scenario by ID
       tags:
       - Scenarios
+      summary: Get api scenarios by id
+      x-summary-source: derived
     put:
       responses:
         '200':
@@ -453,6 +459,8 @@ paths:
                     type: string
       tags:
       - Scenarios
+      summary: Put api scenarios by id
+      x-summary-source: derived
     delete:
       responses:
         '200':
@@ -544,6 +552,8 @@ paths:
       description: Archive (soft-delete) a scenario
       tags:
       - Scenarios
+      summary: Delete api scenarios by id
+      x-summary-source: derived
 components:
   securitySchemes:
     project_api_key:
