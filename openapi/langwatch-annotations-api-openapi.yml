@@ -217,6 +217,17 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Error:
+      required:
+      - error
+      - message
+      type: object
+      properties:
+        error:
+          type: integer
+          format: int32
+        message:
+          type: string
     Annotation:
       required:
       - name
@@ -248,17 +259,6 @@ components:
           type: string
         email:
           description: The email of the user
-          type: string
-    Error:
-      required:
-      - error
-      - message
-      type: object
-      properties:
-        error:
-          type: integer
-          format: int32
-        message:
           type: string
   securitySchemes:
     project_api_key:

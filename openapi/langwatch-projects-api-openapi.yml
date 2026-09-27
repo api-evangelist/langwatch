@@ -230,15 +230,6 @@ paths:
       - Projects
 components:
   schemas:
-    Pagination:
-      type: object
-      properties:
-        page:
-          type: integer
-        limit:
-          type: integer
-        total:
-          type: integer
     Project:
       type: object
       properties:
@@ -267,6 +258,15 @@ components:
         updatedAt:
           type: string
           format: date-time
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
   securitySchemes:
     project_api_key:
       type: apiKey

@@ -55,7 +55,7 @@ tags:
 - AI Gateway
 - DSPy
 - LangChain
-- Open-Source
+- Open Source
 - MCP
 - FinOps
 tags_raw:
@@ -76,6 +76,7 @@ tags_raw:
 - Open Source
 - MCP
 - FinOps
+- Open-Source
 url: https://raw.githubusercontent.com/api-evangelist/langwatch/refs/heads/main/apis.yml
 created: '2026-05-25'
 modified: '2026-09-16'
