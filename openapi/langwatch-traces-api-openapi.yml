@@ -772,15 +772,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    SearchResponse:
-      type: object
-      properties:
-        traces:
-          type: array
-          items:
-            $ref: '#/components/schemas/Trace'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
     Metrics:
       type: object
       properties:
@@ -797,6 +788,104 @@ components:
         first_token_ms:
           type: integer
           nullable: true
+    EvaluationTimestamps:
+      type: object
+      properties:
+        finished_at:
+          type: integer
+        updated_at:
+          type: integer
+    Metadata:
+      type: object
+      properties:
+        sdk_language:
+          type: string
+        sdk_version:
+          type: string
+    Evaluation:
+      type: object
+      properties:
+        evaluation_id:
+          type: string
+        score:
+          type: number
+        timestamps:
+          $ref: '#/components/schemas/EvaluationTimestamps'
+        evaluator_id:
+          type: string
+        name:
+          type: string
+        details:
+          type: string
+        passed:
+          type: boolean
+        label:
+          type: string
+          nullable: true
+        type:
+          type: string
+        status:
+          type: string
+    Output:
+      type: object
+      properties:
+        value:
+          type: string
+    Timestamps:
+      type: object
+      properties:
+        inserted_at:
+          type: integer
+        started_at:
+          type: integer
+        updated_at:
+          type: integer
+    SearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        pageSize:
+          type: integer
+          example: 1000
+        scrollId:
+          type: string
+          example: '123'
+        filters:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    Input:
+      type: object
+      properties:
+        value:
+          type: string
+    SearchResponse:
+      type: object
+      properties:
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trace'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
     Trace:
       type: object
       properties:
@@ -828,95 +917,6 @@ components:
         contexts:
           type: array
           items: {}
-    Output:
-      type: object
-      properties:
-        value:
-          type: string
-    Metadata:
-      type: object
-      properties:
-        sdk_language:
-          type: string
-        sdk_version:
-          type: string
-    SearchRequest:
-      type: object
-      properties:
-        query:
-          type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        pageSize:
-          type: integer
-          example: 1000
-        scrollId:
-          type: string
-          example: '123'
-        filters:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-    Input:
-      type: object
-      properties:
-        value:
-          type: string
-    Pagination:
-      type: object
-      properties:
-        page:
-          type: integer
-        limit:
-          type: integer
-        total:
-          type: integer
-    Timestamps:
-      type: object
-      properties:
-        inserted_at:
-          type: integer
-        started_at:
-          type: integer
-        updated_at:
-          type: integer
-    EvaluationTimestamps:
-      type: object
-      properties:
-        finished_at:
-          type: integer
-        updated_at:
-          type: integer
-    Evaluation:
-      type: object
-      properties:
-        evaluation_id:
-          type: string
-        score:
-          type: number
-        timestamps:
-          $ref: '#/components/schemas/EvaluationTimestamps'
-        evaluator_id:
-          type: string
-        name:
-          type: string
-        details:
-          type: string
-        passed:
-          type: boolean
-        label:
-          type: string
-          nullable: true
-        type:
-          type: string
-        status:
-          type: string
   securitySchemes:
     project_api_key:
       type: apiKey
