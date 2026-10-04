@@ -772,22 +772,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Metrics:
-      type: object
-      properties:
-        tokens_estimated:
-          type: boolean
-        completion_tokens:
-          type: integer
-        prompt_tokens:
-          type: integer
-        total_cost:
-          type: number
-        total_time_ms:
-          type: integer
-        first_token_ms:
-          type: integer
-          nullable: true
     EvaluationTimestamps:
       type: object
       properties:
@@ -795,51 +779,20 @@ components:
           type: integer
         updated_at:
           type: integer
-    Metadata:
-      type: object
-      properties:
-        sdk_language:
-          type: string
-        sdk_version:
-          type: string
-    Evaluation:
-      type: object
-      properties:
-        evaluation_id:
-          type: string
-        score:
-          type: number
-        timestamps:
-          $ref: '#/components/schemas/EvaluationTimestamps'
-        evaluator_id:
-          type: string
-        name:
-          type: string
-        details:
-          type: string
-        passed:
-          type: boolean
-        label:
-          type: string
-          nullable: true
-        type:
-          type: string
-        status:
-          type: string
     Output:
       type: object
       properties:
         value:
           type: string
-    Timestamps:
+    SearchResponse:
       type: object
       properties:
-        inserted_at:
-          type: integer
-        started_at:
-          type: integer
-        updated_at:
-          type: integer
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trace'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     SearchRequest:
       type: object
       properties:
@@ -863,29 +816,6 @@ components:
             type: array
             items:
               type: string
-    Input:
-      type: object
-      properties:
-        value:
-          type: string
-    SearchResponse:
-      type: object
-      properties:
-        traces:
-          type: array
-          items:
-            $ref: '#/components/schemas/Trace'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    Pagination:
-      type: object
-      properties:
-        page:
-          type: integer
-        limit:
-          type: integer
-        total:
-          type: integer
     Trace:
       type: object
       properties:
@@ -917,6 +847,76 @@ components:
         contexts:
           type: array
           items: {}
+    Timestamps:
+      type: object
+      properties:
+        inserted_at:
+          type: integer
+        started_at:
+          type: integer
+        updated_at:
+          type: integer
+    Input:
+      type: object
+      properties:
+        value:
+          type: string
+    Metadata:
+      type: object
+      properties:
+        sdk_language:
+          type: string
+        sdk_version:
+          type: string
+    Metrics:
+      type: object
+      properties:
+        tokens_estimated:
+          type: boolean
+        completion_tokens:
+          type: integer
+        prompt_tokens:
+          type: integer
+        total_cost:
+          type: number
+        total_time_ms:
+          type: integer
+        first_token_ms:
+          type: integer
+          nullable: true
+    Evaluation:
+      type: object
+      properties:
+        evaluation_id:
+          type: string
+        score:
+          type: number
+        timestamps:
+          $ref: '#/components/schemas/EvaluationTimestamps'
+        evaluator_id:
+          type: string
+        name:
+          type: string
+        details:
+          type: string
+        passed:
+          type: boolean
+        label:
+          type: string
+          nullable: true
+        type:
+          type: string
+        status:
+          type: string
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
   securitySchemes:
     project_api_key:
       type: apiKey
