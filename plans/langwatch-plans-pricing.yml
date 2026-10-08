@@ -45,3 +45,36 @@ plans:
   period: none
   included_quota: Hybrid, self-hosted or on-prem, custom retention, SSO/RBAC, audit logs & SLAs
   overage: Custom usage pricing
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - metered
+  - seat
+  units:
+  - seat
+  plans:
+  - name: Developer
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Growth
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - none
