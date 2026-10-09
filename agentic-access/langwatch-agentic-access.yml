@@ -1,47 +1,32 @@
-generated: '2026-07-15'
+generated: '2026-09-23'
 method: generated
-source: openapi/langwatch-openapi.json
+source: openapi/langwatch-agents-api-openapi.yml, openapi/langwatch-analytics-api-openapi.yml,
+  openapi/langwatch-annotations-api-openapi.yml, openapi/langwatch-api-keys-api-openapi.yml,
+  openapi/langwatch-budgets-api-openapi.yml, openapi/langwatch-cache-rules-api-openapi.yml,
+  openapi/langwatch-dashboards-api-openapi.yml, openapi/langwatch-dataset-api-openapi.yml, openapi/langwatch-evaluations-v3-api-openapi.yml,
+  openapi/langwatch-evaluators-api-openapi.yml, openapi/langwatch-graphs-api-openapi.yml, openapi/langwatch-langwatch-api-api-openapi.yml,
+  openapi/langwatch-model-defaults-api-openapi.yml, openapi/langwatch-model-providers-api-openapi.yml,
+  openapi/langwatch-monitors-api-openapi.yml, openapi/langwatch-projects-api-openapi.yml, openapi/langwatch-prompts-api-openapi.yml,
+  openapi/langwatch-providers-api-openapi.yml, openapi/langwatch-scenario-events-api-openapi.yml,
+  openapi/langwatch-scenarios-api-openapi.yml, openapi/langwatch-secrets-api-openapi.yml, openapi/langwatch-simulation-runs-api-openapi.yml,
+  openapi/langwatch-suites-api-openapi.yml, openapi/langwatch-trace-api-openapi.yml, openapi/langwatch-traces-api-openapi.yml,
+  openapi/langwatch-triggers-api-openapi.yml, openapi/langwatch-virtual-keys-api-openapi.yml,
+  openapi/langwatch-workflows-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 133
   by_action_class:
-    connected: 48
-    acting: 85
+    connected: 49
+    acting: 84
   by_consequence:
-    read: 48
-    write: 81
+    read: 49
+    write: 80
     safety-critical: 3
     physical: 1
   human_in_the_loop_required: 3
 operations:
-- path: /
-  method: get
-  operationId: getIndex
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /
-  method: post
-  operationId: postIndex
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /api/agents
   method: get
   operationId: getApiAgents
@@ -128,6 +113,7 @@ operations:
     audit: required
 - path: /api/annotations
   method: get
+  operationId: getApiAnnotations
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -137,6 +123,7 @@ operations:
     audit: none
 - path: /api/annotations/trace/{id}
   method: get
+  operationId: getApiAnnotationsTraceById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -146,6 +133,7 @@ operations:
     audit: none
 - path: /api/annotations/trace/{id}
   method: post
+  operationId: postApiAnnotationsTraceById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -161,6 +149,7 @@ operations:
     audit: required
 - path: /api/annotations/{id}
   method: get
+  operationId: getApiAnnotationsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -170,6 +159,7 @@ operations:
     audit: none
 - path: /api/annotations/{id}
   method: delete
+  operationId: deleteApiAnnotationsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -185,6 +175,7 @@ operations:
     audit: required
 - path: /api/annotations/{id}
   method: patch
+  operationId: patchApiAnnotationsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -239,6 +230,132 @@ operations:
       proof-of-possession: true
     escalation:
       human-in-the-loop: required
+    audit: required
+- path: /api/gateway/v1/budgets
+  method: get
+  operationId: getApiGatewayV1Budgets
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/budgets
+  method: post
+  operationId: postApiGatewayV1Budgets
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/budgets/{id}
+  method: patch
+  operationId: patchApiGatewayV1BudgetsById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/budgets/{id}
+  method: delete
+  operationId: deleteApiGatewayV1BudgetsById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/cache-rules
+  method: get
+  operationId: getApiGatewayV1Cache-rules
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/cache-rules
+  method: post
+  operationId: postApiGatewayV1Cache-rules
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/cache-rules/{id}
+  method: get
+  operationId: getApiGatewayV1Cache-rulesById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/cache-rules/{id}
+  method: patch
+  operationId: patchApiGatewayV1Cache-rulesById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/cache-rules/{id}
+  method: delete
+  operationId: deleteApiGatewayV1Cache-rulesById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
     audit: required
 - path: /api/dashboards
   method: get
@@ -594,274 +711,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/gateway/v1/budgets
-  method: get
-  operationId: getApiGatewayV1Budgets
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/budgets
-  method: post
-  operationId: postApiGatewayV1Budgets
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/budgets/{id}
-  method: patch
-  operationId: patchApiGatewayV1BudgetsById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/budgets/{id}
-  method: delete
-  operationId: deleteApiGatewayV1BudgetsById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/cache-rules
-  method: get
-  operationId: getApiGatewayV1Cache-rules
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/cache-rules
-  method: post
-  operationId: postApiGatewayV1Cache-rules
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/cache-rules/{id}
-  method: get
-  operationId: getApiGatewayV1Cache-rulesById
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/cache-rules/{id}
-  method: patch
-  operationId: patchApiGatewayV1Cache-rulesById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/cache-rules/{id}
-  method: delete
-  operationId: deleteApiGatewayV1Cache-rulesById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/providers
-  method: get
-  operationId: getApiGatewayV1Providers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/providers
-  method: post
-  operationId: postApiGatewayV1Providers
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/providers/{id}
-  method: patch
-  operationId: patchApiGatewayV1ProvidersById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/providers/{id}
-  method: delete
-  operationId: deleteApiGatewayV1ProvidersById
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/gateway/v1/virtual-keys
-  method: get
-  operationId: getApiGatewayV1Virtual-keys
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/virtual-keys
-  method: post
-  operationId: postApiGatewayV1Virtual-keys
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/virtual-keys/{id}
-  method: get
-  operationId: getApiGatewayV1Virtual-keysById
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/gateway/v1/virtual-keys/{id}
-  method: patch
-  operationId: patchApiGatewayV1Virtual-keysById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/gateway/v1/virtual-keys/{id}/revoke
-  method: post
-  operationId: postApiGatewayV1Virtual-keysByIdRevoke
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/gateway/v1/virtual-keys/{id}/rotate
-  method: post
-  operationId: postApiGatewayV1Virtual-keysByIdRotate
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /api/graphs
   method: get
   operationId: getApiGraphs
@@ -917,6 +766,90 @@ operations:
 - path: /api/graphs/{id}
   method: delete
   operationId: deleteApiGraphsById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /
+  method: get
+  operationId: getIndex
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /
+  method: post
+  operationId: postIndex
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/model-defaults
+  method: get
+  operationId: getApiModel-defaults
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/model-defaults
+  method: post
+  operationId: postApiModel-defaults
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/model-defaults/{id}
+  method: put
+  operationId: putApiModel-defaultsById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/model-defaults/{id}
+  method: delete
+  operationId: deleteApiModel-defaultsById
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1292,6 +1225,64 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /api/gateway/v1/providers
+  method: get
+  operationId: getApiGatewayV1Providers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/providers
+  method: post
+  operationId: postApiGatewayV1Providers
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/providers/{id}
+  method: patch
+  operationId: patchApiGatewayV1ProvidersById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/providers/{id}
+  method: delete
+  operationId: deleteApiGatewayV1ProvidersById
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
 - path: /api/scenario-events
   method: post
   operationId: postApiScenario-events
@@ -1590,23 +1581,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /api/trace/search
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /api/trace/{id}
   method: get
+  operationId: getApiTraceById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1616,6 +1593,7 @@ operations:
     audit: none
 - path: /api/trace/{id}/share
   method: post
+  operationId: postApiTraceByIdShare
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1631,6 +1609,7 @@ operations:
     audit: required
 - path: /api/trace/{id}/unshare
   method: post
+  operationId: postApiTraceByIdUnshare
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1644,6 +1623,16 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /api/trace/search
+  method: post
+  operationId: postApiTraceSearch
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /api/traces/search
   method: post
   operationId: postApiTracesSearch
@@ -1738,6 +1727,90 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /api/gateway/v1/virtual-keys
+  method: get
+  operationId: getApiGatewayV1Virtual-keys
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/virtual-keys
+  method: post
+  operationId: postApiGatewayV1Virtual-keys
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/virtual-keys/{id}
+  method: get
+  operationId: getApiGatewayV1Virtual-keysById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/gateway/v1/virtual-keys/{id}
+  method: patch
+  operationId: patchApiGatewayV1Virtual-keysById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/gateway/v1/virtual-keys/{id}/revoke
+  method: post
+  operationId: postApiGatewayV1Virtual-keysByIdRevoke
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/gateway/v1/virtual-keys/{id}/rotate
+  method: post
+  operationId: postApiGatewayV1Virtual-keysByIdRotate
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /api/workflows
   method: get
   operationId: getApiWorkflows
@@ -1777,64 +1850,6 @@ operations:
 - path: /api/workflows/{id}
   method: delete
   operationId: deleteApiWorkflowsById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/model-defaults
-  method: get
-  operationId: getApiModel-defaults
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/model-defaults
-  method: post
-  operationId: postApiModel-defaults
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/model-defaults/{id}
-  method: put
-  operationId: putApiModel-defaultsById
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/model-defaults/{id}
-  method: delete
-  operationId: deleteApiModel-defaultsById
   x-agentic-access:
     action-class: acting
     consequence: write
