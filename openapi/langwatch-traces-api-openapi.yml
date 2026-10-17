@@ -772,14 +772,7 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EvaluationTimestamps:
-      type: object
-      properties:
-        finished_at:
-          type: integer
-        updated_at:
-          type: integer
-    Output:
+    Input:
       type: object
       properties:
         value:
@@ -847,43 +840,6 @@ components:
         contexts:
           type: array
           items: {}
-    Timestamps:
-      type: object
-      properties:
-        inserted_at:
-          type: integer
-        started_at:
-          type: integer
-        updated_at:
-          type: integer
-    Input:
-      type: object
-      properties:
-        value:
-          type: string
-    Metadata:
-      type: object
-      properties:
-        sdk_language:
-          type: string
-        sdk_version:
-          type: string
-    Metrics:
-      type: object
-      properties:
-        tokens_estimated:
-          type: boolean
-        completion_tokens:
-          type: integer
-        prompt_tokens:
-          type: integer
-        total_cost:
-          type: number
-        total_time_ms:
-          type: integer
-        first_token_ms:
-          type: integer
-          nullable: true
     Evaluation:
       type: object
       properties:
@@ -917,6 +873,50 @@ components:
           type: integer
         total:
           type: integer
+    Output:
+      type: object
+      properties:
+        value:
+          type: string
+    Timestamps:
+      type: object
+      properties:
+        inserted_at:
+          type: integer
+        started_at:
+          type: integer
+        updated_at:
+          type: integer
+    EvaluationTimestamps:
+      type: object
+      properties:
+        finished_at:
+          type: integer
+        updated_at:
+          type: integer
+    Metrics:
+      type: object
+      properties:
+        tokens_estimated:
+          type: boolean
+        completion_tokens:
+          type: integer
+        prompt_tokens:
+          type: integer
+        total_cost:
+          type: number
+        total_time_ms:
+          type: integer
+        first_token_ms:
+          type: integer
+          nullable: true
+    Metadata:
+      type: object
+      properties:
+        sdk_language:
+          type: string
+        sdk_version:
+          type: string
   securitySchemes:
     project_api_key:
       type: apiKey

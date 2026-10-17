@@ -101,7 +101,7 @@ paths:
                     type: string
                 required:
                 - error
-      summary: Get evaluations V3 run status
+      summary: Get evaluations V3Run status
       x-summary-source: derived
   /api/experiments/{slug}/run:
     post:
@@ -168,7 +168,7 @@ paths:
                     type: string
                 required:
                 - error
-      summary: Post evaluations V3 run
+      summary: Post evaluations V3Run
       x-summary-source: derived
 components:
   securitySchemes:
