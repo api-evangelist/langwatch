@@ -1,0 +1,583 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Teams API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Teams
+paths:
+  /api/v1/teams:
+    get:
+      operationId: getApiTeams
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+                        slug:
+                          type: string
+                          minLength: 1
+                        organizationId:
+                          type: string
+                          minLength: 1
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - name
+                      - slug
+                      - organizationId
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      description: List all non-archived teams for the organization (paginated)
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:view
+      parameters:
+      - in: query
+        name: page
+        schema:
+          default: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      summary: Get api teams
+      x-summary-source: derived
+    post:
+      operationId: postApiTeams
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                  organizationId:
+                    type: string
+                    minLength: 1
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - name
+                - slug
+                - organizationId
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: Create a new team that can group projects and members
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+              required:
+              - name
+      summary: Post api teams
+      x-summary-source: derived
+  /api/v1/teams/{teamId}:
+    get:
+      operationId: getApiTeamsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                  organizationId:
+                    type: string
+                    minLength: 1
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - name
+                - slug
+                - organizationId
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: Get a team by its id
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:view
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api teams by id
+      x-summary-source: derived
+    patch:
+      operationId: patchApiTeamsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                  organizationId:
+                    type: string
+                    minLength: 1
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - name
+                - slug
+                - organizationId
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: Update a team by its id
+      tags:
+      - Teams
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:manage
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Patch api teams by id
+      x-summary-source: derived
+    delete:
+      operationId: deleteApiTeamsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  archivedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - archivedAt
+                additionalProperties: false
+      description: Archive a team (soft-delete)
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:manage
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete api teams by id
+      x-summary-source: derived
+  /api/v1/teams/{teamId}/members:
+    get:
+      operationId: getApiTeamsByIdMembers
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          minLength: 1
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        email:
+                          type:
+                          - string
+                          - 'null'
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                      required:
+                      - userId
+                      - name
+                      - email
+                      - role
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: List members of a team
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:view
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api teams by id members
+      x-summary-source: derived
+    post:
+      operationId: postApiTeamsByIdMembers
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Add a member to a team
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:manage
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  minLength: 1
+                role:
+                  default: MEMBER
+                  type: string
+                  enum:
+                  - ADMIN
+                  - MEMBER
+                  - VIEWER
+              required:
+              - userId
+      summary: Post api teams by id members
+      x-summary-source: derived
+  /api/v1/teams/{teamId}/members/{userId}:
+    delete:
+      operationId: deleteApiTeamsByIdMembersByUserId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Remove a member from a team
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:manage
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete api teams by id members by user id
+      x-summary-source: derived
+  /api/v1/teams/{teamId}/projects:
+    get:
+      operationId: getApiTeamsByIdProjects
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - name
+                      - slug
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: List projects in a team
+      tags:
+      - Teams
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - team:view
+      parameters:
+      - in: path
+        name: teamId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api teams by id projects
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

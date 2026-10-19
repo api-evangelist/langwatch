@@ -1,0 +1,1784 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Webhooks API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Webhooks
+paths:
+  /api/v1/webhooks/stripe:
+    post:
+      operationId: receiveStripeWebhook
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received:
+                    type: boolean
+                    const: true
+                required:
+                - received
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/octet-stream: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Webhooks
+      summary: Receive stripe webhook
+      x-summary-source: derived
+  /api/webhooks/v1/endpoints:
+    post:
+      operationId: postApiWebhooksV1Endpoints
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    oneOf:
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: http
+                        url:
+                          type: string
+                        sqs:
+                          type: 'null'
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                        secret:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      - secret
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: sqs
+                        url:
+                          type: 'null'
+                        sqs:
+                          type: object
+                          properties:
+                            queue_url:
+                              type: string
+                            region:
+                              type: string
+                            account_id:
+                              type: string
+                            queue_name:
+                              type: string
+                            credential_mode:
+                              type: string
+                              enum:
+                              - assume_role
+                              - static
+                              - ambient
+                            role_arn:
+                              type:
+                              - string
+                              - 'null'
+                            external_id:
+                              type:
+                              - string
+                              - 'null'
+                            access_key_id:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - queue_url
+                          - region
+                          - account_id
+                          - queue_name
+                          - credential_mode
+                          - role_arn
+                          - external_id
+                          - access_key_id
+                          additionalProperties: false
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                        secret:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      - secret
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: 'Create a webhook endpoint. Name one destination: `url` for `destination_kind: http`, `sqs` for `destination_kind: sqs`. Naming the other kind''s field is a 400 that says which field does not belong, rather than a 201 that saved half the body. `destination_kind` may be omitted and then means `http`. The signing secret is returned ONCE in this response and never again; roll it to get a new one. Send `Idempotency-Key` to make a retry safe: a replay returns the original response including its `secret`, which is the only way to recover a secret whose response was lost in transit.'
+      summary: Create a webhook endpoint
+      tags:
+      - Webhooks
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        description: 'A caller-chosen key, 8 to 255 characters, that makes this create safe to retry. The first request to use a key runs normally and its response is stored for 24 hours. A later request with the same key and the same body is not executed again: it returns the stored response, marked with `X-Idempotent-Replay: true`. The same key with a different body is refused 409 `idempotency_error`, as is a retry sent while the original is still running. Only successful responses are stored, so a create that failed can simply be retried with the same key.'
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 255
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destination_kind:
+                  type: string
+                  enum:
+                  - http
+                  - sqs
+                url:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                sqs:
+                  type: object
+                  properties:
+                    queue_url:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                    role_arn:
+                      type: string
+                      minLength: 1
+                      maxLength: 2048
+                    external_id:
+                      type: string
+                      minLength: 1
+                      maxLength: 1224
+                    access_key_id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                    secret_access_key:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                  required:
+                  - queue_url
+                enabled_events:
+                  minItems: 1
+                  maxItems: 100
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                max_batch_size:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                max_batch_delay_ms:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                max_in_flight:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+              required:
+              - enabled_events
+    get:
+      operationId: getApiWebhooksV1Endpoints
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                      - type: object
+                        properties:
+                          destination_kind:
+                            type: string
+                            const: http
+                          url:
+                            type: string
+                          sqs:
+                            type: 'null'
+                          id:
+                            type: string
+                          enabled_events:
+                            type: array
+                            items:
+                              type: string
+                          status:
+                            type: string
+                            enum:
+                            - active
+                            - disabled
+                          disabled_reason:
+                            type:
+                            - string
+                            - 'null'
+                          disabled_at:
+                            type:
+                            - string
+                            - 'null'
+                          failing_since:
+                            type:
+                            - string
+                            - 'null'
+                          last_success_at:
+                            type:
+                            - string
+                            - 'null'
+                          last_failure_at:
+                            type:
+                            - string
+                            - 'null'
+                          max_batch_size:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          max_batch_delay_ms:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          max_in_flight:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          created_at:
+                            type: string
+                          updated_at:
+                            type: string
+                        required:
+                        - destination_kind
+                        - url
+                        - sqs
+                        - id
+                        - enabled_events
+                        - status
+                        - disabled_reason
+                        - disabled_at
+                        - failing_since
+                        - last_success_at
+                        - last_failure_at
+                        - max_batch_size
+                        - max_batch_delay_ms
+                        - max_in_flight
+                        - created_at
+                        - updated_at
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          destination_kind:
+                            type: string
+                            const: sqs
+                          url:
+                            type: 'null'
+                          sqs:
+                            type: object
+                            properties:
+                              queue_url:
+                                type: string
+                              region:
+                                type: string
+                              account_id:
+                                type: string
+                              queue_name:
+                                type: string
+                              credential_mode:
+                                type: string
+                                enum:
+                                - assume_role
+                                - static
+                                - ambient
+                              role_arn:
+                                type:
+                                - string
+                                - 'null'
+                              external_id:
+                                type:
+                                - string
+                                - 'null'
+                              access_key_id:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - queue_url
+                            - region
+                            - account_id
+                            - queue_name
+                            - credential_mode
+                            - role_arn
+                            - external_id
+                            - access_key_id
+                            additionalProperties: false
+                          id:
+                            type: string
+                          enabled_events:
+                            type: array
+                            items:
+                              type: string
+                          status:
+                            type: string
+                            enum:
+                            - active
+                            - disabled
+                          disabled_reason:
+                            type:
+                            - string
+                            - 'null'
+                          disabled_at:
+                            type:
+                            - string
+                            - 'null'
+                          failing_since:
+                            type:
+                            - string
+                            - 'null'
+                          last_success_at:
+                            type:
+                            - string
+                            - 'null'
+                          last_failure_at:
+                            type:
+                            - string
+                            - 'null'
+                          max_batch_size:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          max_batch_delay_ms:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          max_in_flight:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          created_at:
+                            type: string
+                          updated_at:
+                            type: string
+                        required:
+                        - destination_kind
+                        - url
+                        - sqs
+                        - id
+                        - enabled_events
+                        - status
+                        - disabled_reason
+                        - disabled_at
+                        - failing_since
+                        - last_success_at
+                        - last_failure_at
+                        - max_batch_size
+                        - max_batch_delay_ms
+                        - max_in_flight
+                        - created_at
+                        - updated_at
+                        additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: List the organization's webhook endpoints
+      summary: List webhook endpoints
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+  /api/webhooks/v1/endpoints/{id}:
+    get:
+      operationId: getApiWebhooksV1EndpointsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    oneOf:
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: http
+                        url:
+                          type: string
+                        sqs:
+                          type: 'null'
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: sqs
+                        url:
+                          type: 'null'
+                        sqs:
+                          type: object
+                          properties:
+                            queue_url:
+                              type: string
+                            region:
+                              type: string
+                            account_id:
+                              type: string
+                            queue_name:
+                              type: string
+                            credential_mode:
+                              type: string
+                              enum:
+                              - assume_role
+                              - static
+                              - ambient
+                            role_arn:
+                              type:
+                              - string
+                              - 'null'
+                            external_id:
+                              type:
+                              - string
+                              - 'null'
+                            access_key_id:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - queue_url
+                          - region
+                          - account_id
+                          - queue_name
+                          - credential_mode
+                          - role_arn
+                          - external_id
+                          - access_key_id
+                          additionalProperties: false
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: Get one webhook endpoint
+      summary: Get a webhook endpoint
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    patch:
+      operationId: patchApiWebhooksV1EndpointsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    oneOf:
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: http
+                        url:
+                          type: string
+                        sqs:
+                          type: 'null'
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: sqs
+                        url:
+                          type: 'null'
+                        sqs:
+                          type: object
+                          properties:
+                            queue_url:
+                              type: string
+                            region:
+                              type: string
+                            account_id:
+                              type: string
+                            queue_name:
+                              type: string
+                            credential_mode:
+                              type: string
+                              enum:
+                              - assume_role
+                              - static
+                              - ambient
+                            role_arn:
+                              type:
+                              - string
+                              - 'null'
+                            external_id:
+                              type:
+                              - string
+                              - 'null'
+                            access_key_id:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - queue_url
+                          - region
+                          - account_id
+                          - queue_name
+                          - credential_mode
+                          - role_arn
+                          - external_id
+                          - access_key_id
+                          additionalProperties: false
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: 'Update a webhook endpoint''s address, event subscriptions, or status (`active` re-enables, `disabled` pauses; re-enabling does not re-send the gap, replay covers it). `destination_kind` cannot change: batches already planned against the old transport are in flight, so a move means a new endpoint alongside this one until it has drained.'
+      summary: Update a webhook endpoint
+      tags:
+      - Webhooks
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destination_kind:
+                  type: string
+                  enum:
+                  - http
+                  - sqs
+                url:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                sqs:
+                  type: object
+                  properties:
+                    queue_url:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                    role_arn:
+                      type: string
+                      minLength: 1
+                      maxLength: 2048
+                    external_id:
+                      type: string
+                      minLength: 1
+                      maxLength: 1224
+                    access_key_id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                    secret_access_key:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                enabled_events:
+                  minItems: 1
+                  maxItems: 100
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - disabled
+                max_batch_size:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                max_batch_delay_ms:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                max_in_flight:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    delete:
+      operationId: deleteApiWebhooksV1EndpointsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      archived:
+                        type: boolean
+                        const: true
+                    required:
+                    - archived
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      summary: Archive a webhook endpoint
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/webhooks/v1/endpoints/{id}/roll-secret:
+    post:
+      operationId: postApiWebhooksV1EndpointsByIdRollSecret
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    oneOf:
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: http
+                        url:
+                          type: string
+                        sqs:
+                          type: 'null'
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                        secret:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      - secret
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        destination_kind:
+                          type: string
+                          const: sqs
+                        url:
+                          type: 'null'
+                        sqs:
+                          type: object
+                          properties:
+                            queue_url:
+                              type: string
+                            region:
+                              type: string
+                            account_id:
+                              type: string
+                            queue_name:
+                              type: string
+                            credential_mode:
+                              type: string
+                              enum:
+                              - assume_role
+                              - static
+                              - ambient
+                            role_arn:
+                              type:
+                              - string
+                              - 'null'
+                            external_id:
+                              type:
+                              - string
+                              - 'null'
+                            access_key_id:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - queue_url
+                          - region
+                          - account_id
+                          - queue_name
+                          - credential_mode
+                          - role_arn
+                          - external_id
+                          - access_key_id
+                          additionalProperties: false
+                        id:
+                          type: string
+                        enabled_events:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                        disabled_reason:
+                          type:
+                          - string
+                          - 'null'
+                        disabled_at:
+                          type:
+                          - string
+                          - 'null'
+                        failing_since:
+                          type:
+                          - string
+                          - 'null'
+                        last_success_at:
+                          type:
+                          - string
+                          - 'null'
+                        last_failure_at:
+                          type:
+                          - string
+                          - 'null'
+                        max_batch_size:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_batch_delay_ms:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        max_in_flight:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+                        secret:
+                          type: string
+                      required:
+                      - destination_kind
+                      - url
+                      - sqs
+                      - id
+                      - enabled_events
+                      - status
+                      - disabled_reason
+                      - disabled_at
+                      - failing_since
+                      - last_success_at
+                      - last_failure_at
+                      - max_batch_size
+                      - max_batch_delay_ms
+                      - max_in_flight
+                      - created_at
+                      - updated_at
+                      - secret
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: Roll the endpoint's signing secret. The new secret is returned ONCE; deliveries sign with it immediately.
+      summary: Roll an endpoint's signing secret
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/webhooks/v1/endpoints/{id}/test:
+    post:
+      operationId: postApiWebhooksV1EndpointsByIdTest
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      delivered:
+                        type: boolean
+                      response_status:
+                        anyOf:
+                        - type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        - type: 'null'
+                      response_body:
+                        type: string
+                      error:
+                        type: string
+                    required:
+                    - delivered
+                    - response_status
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: 'Send a signed test event through the full delivery path. Contract: the route answers 200 whenever the test itself ran; data.delivered says whether the receiver accepted it, so clients must read the body, not the status code.'
+      summary: Send a test event to an endpoint
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/webhooks/v1/endpoints/{id}/deliveries:
+    get:
+      operationId: getApiWebhooksV1EndpointsByIdDeliveries
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        dispatch_id:
+                          type: string
+                        attempt:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        event_count:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        outcome:
+                          type: string
+                          enum:
+                          - success
+                          - retryable
+                          - terminal
+                          - pending
+                        response_status:
+                          anyOf:
+                          - type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          - type: 'null'
+                        latency_ms:
+                          anyOf:
+                          - type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          - type: 'null'
+                        error:
+                          type:
+                          - string
+                          - 'null'
+                        fired_at:
+                          type: string
+                      required:
+                      - id
+                      - dispatch_id
+                      - attempt
+                      - event_count
+                      - outcome
+                      - response_status
+                      - latency_ms
+                      - error
+                      - fired_at
+                      additionalProperties: false
+                  next_cursor:
+                    description: Pass back as `cursor` for the next page. Null means the walk is exhausted; a full page does NOT mean there is more.
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - data
+                - next_cursor
+                additionalProperties: false
+      description: 'The endpoint''s delivery log: every attempt with the receiver''s HTTP status, latency, and error'
+      summary: List an endpoint's delivery attempts
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 500
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 200
+  /api/webhooks/v1/endpoints/{id}/health:
+    get:
+      operationId: getApiWebhooksV1EndpointsByIdHealth
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                        - active
+                        - disabled
+                      disabled_reason:
+                        type:
+                        - string
+                        - 'null'
+                      failing_since:
+                        type:
+                        - string
+                        - 'null'
+                      last_success_at:
+                        type:
+                        - string
+                        - 'null'
+                      last_failure_at:
+                        type:
+                        - string
+                        - 'null'
+                      oldest_undelivered_age_ms:
+                        anyOf:
+                        - type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        - type: 'null'
+                      dlq_depth:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      sends_per_minute:
+                        type: number
+                      success_rate:
+                        type:
+                        - number
+                        - 'null'
+                      p95_latency_ms:
+                        anyOf:
+                        - type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        - type: 'null'
+                    required:
+                    - status
+                    - disabled_reason
+                    - failing_since
+                    - last_success_at
+                    - last_failure_at
+                    - oldest_undelivered_age_ms
+                    - dlq_depth
+                    - sends_per_minute
+                    - success_rate
+                    - p95_latency_ms
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: 'Delivery health. The headline number is oldest_undelivered_age_ms, the feed''s staleness: age of the oldest envelope still buffered or retrying. Also: DLQ depth, failure streak, sends/min, success rate, and p95 latency over the last hour.'
+      summary: Read an endpoint's delivery health
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/webhooks/v1/event-types:
+    get:
+      operationId: getApiWebhooksV1EventTypes
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        family:
+                          type: string
+                        schema_version:
+                          type: string
+                        is_emitting:
+                          type: boolean
+                        description:
+                          type: string
+                      required:
+                      - type
+                      - family
+                      - schema_version
+                      - is_emitting
+                      - description
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: 'The event catalog: every subscribable type, grouped by family; types marked emitting=false are declared contracts whose producers have not shipped yet'
+      summary: List subscribable event types
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+  /api/webhooks/v1/events:
+    get:
+      operationId: getApiWebhooksV1Events
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        created:
+                          type: string
+                        schema_version:
+                          type: string
+                        data:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                      required:
+                      - id
+                      - type
+                      - created
+                      - schema_version
+                      - data
+                      additionalProperties: false
+                  next_cursor:
+                    description: Pass back as `cursor` for the next page. Null means the walk is exhausted; a full page does NOT mean there is more.
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - data
+                - next_cursor
+                additionalProperties: false
+      description: 'The organization''s emitted-events log for the request families: cursor-paged, newest first, filter by type. `from` and `to` bound the created range in epoch milliseconds, are REQUIRED, and `from` must not be later than `to` - a range that ends before it starts is rejected rather than answered with an empty page. They are required because the log is a ranged read over the 13-month spend table and an unbounded walk sorts all of it on every page. Webhooks are push over this log, never the only copy of it. SERVES `gateway.request.completed` and `gateway.request.settled` ONLY. The governance families (`gateway.budget.*`, `gateway.virtual_key.*`) are delivered by webhook but are not retained in a queryable log, so they cannot be listed or replayed here; any other type returns an empty page rather than an error, so a client can probe forward-compatibly.'
+      summary: List emitted events
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+      parameters:
+      - in: query
+        name: type
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+      - in: query
+        name: from
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        required: true
+      - in: query
+        name: to
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 500
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 200
+  /api/webhooks/v1/events/{id}:
+    get:
+      operationId: getApiWebhooksV1EventsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                      created:
+                        type: string
+                      schema_version:
+                        type: string
+                      data:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - id
+                    - type
+                    - created
+                    - schema_version
+                    - data
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: One emitted event by its id, as it was delivered. Serves the same families the events log serves. A 404 covers every reason the log cannot answer -- never emitted, past the retention horizon, or belonging to another organization -- because telling those apart would confirm the existence of another tenant's request ids.
+      summary: Get one emitted event
+      tags:
+      - Webhooks
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - webhookEndpoints:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,215 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Internal API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Internal
+paths:
+  /api/internal/langy/turn/{turnId}/result:
+    post:
+      operationId: ingestTurnResult
+      responses:
+        '202':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: accepted
+                required:
+                - status
+                additionalProperties: false
+      security:
+      - internal_secret: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - internal_secret
+        permissions: []
+      parameters:
+      - in: path
+        name: turnId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                  minLength: 1
+                conversationId:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  enum:
+                  - completed
+                  - failed
+                text:
+                  type: string
+                toolCalls:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                        minLength: 1
+                      input: {}
+                      output:
+                        type: string
+                      isError:
+                        type: boolean
+                      result: {}
+                    required:
+                    - id
+                    - name
+                errorCode:
+                  type: string
+              required:
+              - projectId
+              - conversationId
+              - status
+      tags:
+      - Internal
+      summary: Ingest turn result
+      x-summary-source: derived
+  /api/internal/langy/credentials/revoke:
+    post:
+      operationId: revokeWorkerSessionKey
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  outcome:
+                    type: string
+                    enum:
+                    - revoked
+                    - already_revoked
+                    - not_found
+                required:
+                - outcome
+                additionalProperties: false
+      security:
+      - internal_secret: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - internal_secret
+        permissions: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiKeyId:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                projectId:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+              required:
+              - apiKeyId
+              - projectId
+      tags:
+      - Internal
+      summary: Revoke worker session key
+      x-summary-source: derived
+  /api/internal/langy/relay/frames:
+    post:
+      operationId: streamRelayFrames
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applied:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  duplicate:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  rejected:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  terminal:
+                    type: boolean
+                required:
+                - applied
+                - duplicate
+                - rejected
+                - terminal
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/x-ndjson: {}
+      security:
+      - internal_secret: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - internal_secret
+        permissions: []
+      tags:
+      - Internal
+      summary: Stream relay frames
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Dataset API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,98 +10,9 @@ security:
 tags:
 - name: Dataset
 paths:
-  /api/dataset:
+  /api/v1/dataset:
     get:
-      responses: {}
       operationId: getApiDataset
-      parameters:
-      - in: query
-        name: page
-        schema:
-          type: integer
-          exclusiveMinimum: 0
-          default: 1
-      - in: query
-        name: limit
-        schema:
-          type: integer
-          exclusiveMinimum: 0
-          maximum: 1000
-          default: 50
-      description: List all non-archived datasets for the project (paginated)
-      tags:
-      - Dataset
-      summary: Get api dataset
-      x-summary-source: derived
-    post:
-      responses: {}
-      operationId: postApiDataset
-      parameters: []
-      description: Create a new dataset
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                columnTypes:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      type:
-                        anyOf:
-                        - type: string
-                          const: string
-                        - type: string
-                          const: boolean
-                        - type: string
-                          const: number
-                        - type: string
-                          const: date
-                        - type: string
-                          const: list
-                        - type: string
-                          const: json
-                        - type: string
-                          const: spans
-                        - type: string
-                          const: rag_contexts
-                        - type: string
-                          const: chat_messages
-                        - type: string
-                          const: annotations
-                        - type: string
-                          const: evaluations
-                        - type: string
-                          const: image
-                    required:
-                    - name
-                    - type
-                  default: []
-              required:
-              - name
-      tags:
-      - Dataset
-      summary: Post api dataset
-      x-summary-source: derived
-  /api/dataset/upload:
-    post:
-      responses: {}
-      operationId: postApiDatasetUpload
-      parameters: []
-      description: Create a new dataset from an uploaded file (CSV, JSON, JSONL)
-      tags:
-      - Dataset
-      summary: Post api dataset upload
-      x-summary-source: derived
-  /api/dataset/{slugOrId}:
-    get:
       responses:
         '200':
           description: Success
@@ -117,17 +28,266 @@ paths:
                       properties:
                         id:
                           type: string
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        columnTypes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                minLength: 1
+                              type:
+                                type: string
+                                enum:
+                                - string
+                                - boolean
+                                - number
+                                - date
+                                - list
+                                - json
+                                - spans
+                                - rag_contexts
+                                - chat_messages
+                                - annotations
+                                - evaluations
+                                - image
+                                - file
+                            required:
+                            - name
+                            - type
+                            additionalProperties: false
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        platformUrl:
+                          type: string
+                        recordCount:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                      required:
+                      - id
+                      - name
+                      - slug
+                      - columnTypes
+                      - createdAt
+                      - updatedAt
+                      - platformUrl
+                      - recordCount
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      totalPages:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    - totalPages
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      description: List all non-archived datasets for the project (paginated)
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:view
+      parameters:
+      - in: query
+        name: page
+        schema:
+          default: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      tags:
+      - Dataset
+      summary: Get api dataset
+      x-summary-source: derived
+    post:
+      operationId: postApiDataset
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  columnTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - boolean
+                          - number
+                          - date
+                          - list
+                          - json
+                          - spans
+                          - rag_contexts
+                          - chat_messages
+                          - annotations
+                          - evaluations
+                          - image
+                          - file
+                      required:
+                      - name
+                      - type
+                      additionalProperties: false
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                required:
+                - id
+                - name
+                - slug
+                - columnTypes
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+      description: Create a new dataset
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                columnTypes:
+                  default: []
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - string
+                        - boolean
+                        - number
+                        - date
+                        - list
+                        - json
+                        - spans
+                        - rag_contexts
+                        - chat_messages
+                        - annotations
+                        - evaluations
+                        - image
+                        - file
+                    required:
+                    - name
+                    - type
+              required:
+              - name
+      tags:
+      - Dataset
+      summary: Post api dataset
+      x-summary-source: derived
+  /api/v1/dataset/{slugOrId}/records:
+    post:
+      operationId: postApiDatasetBySlugOrIdRecords
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
                         datasetId:
                           type: string
+                          minLength: 1
                         projectId:
                           type: string
+                          minLength: 1
                         entry:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties: {}
                         createdAt:
                           type: string
+                          format: date-time
                         updatedAt:
                           type: string
+                          format: date-time
                       required:
                       - id
                       - datasetId
@@ -135,96 +295,1009 @@ paths:
                       - entry
                       - createdAt
                       - updatedAt
+                      additionalProperties: false
                 required:
                 - data
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Dataset not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiDatasetBySlugOrId
+                additionalProperties: false
+      description: Create records in a dataset in batch
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: slugOrId
+        schema:
+          type: string
         required: true
-      description: Get a dataset by its slug or id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entries:
+                  minItems: 1
+                  maxItems: 4000
+                  type: array
+                  items:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+              required:
+              - entries
+      tags:
+      - Dataset
+      summary: Post api dataset by slug or id records
+      x-summary-source: derived
+    get:
+      operationId: getApiDatasetBySlugOrIdRecords
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        datasetId:
+                          type: string
+                          minLength: 1
+                        projectId:
+                          type: string
+                          minLength: 1
+                        entry:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - datasetId
+                      - projectId
+                      - entry
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      totalPages:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    - totalPages
+                    additionalProperties: false
+                  dataset:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                      columnTypes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                            type:
+                              type: string
+                              enum:
+                              - string
+                              - boolean
+                              - number
+                              - date
+                              - list
+                              - json
+                              - spans
+                              - rag_contexts
+                              - chat_messages
+                              - annotations
+                              - evaluations
+                              - image
+                              - file
+                          required:
+                          - name
+                          - type
+                          additionalProperties: false
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      platformUrl:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - slug
+                    - columnTypes
+                    - createdAt
+                    - updatedAt
+                    - platformUrl
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      description: 'List records for a dataset (paginated). Each page also carries the dataset itself. A page too large for one response is refused with `dataset_page_too_large`: ask again with the smaller `limit` the error names.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:view
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: page
+        schema:
+          default: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      tags:
+      - Dataset
+      summary: Get api dataset by slug or id records
+      x-summary-source: derived
+    delete:
+      operationId: deleteApiDatasetBySlugOrIdRecords
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletedCount:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                required:
+                - deletedCount
+                additionalProperties: false
+      description: Delete records from a dataset by IDs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:manage
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recordIds:
+                  minItems: 1
+                  maxItems: 4000
+                  type: array
+                  items:
+                    type: string
+              required:
+              - recordIds
+      tags:
+      - Dataset
+      summary: Delete api dataset by slug or id records
+      x-summary-source: derived
+  /api/v1/dataset/{datasetSlug}/entries:
+    post:
+      operationId: postApiDatasetBySlugEntries
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                required:
+                - success
+                additionalProperties: false
+      description: Add entries to a dataset
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
+      parameters:
+      - in: path
+        name: datasetSlug
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetPostEntries'
+      tags:
+      - Dataset
+      summary: Post api dataset by slug entries
+      x-summary-source: derived
+    get:
+      operationId: getApiDatasetBySlugEntries
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        datasetId:
+                          type: string
+                          minLength: 1
+                        projectId:
+                          type: string
+                          minLength: 1
+                        entry:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - datasetId
+                      - projectId
+                      - entry
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      totalPages:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    - totalPages
+                    additionalProperties: false
+                  dataset:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                      columnTypes:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                            type:
+                              type: string
+                              enum:
+                              - string
+                              - boolean
+                              - number
+                              - date
+                              - list
+                              - json
+                              - spans
+                              - rag_contexts
+                              - chat_messages
+                              - annotations
+                              - evaluations
+                              - image
+                              - file
+                          required:
+                          - name
+                          - type
+                          additionalProperties: false
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      platformUrl:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - slug
+                    - columnTypes
+                    - createdAt
+                    - updatedAt
+                    - platformUrl
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      description: List entries of a dataset (paginated). Same as GET /:slugOrId/records.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:view
+      parameters:
+      - in: path
+        name: datasetSlug
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: page
+        schema:
+          default: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      tags:
+      - Dataset
+      summary: Get api dataset by slug entries
+      x-summary-source: derived
+  /api/v1/dataset/imports:
+    post:
+      operationId: postApiDatasetImports
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datasetId:
+                    type: string
+                  slug:
+                    type: string
+                  status:
+                    type: string
+                    const: processing
+                required:
+                - datasetId
+                - slug
+                - status
+                additionalProperties: false
+      description: Create a dataset from an uploaded and confirmed file
+      summary: Create a dataset from an uploaded file
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetImport'
+      tags:
+      - Dataset
+  /api/v1/dataset/{slugOrId}/imports:
+    post:
+      operationId: postApiDatasetBySlugOrIdImports
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datasetId:
+                    type: string
+                  recordsCreated:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                required:
+                - datasetId
+                - recordsCreated
+                additionalProperties: false
+      description: Add an uploaded and confirmed file's rows to a dataset
+      summary: Import an uploaded file into a dataset
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetAppendImport'
+      tags:
+      - Dataset
+  /api/v1/dataset/upload:
+    post:
+      operationId: postApiDatasetUpload
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  columnTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - boolean
+                          - number
+                          - date
+                          - list
+                          - json
+                          - spans
+                          - rag_contexts
+                          - chat_messages
+                          - annotations
+                          - evaluations
+                          - image
+                          - file
+                      required:
+                      - name
+                      - type
+                      additionalProperties: false
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  recordsCreated:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - slug
+                - columnTypes
+                - createdAt
+                - updatedAt
+                - recordsCreated
+                additionalProperties: false
+      description: Create a new dataset from an uploaded file (CSV, JSON, JSONL) upload the file as a stored object with the purpose dataset_import, then create the dataset from it
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                file:
+                  type: string
+                  format: binary
+              required:
+              - name
+              - file
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:create
+      deprecated: true
+      tags:
+      - Dataset
+      summary: Post api dataset upload
+      x-summary-source: derived
+  /api/v1/dataset/{slugOrId}/upload:
+    post:
+      operationId: postApiDatasetBySlugOrIdUpload
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datasetId:
+                    type: string
+                  recordsCreated:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                required:
+                - datasetId
+                - recordsCreated
+                additionalProperties: false
+      description: Upload a file (CSV, JSON, JSONL) to an existing dataset upload the file as a stored object with the purpose dataset_import, then create the dataset from it
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
+      deprecated: true
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
+      tags:
+      - Dataset
+      summary: Post api dataset by slug or id upload
+      x-summary-source: derived
+  /api/v1/dataset/attachments:
+    post:
+      operationId: postApiDatasetAttachments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetAttachment'
+        '413':
+          description: The file is larger than the upload limit.
+          content: {}
+        '415':
+          description: The media type is not accepted.
+          content: {}
+        '429':
+          description: Too many uploads for this project in one minute.
+          content: {}
+      description: Upload a file for an image or file column and get the reference a cell holds. The project is named by the `projectId` query parameter; the file goes in the `file` multipart field, with an optional `datasetId` field. create the upload, send the file to the address it answers, confirm it as a stored object, then put its reference in the cell
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                datasetId:
+                  description: The dataset that owns the file. Omit it while the dataset is still a draft.
+                  type: string
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:manage
+      deprecated: true
+      parameters:
+      - in: query
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The project the file is stored for.
+      tags:
+      - Dataset
+      summary: Post api dataset attachments
+      x-summary-source: derived
+  /api/v1/dataset/attachments/uploads:
+    post:
+      operationId: postApiDatasetAttachmentsUploads
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objectId:
+                    type: string
+                    minLength: 1
+                  uploadUrl:
+                    type: string
+                    format: uri
+                  method:
+                    type: string
+                    const: PUT
+                  headers:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: string
+                      minLength: 1
+                  expiresAt:
+                    type: string
+                    minLength: 1
+                required:
+                - objectId
+                - uploadUrl
+                - method
+                - expiresAt
+                additionalProperties: false
+        '413':
+          description: The file is larger than the organization's limit.
+          content: {}
+        '415':
+          description: The media type is not accepted.
+          content: {}
+        '429':
+          description: Too many uploads for this project in one minute.
+          content: {}
+      description: Answers the address to PUT the file to. After the PUT, confirm the upload at `POST /api/v1/stored-objects/uploads/{objectId}/confirmation`, then write `/api/files/{projectId}/{objectId}/{filename}` into the cell.
+      summary: Create an upload for an image or file cell
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filename:
+                  description: The file name the reference will carry.
+                  type: string
+                  minLength: 1
+                mediaType:
+                  type: string
+                  minLength: 1
+                  maxLength: 127
+                  pattern: ^[\u0020-\u007e]+$
+                  description: The media type of the file.
+                byteLength:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                  description: The size of the file, in bytes.
+              required:
+              - filename
+              - mediaType
+              - byteLength
+      tags:
+      - Dataset
+  /api/v1/dataset/{slugOrId}:
+    get:
+      operationId: getApiDatasetBySlugOrId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  columnTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - boolean
+                          - number
+                          - date
+                          - list
+                          - json
+                          - spans
+                          - rag_contexts
+                          - chat_messages
+                          - annotations
+                          - evaluations
+                          - image
+                          - file
+                      required:
+                      - name
+                      - type
+                      additionalProperties: false
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        datasetId:
+                          type: string
+                          minLength: 1
+                        projectId:
+                          type: string
+                          minLength: 1
+                        entry:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - datasetId
+                      - projectId
+                      - entry
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                required:
+                - id
+                - name
+                - slug
+                - columnTypes
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - data
+                additionalProperties: false
+      description: 'Get a dataset by its slug or id, with every record inline. A dataset too large for one response is refused: read it page by page from `GET /{slugOrId}/records`.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:view
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
       tags:
       - Dataset
       summary: Get api dataset by slug or id
       x-summary-source: derived
     patch:
-      responses: {}
       operationId: patchApiDatasetBySlugOrId
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  columnTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - boolean
+                          - number
+                          - date
+                          - list
+                          - json
+                          - spans
+                          - rag_contexts
+                          - chat_messages
+                          - annotations
+                          - evaluations
+                          - image
+                          - file
+                      required:
+                      - name
+                      - type
+                      additionalProperties: false
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                required:
+                - id
+                - name
+                - slug
+                - columnTypes
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
       description: Update a dataset by its slug or id
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -241,154 +1314,176 @@ paths:
                       name:
                         type: string
                       type:
-                        anyOf:
-                        - type: string
-                          const: string
-                        - type: string
-                          const: boolean
-                        - type: string
-                          const: number
-                        - type: string
-                          const: date
-                        - type: string
-                          const: list
-                        - type: string
-                          const: json
-                        - type: string
-                          const: spans
-                        - type: string
-                          const: rag_contexts
-                        - type: string
-                          const: chat_messages
-                        - type: string
-                          const: annotations
-                        - type: string
-                          const: evaluations
-                        - type: string
-                          const: image
+                        type: string
+                        enum:
+                        - string
+                        - boolean
+                        - number
+                        - date
+                        - list
+                        - json
+                        - spans
+                        - rag_contexts
+                        - chat_messages
+                        - annotations
+                        - evaluations
+                        - image
+                        - file
                     required:
                     - name
                     - type
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:manage
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
       tags:
       - Dataset
       summary: Patch api dataset by slug or id
       x-summary-source: derived
     delete:
-      responses: {}
       operationId: deleteApiDatasetBySlugOrId
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  archived:
+                    type: boolean
+                    const: true
+                required:
+                - id
+                - archived
+                additionalProperties: false
       description: Archive a dataset (soft-delete)
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:manage
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
       tags:
       - Dataset
       summary: Delete api dataset by slug or id
       x-summary-source: derived
-  /api/dataset/{slugOrId}/records:
-    post:
-      responses: {}
-      operationId: postApiDatasetBySlugOrIdRecords
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
-      description: Create records in a dataset in batch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                entries:
-                  type: array
-                  items:
-                    type: object
-                    additionalProperties: {}
-                  minItems: 1
-                  maxItems: 1000
-              required:
-              - entries
-      tags:
-      - Dataset
-      summary: Post api dataset by slug or id records
-      x-summary-source: derived
-    get:
-      responses: {}
-      operationId: getApiDatasetBySlugOrIdRecords
-      parameters:
-      - in: query
-        name: page
-        schema:
-          type: integer
-          exclusiveMinimum: 0
-          default: 1
-      - in: query
-        name: limit
-        schema:
-          type: integer
-          exclusiveMinimum: 0
-          maximum: 1000
-          default: 50
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
-      description: List records for a dataset (paginated)
-      tags:
-      - Dataset
-      summary: Get api dataset by slug or id records
-      x-summary-source: derived
-    delete:
-      responses: {}
-      operationId: deleteApiDatasetBySlugOrIdRecords
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
-      description: Delete records from a dataset by IDs
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                recordIds:
-                  type: array
-                  items:
-                    type: string
-                  minItems: 1
-                  maxItems: 1000
-              required:
-              - recordIds
-      tags:
-      - Dataset
-      summary: Delete api dataset by slug or id records
-      x-summary-source: derived
-  /api/dataset/{slugOrId}/records/{recordId}:
+  /api/v1/dataset/{slugOrId}/records/{recordId}:
     patch:
-      responses: {}
       operationId: patchApiDatasetBySlugOrIdRecordsByRecordId
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
-      - schema:
-          type: string
-        in: path
-        name: recordId
-        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  datasetId:
+                    type: string
+                    minLength: 1
+                  projectId:
+                    type: string
+                    minLength: 1
+                  entry:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - datasetId
+                - projectId
+                - entry
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  datasetId:
+                    type: string
+                    minLength: 1
+                  projectId:
+                    type: string
+                    minLength: 1
+                  entry:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - datasetId
+                - projectId
+                - entry
+                - createdAt
+                - updatedAt
+                additionalProperties: false
       description: Update or create a record in a dataset
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - datasets:update
+      parameters:
+      - in: path
+        name: slugOrId
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: recordId
+        schema:
+          type: string
+        required: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -396,6 +1491,8 @@ paths:
               properties:
                 entry:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
               required:
               - entry
@@ -403,50 +1500,93 @@ paths:
       - Dataset
       summary: Patch api dataset by slug or id records by record id
       x-summary-source: derived
-  /api/dataset/{slugOrId}/upload:
-    post:
-      responses: {}
-      operationId: postApiDatasetBySlugOrIdUpload
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slugOrId
-        required: true
-      description: Upload a file (CSV, JSON, JSONL) to an existing dataset
-      tags:
-      - Dataset
-      summary: Post api dataset by slug or id upload
-      x-summary-source: derived
-  /api/dataset/{slug}/entries:
-    post:
-      responses: {}
-      operationId: postApiDatasetBySlugEntries
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: slug
-        required: true
-      description: Add entries to a dataset
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DatasetPostEntries'
-      tags:
-      - Dataset
-      summary: Post api dataset by slug entries
-      x-summary-source: derived
 components:
   schemas:
+    DatasetAppendImport:
+      type: object
+      properties:
+        storedObjectId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]*$
+      required:
+      - storedObjectId
+    DatasetAttachment:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The value to write into the cell, and the address the file is served from.
+        name:
+          type: string
+          description: The file name the reference carries.
+        mediaType:
+          type: string
+          description: The media type the file is stored under.
+        sizeBytes:
+          type: number
+          description: The size of the stored file, in bytes.
+      required:
+      - url
+      - name
+      - mediaType
+      - sizeBytes
+      additionalProperties: false
+    DatasetImport:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        storedObjectId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]*$
+        columnTypes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                - string
+                - boolean
+                - number
+                - date
+                - list
+                - json
+                - spans
+                - rag_contexts
+                - chat_messages
+                - annotations
+                - evaluations
+                - image
+                - file
+              sourceHeader:
+                type: string
+            required:
+            - name
+            - type
+            - sourceHeader
+      required:
+      - name
+      - storedObjectId
     DatasetPostEntries:
       type: object
       properties:
         entries:
+          minItems: 1
+          maxItems: 4000
           type: array
           items:
             type: object
+            propertyNames:
+              type: string
             additionalProperties: {}
           example:
           - input: hi
@@ -463,3 +1603,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

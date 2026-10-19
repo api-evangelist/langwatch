@@ -1,0 +1,12 @@
+{
+ "url": "https://app.langwatch.ai/api/openapi.json",
+ "final": "https://app.langwatch.ai/api/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 1341845,
+ "sha256": "47ab84f7fa07bcbb8f4622994049fd849de5d985bb738ac0f0ed2d78b0a3d5cd",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

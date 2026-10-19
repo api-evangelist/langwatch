@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Agents API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,90 +10,2048 @@ security:
 tags:
 - name: Agents
 paths:
-  /api/agents:
+  /api/v1/agents:
     get:
-      responses: {}
-      operationId: getApiAgents
+      operationId: listAgents
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                          - signature
+                          - code
+                          - workflow
+                          - http
+                          - connected
+                          - voice
+                          description: The kind of agent. A connected agent is registered from code by the SDK and cannot be created or reconfigured through this API.
+                        config:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          - type: 'null'
+                        environment:
+                          description: The environment a connected agent registered with, for example production or development. Null for every other kind.
+                          type:
+                          - string
+                          - 'null'
+                        ownerUserId:
+                          description: The user a personal development agent belongs to. Only that user can run simulations against it. Null when the agent is shared.
+                          type:
+                          - string
+                          - 'null'
+                        hostLabel:
+                          description: The machine a development agent registered from with a project or service key. Null when the agent is personal or shared.
+                          type:
+                          - string
+                          - 'null'
+                        lastSeenAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                          description: When an instance of a connected agent was last connected. Null for every other kind.
+                        parameters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                minLength: 1
+                              description:
+                                type: string
+                              defaultValue:
+                                type:
+                                - string
+                                - number
+                                - boolean
+                              secret:
+                                type: boolean
+                              type:
+                                type: string
+                                enum:
+                                - string
+                                - number
+                                - boolean
+                              options:
+                                type: array
+                                items:
+                                  type:
+                                  - string
+                                  - number
+                                  - boolean
+                              required:
+                                type: boolean
+                            required:
+                            - name
+                            additionalProperties: false
+                          description: 'The run parameters a connected agent declares from its function signature: name, type, options, default and description. Empty for every other kind.'
+                        owner:
+                          anyOf:
+                          - type: object
+                            properties:
+                              userId:
+                                type: string
+                              name:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - userId
+                            - name
+                            additionalProperties: false
+                          - type: 'null'
+                          description: The person a personal development agent belongs to. Null when the agent is shared or host-scoped.
+                        status:
+                          type: string
+                          enum:
+                          - online
+                          - offline
+                          description: online while at least one process running the connected agent is connected; offline otherwise, and always for every other kind.
+                        instances:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              instanceId:
+                                type: string
+                              hostname:
+                                type: string
+                              username:
+                                type: string
+                              pid:
+                                type: number
+                              label:
+                                type:
+                                - string
+                                - 'null'
+                              sdk:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  version:
+                                    type: string
+                                  language:
+                                    type: string
+                                required:
+                                - name
+                                - version
+                                - language
+                                additionalProperties: false
+                              connectedAt:
+                                type: string
+                                format: date-time
+                              inflight:
+                                type: number
+                              maxConcurrency:
+                                type: number
+                            required:
+                            - instanceId
+                            - hostname
+                            - username
+                            - pid
+                            - label
+                            - sdk
+                            - connectedAt
+                            - inflight
+                            - maxConcurrency
+                            additionalProperties: false
+                          description: 'The processes currently connected for a connected agent: hostname, user, pid, SDK and how many calls each has in flight. Empty for every other kind.'
+                        selectable:
+                          type: boolean
+                          description: Whether the credential making this request can run simulations against the agent. False for a personal development agent that belongs to somebody else, which is listed all the same so it can be told apart from the other agents of the same name.
+                        notSelectableReason:
+                          anyOf:
+                          - type: string
+                            enum:
+                            - owned_by_another_person
+                          - type: 'null'
+                          description: Why the agent cannot be run by this credential. Null when it can.
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        platformUrl:
+                          type: string
+                          format: uri
+                      required:
+                      - id
+                      - name
+                      - type
+                      - config
+                      - environment
+                      - ownerUserId
+                      - hostLabel
+                      - lastSeenAt
+                      - parameters
+                      - owner
+                      - status
+                      - instances
+                      - selectable
+                      - notSelectableReason
+                      - createdAt
+                      - updatedAt
+                      - platformUrl
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      totalPages:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    - totalPages
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      summary: List agents with their current presence and owner
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:view
       parameters:
       - in: query
         name: page
         schema:
+          default: 1
           type: integer
           exclusiveMinimum: 0
-          default: 1
+          maximum: 9007199254740991
       - in: query
         name: limit
         schema:
+          default: 50
           type: integer
           exclusiveMinimum: 0
           maximum: 1000
-          default: 50
-      description: List all non-archived agents for the project (paginated)
       tags:
       - Agents
-      summary: Get api agents
-      x-summary-source: derived
     post:
-      responses: {}
-      operationId: postApiAgents
-      parameters: []
-      description: Create a new agent
+      operationId: createAgent
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - signature
+                    - code
+                    - workflow
+                    - http
+                    - connected
+                    - voice
+                    description: The kind of agent. A connected agent is registered from code by the SDK and cannot be created or reconfigured through this API.
+                  config:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  environment:
+                    description: The environment a connected agent registered with, for example production or development. Null for every other kind.
+                    type:
+                    - string
+                    - 'null'
+                  ownerUserId:
+                    description: The user a personal development agent belongs to. Only that user can run simulations against it. Null when the agent is shared.
+                    type:
+                    - string
+                    - 'null'
+                  hostLabel:
+                    description: The machine a development agent registered from with a project or service key. Null when the agent is personal or shared.
+                    type:
+                    - string
+                    - 'null'
+                  lastSeenAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                    description: When an instance of a connected agent was last connected. Null for every other kind.
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        description:
+                          type: string
+                        defaultValue:
+                          type:
+                          - string
+                          - number
+                          - boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          type: array
+                          items:
+                            type:
+                            - string
+                            - number
+                            - boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                    description: 'The run parameters a connected agent declares from its function signature: name, type, options, default and description. Empty for every other kind.'
+                  owner:
+                    anyOf:
+                    - type: object
+                      properties:
+                        userId:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The person a personal development agent belongs to. Null when the agent is shared or host-scoped.
+                  status:
+                    type: string
+                    enum:
+                    - online
+                    - offline
+                    description: online while at least one process running the connected agent is connected; offline otherwise, and always for every other kind.
+                  instances:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        instanceId:
+                          type: string
+                        hostname:
+                          type: string
+                        username:
+                          type: string
+                        pid:
+                          type: number
+                        label:
+                          type:
+                          - string
+                          - 'null'
+                        sdk:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            version:
+                              type: string
+                            language:
+                              type: string
+                          required:
+                          - name
+                          - version
+                          - language
+                          additionalProperties: false
+                        connectedAt:
+                          type: string
+                          format: date-time
+                        inflight:
+                          type: number
+                        maxConcurrency:
+                          type: number
+                      required:
+                      - instanceId
+                      - hostname
+                      - username
+                      - pid
+                      - label
+                      - sdk
+                      - connectedAt
+                      - inflight
+                      - maxConcurrency
+                      additionalProperties: false
+                    description: 'The processes currently connected for a connected agent: hostname, user, pid, SDK and how many calls each has in flight. Empty for every other kind.'
+                  selectable:
+                    type: boolean
+                    description: Whether the credential making this request can run simulations against the agent. False for a personal development agent that belongs to somebody else, which is listed all the same so it can be told apart from the other agents of the same name.
+                  notSelectableReason:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - owned_by_another_person
+                    - type: 'null'
+                    description: Why the agent cannot be run by this credential. Null when it can.
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - type
+                - config
+                - environment
+                - ownerUserId
+                - hostLabel
+                - lastSeenAt
+                - parameters
+                - owner
+                - status
+                - instances
+                - selectable
+                - notSelectableReason
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+      summary: Create an authored agent; connected agents register through the SDK
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:update
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                type:
-                  type: string
-                  enum:
-                  - signature
-                  - code
-                  - workflow
-                  - http
-                config:
-                  type: object
-                  additionalProperties: {}
-                workflowId:
-                  type: string
-              required:
-              - name
-              - type
-              - config
+              oneOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: signature
+                  config:
+                    type: object
+                    properties:
+                      _library_ref:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      cls:
+                        type: string
+                      parameters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      inputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      outputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      isCustom:
+                        type: boolean
+                      behave_as:
+                        type: string
+                        const: evaluator
+                      configId:
+                        type: string
+                      handle:
+                        type:
+                        - string
+                        - 'null'
+                      versionMetadata:
+                        type: object
+                        properties:
+                          versionId:
+                            type: string
+                          versionNumber:
+                            type: number
+                          versionCreatedAt:
+                            type: string
+                        required:
+                        - versionId
+                        - versionNumber
+                        - versionCreatedAt
+                      llm:
+                        type: object
+                        properties:
+                          model:
+                            type: string
+                          temperature:
+                            type: number
+                          max_tokens:
+                            type: number
+                          top_p:
+                            type: number
+                          frequency_penalty:
+                            type: number
+                          presence_penalty:
+                            type: number
+                          seed:
+                            type: number
+                          top_k:
+                            type: number
+                          min_p:
+                            type: number
+                          repetition_penalty:
+                            type: number
+                          reasoning:
+                            type: string
+                          reasoning_effort:
+                            type: string
+                          thinkingLevel:
+                            type: string
+                          effort:
+                            type: string
+                          verbosity:
+                            type: string
+                          litellm_params:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: string
+                        required:
+                        - model
+                      prompt:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            role:
+                              type: string
+                              enum:
+                              - system
+                              - user
+                              - assistant
+                            content:
+                              type: string
+                      promptDraft:
+                        type: boolean
+                required:
+                - name
+                - type
+                - config
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: code
+                  config:
+                    type: object
+                    properties:
+                      _library_ref:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      cls:
+                        type: string
+                      parameters:
+                        type: array
+                        items:
+                          anyOf:
+                          - type: object
+                            properties:
+                              identifier:
+                                type: string
+                                const: code
+                              type:
+                                type: string
+                                const: code
+                              value:
+                                type: string
+                              optional:
+                                type: boolean
+                              desc:
+                                type: string
+                              prefix:
+                                type: string
+                              hidden:
+                                type: boolean
+                            required:
+                            - identifier
+                            - type
+                            - value
+                          - type: object
+                            properties:
+                              identifier:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                - str
+                                - image
+                                - file
+                                - float
+                                - int
+                                - bool
+                                - list
+                                - list[str]
+                                - list[float]
+                                - list[int]
+                                - list[bool]
+                                - dict
+                                - json_schema
+                                - chat_messages
+                                - signature
+                                - llm
+                                - prompting_technique
+                                - dataset
+                                - code
+                              optional:
+                                type: boolean
+                              value: {}
+                              desc:
+                                type: string
+                              prefix:
+                                type: string
+                              hidden:
+                                type: boolean
+                              json_schema:
+                                type: object
+                                properties: {}
+                                additionalProperties: {}
+                            required:
+                            - identifier
+                            - type
+                      inputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      outputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      isCustom:
+                        type: boolean
+                      behave_as:
+                        type: string
+                        const: evaluator
+                      timeoutMs:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                      scenarioOutputField:
+                        type: string
+                    required:
+                    - parameters
+                required:
+                - name
+                - type
+                - config
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: workflow
+                  config:
+                    type: object
+                    properties:
+                      _library_ref:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      cls:
+                        type: string
+                      parameters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      inputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      outputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      isCustom:
+                        type: boolean
+                      behave_as:
+                        type: string
+                        const: evaluator
+                      workflow_id:
+                        type: string
+                      publishedId:
+                        type: string
+                      version_id:
+                        type: string
+                      versions:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      workflowFields:
+                        type: object
+                        properties:
+                          inputFields:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                identifier:
+                                  type: string
+                                type:
+                                  type: string
+                                  enum:
+                                  - str
+                                  - image
+                                  - file
+                                  - float
+                                  - int
+                                  - bool
+                                  - list
+                                  - list[str]
+                                  - list[float]
+                                  - list[int]
+                                  - list[bool]
+                                  - dict
+                                  - json_schema
+                                  - chat_messages
+                                  - signature
+                                  - llm
+                                  - prompting_technique
+                                  - dataset
+                                  - code
+                                optional:
+                                  type: boolean
+                                value: {}
+                                desc:
+                                  type: string
+                                prefix:
+                                  type: string
+                                hidden:
+                                  type: boolean
+                                json_schema:
+                                  type: object
+                                  properties: {}
+                                  additionalProperties: {}
+                              required:
+                              - identifier
+                              - type
+                          outputFields:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                identifier:
+                                  type: string
+                                type:
+                                  type: string
+                                  enum:
+                                  - str
+                                  - image
+                                  - file
+                                  - float
+                                  - int
+                                  - bool
+                                  - list
+                                  - list[str]
+                                  - list[float]
+                                  - list[int]
+                                  - list[bool]
+                                  - dict
+                                  - json_schema
+                                  - chat_messages
+                                  - signature
+                                  - llm
+                                  - prompting_technique
+                                  - dataset
+                                  - code
+                                optional:
+                                  type: boolean
+                                value: {}
+                                desc:
+                                  type: string
+                                prefix:
+                                  type: string
+                                hidden:
+                                  type: boolean
+                                json_schema:
+                                  type: object
+                                  properties: {}
+                                  additionalProperties: {}
+                              required:
+                              - identifier
+                              - type
+                          fieldsResolved:
+                            type: boolean
+                          recordedAt:
+                            type: integer
+                            minimum: 0
+                            maximum: 9007199254740991
+                        required:
+                        - inputFields
+                        - outputFields
+                        - fieldsResolved
+                        - recordedAt
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                      scenarioOutputField:
+                        type: string
+                required:
+                - name
+                - type
+                - config
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: http
+                  config:
+                    type: object
+                    properties:
+                      _library_ref:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      cls:
+                        type: string
+                      parameters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      inputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      outputs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            identifier:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - str
+                              - image
+                              - file
+                              - float
+                              - int
+                              - bool
+                              - list
+                              - list[str]
+                              - list[float]
+                              - list[int]
+                              - list[bool]
+                              - dict
+                              - json_schema
+                              - chat_messages
+                              - signature
+                              - llm
+                              - prompting_technique
+                              - dataset
+                              - code
+                            optional:
+                              type: boolean
+                            value: {}
+                            desc:
+                              type: string
+                            prefix:
+                              type: string
+                            hidden:
+                              type: boolean
+                            json_schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - identifier
+                          - type
+                      isCustom:
+                        type: boolean
+                      behave_as:
+                        type: string
+                        const: evaluator
+                      url:
+                        type: string
+                        minLength: 1
+                      method:
+                        default: POST
+                        type: string
+                        enum:
+                        - GET
+                        - POST
+                        - PUT
+                        - DELETE
+                        - PATCH
+                      headers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - key
+                          - value
+                      auth:
+                        oneOf:
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: none
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: bearer
+                            token:
+                              type: string
+                          required:
+                          - type
+                          - token
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: api_key
+                            header:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - type
+                          - header
+                          - value
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: basic
+                            username:
+                              type: string
+                            password:
+                              type: string
+                          required:
+                          - type
+                          - username
+                          - password
+                      bodyTemplate:
+                        type: string
+                      outputPath:
+                        type: string
+                      sessionPath:
+                        type: string
+                      timeoutMs:
+                        type: number
+                        exclusiveMinimum: 0
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                      devTunnel:
+                        type: object
+                        properties:
+                          previousUrl:
+                            type: string
+                          connectedAt:
+                            type: string
+                          heartbeatAt:
+                            type: string
+                    required:
+                    - url
+                required:
+                - name
+                - type
+                - config
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: connected
+                  config:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - name
+                - type
+                - config
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  workflowId:
+                    type: string
+                  copiedFromAgentId:
+                    type: string
+                  type:
+                    type: string
+                    const: voice
+                  config:
+                    oneOf:
+                    - type: object
+                      properties:
+                        transport:
+                          type: string
+                          const: elevenlabs_convai
+                        agentId:
+                          type: string
+                          minLength: 1
+                          maxLength: 128
+                      required:
+                      - transport
+                      - agentId
+                    - type: object
+                      properties:
+                        transport:
+                          type: string
+                          const: phone
+                        phoneNumber:
+                          type: string
+                          pattern: ^\+[1-9]\d{1,14}$
+                        callDirection:
+                          default: outbound
+                          type: string
+                          enum:
+                          - inbound
+                          - outbound
+                      required:
+                      - transport
+                      - phoneNumber
+                required:
+                - name
+                - type
+                - config
       tags:
       - Agents
-      summary: Post api agents
-      x-summary-source: derived
-  /api/agents/{id}:
+  /api/v1/agents/{id}:
     get:
-      responses: {}
-      operationId: getApiAgentsById
+      operationId: getAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - signature
+                    - code
+                    - workflow
+                    - http
+                    - connected
+                    - voice
+                    description: The kind of agent. A connected agent is registered from code by the SDK and cannot be created or reconfigured through this API.
+                  config:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  environment:
+                    description: The environment a connected agent registered with, for example production or development. Null for every other kind.
+                    type:
+                    - string
+                    - 'null'
+                  ownerUserId:
+                    description: The user a personal development agent belongs to. Only that user can run simulations against it. Null when the agent is shared.
+                    type:
+                    - string
+                    - 'null'
+                  hostLabel:
+                    description: The machine a development agent registered from with a project or service key. Null when the agent is personal or shared.
+                    type:
+                    - string
+                    - 'null'
+                  lastSeenAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                    description: When an instance of a connected agent was last connected. Null for every other kind.
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        description:
+                          type: string
+                        defaultValue:
+                          type:
+                          - string
+                          - number
+                          - boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          type: array
+                          items:
+                            type:
+                            - string
+                            - number
+                            - boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                    description: 'The run parameters a connected agent declares from its function signature: name, type, options, default and description. Empty for every other kind.'
+                  owner:
+                    anyOf:
+                    - type: object
+                      properties:
+                        userId:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The person a personal development agent belongs to. Null when the agent is shared or host-scoped.
+                  status:
+                    type: string
+                    enum:
+                    - online
+                    - offline
+                    description: online while at least one process running the connected agent is connected; offline otherwise, and always for every other kind.
+                  instances:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        instanceId:
+                          type: string
+                        hostname:
+                          type: string
+                        username:
+                          type: string
+                        pid:
+                          type: number
+                        label:
+                          type:
+                          - string
+                          - 'null'
+                        sdk:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            version:
+                              type: string
+                            language:
+                              type: string
+                          required:
+                          - name
+                          - version
+                          - language
+                          additionalProperties: false
+                        connectedAt:
+                          type: string
+                          format: date-time
+                        inflight:
+                          type: number
+                        maxConcurrency:
+                          type: number
+                      required:
+                      - instanceId
+                      - hostname
+                      - username
+                      - pid
+                      - label
+                      - sdk
+                      - connectedAt
+                      - inflight
+                      - maxConcurrency
+                      additionalProperties: false
+                    description: 'The processes currently connected for a connected agent: hostname, user, pid, SDK and how many calls each has in flight. Empty for every other kind.'
+                  selectable:
+                    type: boolean
+                    description: Whether the credential making this request can run simulations against the agent. False for a personal development agent that belongs to somebody else, which is listed all the same so it can be told apart from the other agents of the same name.
+                  notSelectableReason:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - owned_by_another_person
+                    - type: 'null'
+                    description: Why the agent cannot be run by this credential. Null when it can.
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - type
+                - config
+                - environment
+                - ownerUserId
+                - hostLabel
+                - lastSeenAt
+                - parameters
+                - owner
+                - status
+                - instances
+                - selectable
+                - notSelectableReason
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+      summary: Get an agent in the caller's project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:view
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: id
+        schema:
+          type: string
+          minLength: 1
         required: true
-      description: Get an agent by its id
+        description: The agent id.
       tags:
       - Agents
-      summary: Get api agents by id
-      x-summary-source: derived
     patch:
-      responses: {}
-      operationId: patchApiAgentsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Update an agent by its id
+      operationId: updateAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - signature
+                    - code
+                    - workflow
+                    - http
+                    - connected
+                    - voice
+                    description: The kind of agent. A connected agent is registered from code by the SDK and cannot be created or reconfigured through this API.
+                  config:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  environment:
+                    description: The environment a connected agent registered with, for example production or development. Null for every other kind.
+                    type:
+                    - string
+                    - 'null'
+                  ownerUserId:
+                    description: The user a personal development agent belongs to. Only that user can run simulations against it. Null when the agent is shared.
+                    type:
+                    - string
+                    - 'null'
+                  hostLabel:
+                    description: The machine a development agent registered from with a project or service key. Null when the agent is personal or shared.
+                    type:
+                    - string
+                    - 'null'
+                  lastSeenAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                    description: When an instance of a connected agent was last connected. Null for every other kind.
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        description:
+                          type: string
+                        defaultValue:
+                          type:
+                          - string
+                          - number
+                          - boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          type: array
+                          items:
+                            type:
+                            - string
+                            - number
+                            - boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                    description: 'The run parameters a connected agent declares from its function signature: name, type, options, default and description. Empty for every other kind.'
+                  owner:
+                    anyOf:
+                    - type: object
+                      properties:
+                        userId:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The person a personal development agent belongs to. Null when the agent is shared or host-scoped.
+                  status:
+                    type: string
+                    enum:
+                    - online
+                    - offline
+                    description: online while at least one process running the connected agent is connected; offline otherwise, and always for every other kind.
+                  instances:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        instanceId:
+                          type: string
+                        hostname:
+                          type: string
+                        username:
+                          type: string
+                        pid:
+                          type: number
+                        label:
+                          type:
+                          - string
+                          - 'null'
+                        sdk:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            version:
+                              type: string
+                            language:
+                              type: string
+                          required:
+                          - name
+                          - version
+                          - language
+                          additionalProperties: false
+                        connectedAt:
+                          type: string
+                          format: date-time
+                        inflight:
+                          type: number
+                        maxConcurrency:
+                          type: number
+                      required:
+                      - instanceId
+                      - hostname
+                      - username
+                      - pid
+                      - label
+                      - sdk
+                      - connectedAt
+                      - inflight
+                      - maxConcurrency
+                      additionalProperties: false
+                    description: 'The processes currently connected for a connected agent: hostname, user, pid, SDK and how many calls each has in flight. Empty for every other kind.'
+                  selectable:
+                    type: boolean
+                    description: Whether the credential making this request can run simulations against the agent. False for a personal development agent that belongs to somebody else, which is listed all the same so it can be told apart from the other agents of the same name.
+                  notSelectableReason:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - owned_by_another_person
+                    - type: 'null'
+                    description: Why the agent cannot be run by this credential. Null when it can.
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - type
+                - config
+                - environment
+                - ownerUserId
+                - hostLabel
+                - lastSeenAt
+                - parameters
+                - owner
+                - status
+                - instances
+                - selectable
+                - notSelectableReason
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+      summary: Update an authored agent
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -110,31 +2068,1014 @@ paths:
                   - code
                   - workflow
                   - http
+                  - connected
+                  - voice
                 config:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
                 workflowId:
                   type:
                   - string
                   - 'null'
-      tags:
-      - Agents
-      summary: Patch api agents by id
-      x-summary-source: derived
-    delete:
-      responses: {}
-      operationId: deleteApiAgentsById
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:update
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: id
+        schema:
+          type: string
+          minLength: 1
         required: true
-      description: Archive an agent (soft-delete)
+        description: The agent id.
       tags:
       - Agents
-      summary: Delete api agents by id
-      x-summary-source: derived
+    put:
+      operationId: replaceAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - signature
+                    - code
+                    - workflow
+                    - http
+                    - connected
+                    - voice
+                    description: The kind of agent. A connected agent is registered from code by the SDK and cannot be created or reconfigured through this API.
+                  config:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  environment:
+                    description: The environment a connected agent registered with, for example production or development. Null for every other kind.
+                    type:
+                    - string
+                    - 'null'
+                  ownerUserId:
+                    description: The user a personal development agent belongs to. Only that user can run simulations against it. Null when the agent is shared.
+                    type:
+                    - string
+                    - 'null'
+                  hostLabel:
+                    description: The machine a development agent registered from with a project or service key. Null when the agent is personal or shared.
+                    type:
+                    - string
+                    - 'null'
+                  lastSeenAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                    description: When an instance of a connected agent was last connected. Null for every other kind.
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        description:
+                          type: string
+                        defaultValue:
+                          type:
+                          - string
+                          - number
+                          - boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          type: array
+                          items:
+                            type:
+                            - string
+                            - number
+                            - boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                    description: 'The run parameters a connected agent declares from its function signature: name, type, options, default and description. Empty for every other kind.'
+                  owner:
+                    anyOf:
+                    - type: object
+                      properties:
+                        userId:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The person a personal development agent belongs to. Null when the agent is shared or host-scoped.
+                  status:
+                    type: string
+                    enum:
+                    - online
+                    - offline
+                    description: online while at least one process running the connected agent is connected; offline otherwise, and always for every other kind.
+                  instances:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        instanceId:
+                          type: string
+                        hostname:
+                          type: string
+                        username:
+                          type: string
+                        pid:
+                          type: number
+                        label:
+                          type:
+                          - string
+                          - 'null'
+                        sdk:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            version:
+                              type: string
+                            language:
+                              type: string
+                          required:
+                          - name
+                          - version
+                          - language
+                          additionalProperties: false
+                        connectedAt:
+                          type: string
+                          format: date-time
+                        inflight:
+                          type: number
+                        maxConcurrency:
+                          type: number
+                      required:
+                      - instanceId
+                      - hostname
+                      - username
+                      - pid
+                      - label
+                      - sdk
+                      - connectedAt
+                      - inflight
+                      - maxConcurrency
+                      additionalProperties: false
+                    description: 'The processes currently connected for a connected agent: hostname, user, pid, SDK and how many calls each has in flight. Empty for every other kind.'
+                  selectable:
+                    type: boolean
+                    description: Whether the credential making this request can run simulations against the agent. False for a personal development agent that belongs to somebody else, which is listed all the same so it can be told apart from the other agents of the same name.
+                  notSelectableReason:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - owned_by_another_person
+                    - type: 'null'
+                    description: Why the agent cannot be run by this credential. Null when it can.
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - type
+                - config
+                - environment
+                - ownerUserId
+                - hostLabel
+                - lastSeenAt
+                - parameters
+                - owner
+                - status
+                - instances
+                - selectable
+                - notSelectableReason
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+      summary: Update an authored agent; PUT retains partial update semantics
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                type:
+                  type: string
+                  enum:
+                  - signature
+                  - code
+                  - workflow
+                  - http
+                  - connected
+                  - voice
+                config:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties: {}
+                workflowId:
+                  type:
+                  - string
+                  - 'null'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The agent id.
+      tags:
+      - Agents
+    delete:
+      operationId: archiveAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                    - signature
+                    - code
+                    - workflow
+                    - http
+                    - connected
+                    - voice
+                  archivedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - type
+                - archivedAt
+                additionalProperties: false
+      summary: Archive an agent while keeping its runs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:delete
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The agent id.
+      tags:
+      - Agents
+  /api/v1/agents/{id}/call:
+    post:
+      operationId: callConnectedAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  output:
+                    anyOf:
+                    - type: string
+                    - type: object
+                      properties:
+                        role:
+                          type: string
+                          minLength: 1
+                      required:
+                      - role
+                      additionalProperties: {}
+                    - type: array
+                      items:
+                        type: object
+                        properties:
+                          role:
+                            type: string
+                            minLength: 1
+                        required:
+                        - role
+                        additionalProperties: {}
+                    description: 'What the function answered: text, one message, or a list of messages.'
+                  session:
+                    description: The agent's per-conversation memory, to send on the next turn.
+                  instance:
+                    type: object
+                    properties:
+                      hostname:
+                        type: string
+                      label:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - hostname
+                    - label
+                    additionalProperties: false
+                  durationMs:
+                    type: number
+                required:
+                - output
+                - instance
+                - durationMs
+                additionalProperties: false
+      summary: Send one conversation turn to an online connected agent
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The agent id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    additionalProperties: {}
+                  description: The whole conversation so far, OpenAI style.
+                newMessages:
+                  description: The messages added since the agent's last turn. Defaults to the last message.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    additionalProperties: {}
+                threadId:
+                  description: The conversation id. Turns of one conversation share it; a new id starts a new one.
+                  type: string
+                  maxLength: 255
+                params:
+                  description: Run parameter values by name, as JSON scalars.
+                  type: object
+                  propertyNames:
+                    type: string
+                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                  additionalProperties:
+                    type:
+                    - string
+                    - number
+                    - boolean
+                session:
+                  description: The session the agent returned on its previous turn of this conversation, echoed back as is.
+                traceparent:
+                  description: The W3C trace context the agent adopts, so its spans join this turn's trace.
+                  type: string
+                  maxLength: 255
+                run:
+                  description: The simulation run this turn belongs to, if any.
+                  type: object
+                  properties:
+                    scenarioRunId:
+                      type: string
+                    scenarioName:
+                      type: string
+                    batchRunId:
+                      type: string
+              required:
+              - messages
+      tags:
+      - Agents
+  /api/v1/agents/connect/register:
+    post:
+      operationId: registerConnectedAgentInstance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frame:
+                    anyOf:
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: registered
+                        agents:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              environment:
+                                type: string
+                              id:
+                                type: string
+                              url:
+                                type: string
+                              parameterNotes:
+                                type: array
+                                items:
+                                  type: string
+                              scope:
+                                oneOf:
+                                - type: object
+                                  properties:
+                                    kind:
+                                      type: string
+                                      const: shared
+                                  required:
+                                  - kind
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    kind:
+                                      type: string
+                                      const: owner
+                                  required:
+                                  - kind
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    kind:
+                                      type: string
+                                      const: host
+                                    hostLabel:
+                                      type: string
+                                  required:
+                                  - kind
+                                  - hostLabel
+                                  additionalProperties: false
+                            required:
+                            - name
+                            - environment
+                            - id
+                            - url
+                            - parameterNotes
+                            - scope
+                            additionalProperties: false
+                        heartbeatIntervalMs:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                        instanceId:
+                          type: string
+                      required:
+                      - protocol
+                      - type
+                      - agents
+                      - heartbeatIntervalMs
+                      - instanceId
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: refused
+                        code:
+                          type: string
+                          enum:
+                          - api_key_invalid
+                          - project_required
+                          - permission_denied
+                          - key_type_not_allowed
+                          - replica_count_unsupported
+                          - parameters_invalid
+                          - environment_invalid
+                          - protocol_invalid
+                        message:
+                          type: string
+                        meta:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                      required:
+                      - protocol
+                      - type
+                      - code
+                      - message
+                      additionalProperties: false
+                  instanceToken:
+                    type: string
+                required:
+                - frame
+                additionalProperties: false
+      description: Returns a registered frame and instance token, or refuses at the status of the reason.
+      summary: Register this process's agents
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                protocol:
+                  type: number
+                  const: 1
+                type:
+                  type: string
+                  const: register
+                sdk:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                      maxLength: 64
+                    version:
+                      type: string
+                      minLength: 1
+                      maxLength: 64
+                    language:
+                      type: string
+                      minLength: 1
+                      maxLength: 32
+                  required:
+                  - name
+                  - version
+                  - language
+                instance:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                    hostname:
+                      type: string
+                      maxLength: 255
+                    username:
+                      type: string
+                      maxLength: 255
+                    pid:
+                      type: integer
+                      minimum: 0
+                      maximum: 9007199254740991
+                    startedAt:
+                      type: string
+                      maxLength: 64
+                    label:
+                      type: string
+                      maxLength: 128
+                    inFlightCallIds:
+                      default: []
+                      maxItems: 1000
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 128
+                    maxConcurrency:
+                      type: integer
+                      exclusiveMinimum: 0
+                      maximum: 1000
+                  required:
+                  - id
+                  - hostname
+                  - username
+                  - pid
+                  - startedAt
+                agents:
+                  minItems: 1
+                  maxItems: 100
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      environment:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                      parameters:
+                        default: {}
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      concurrency:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 1000
+                      timeoutMs:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      sticky:
+                        type: boolean
+                    required:
+                    - name
+                    - environment
+              required:
+              - protocol
+              - type
+              - sdk
+              - instance
+              - agents
+      tags:
+      - Agents
+  /api/v1/agents/connect/poll:
+    get:
+      operationId: pollConnectedAgentInstance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frames:
+                    type: array
+                    items:
+                      anyOf:
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: call
+                          callId:
+                            type: string
+                          agentId:
+                            type: string
+                          threadId:
+                            type: string
+                          messages:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                role:
+                                  type: string
+                                  minLength: 1
+                              required:
+                              - role
+                              additionalProperties: {}
+                          newMessages:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                role:
+                                  type: string
+                                  minLength: 1
+                              required:
+                              - role
+                              additionalProperties: {}
+                          params:
+                            type: object
+                            propertyNames:
+                              type: string
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            additionalProperties:
+                              type:
+                              - string
+                              - number
+                              - boolean
+                          session: {}
+                          traceparent:
+                            type:
+                            - string
+                            - 'null'
+                          deadlineAt:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          run:
+                            type: object
+                            properties:
+                              scenarioRunId:
+                                type: string
+                              scenarioName:
+                                type: string
+                              batchRunId:
+                                type: string
+                            additionalProperties: false
+                        required:
+                        - protocol
+                        - type
+                        - callId
+                        - agentId
+                        - threadId
+                        - messages
+                        - newMessages
+                        - params
+                        - traceparent
+                        - deadlineAt
+                        - run
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: cancel
+                          callId:
+                            type: string
+                            minLength: 1
+                        required:
+                        - protocol
+                        - type
+                        - callId
+                        additionalProperties: false
+                required:
+                - frames
+                additionalProperties: false
+      summary: Wait for call and cancel frames while refreshing this instance's presence
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      parameters:
+      - in: query
+        name: inFlight
+        schema:
+          type: string
+          maxLength: 200000
+      tags:
+      - Agents
+  /api/v1/agents/connect/frames:
+    post:
+      operationId: postConnectedAgentFrames
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - accepted
+                additionalProperties: false
+      summary: Accept this instance's acknowledgements, results and deregistration
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                frames:
+                  minItems: 1
+                  maxItems: 100
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: ack
+                        callId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: result
+                        callId:
+                          type: string
+                          minLength: 1
+                        output:
+                          anyOf:
+                          - type: string
+                          - type: object
+                            properties:
+                              role:
+                                type: string
+                                minLength: 1
+                            required:
+                            - role
+                            additionalProperties: {}
+                          - type: array
+                            items:
+                              type: object
+                              properties:
+                                role:
+                                  type: string
+                                  minLength: 1
+                              required:
+                              - role
+                              additionalProperties: {}
+                        session: {}
+                        error:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                            message:
+                              type: string
+                              maxLength: 4000
+                          required:
+                          - code
+                          - message
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: deregister
+                      required:
+                      - protocol
+                      - type
+              required:
+              - frames
+      tags:
+      - Agents
+  /api/v1/agents/{id}/test:
+    post:
+      operationId: testAgent
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioRunId:
+                    type: string
+                    description: The run to follow; open it in the simulations run drawer.
+                  batchRunId:
+                    type: string
+                    description: The batch the run belongs to.
+                  setId:
+                    type: string
+                    description: The internal set that holds agent test runs.
+                required:
+                - scenarioRunId
+                - batchRunId
+                - setId
+                additionalProperties: false
+      summary: Schedule a scripted test run and return its run identifiers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The agent id.
+      tags:
+      - Agents
 components:
   securitySchemes:
     project_api_key:
@@ -146,3 +3087,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

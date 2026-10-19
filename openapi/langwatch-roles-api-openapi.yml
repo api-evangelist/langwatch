@@ -1,0 +1,429 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Roles API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Roles
+paths:
+  /api/v1/roles:
+    get:
+      operationId: listRoles
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        permissions:
+                          type: array
+                          items:
+                            type: string
+                        builtIn:
+                          type: boolean
+                        createdAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                        updatedAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                      required:
+                      - id
+                      - name
+                      - description
+                      - permissions
+                      - builtIn
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                required:
+                - roles
+                additionalProperties: false
+      description: 'List the organization''s custom roles with their permission sets. Omitted `builtIn`: custom roles only. `?builtIn=true` lists only the built-in roles `admin`, `member` and `viewer`, `?builtIn=false` only the custom ones.'
+      tags:
+      - Roles
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: query
+        name: builtIn
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      summary: List roles
+      x-summary-source: derived
+    post:
+      operationId: createRole
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                  builtIn:
+                    type: boolean
+                  createdAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  updatedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - permissions
+                - builtIn
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: Create a custom role from resource:action permission keys. The name is unique within the organization; a taken name answers 409 custom_role_name_taken.
+      tags:
+      - Roles
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                description:
+                  type: string
+                  maxLength: 500
+                permissions:
+                  minItems: 1
+                  type: array
+                  items:
+                    type: string
+              required:
+              - name
+              - permissions
+      summary: Create role
+      x-summary-source: derived
+  /api/v1/roles/permissions:
+    get:
+      operationId: listRolePermissions
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        resource:
+                          type: string
+                        organizationExclusive:
+                          type: boolean
+                        actions:
+                          type: array
+                          items:
+                            type: string
+                        permissions:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - resource
+                      - organizationExclusive
+                      - actions
+                      - permissions
+                      additionalProperties: false
+                  actions:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - resources
+                - actions
+                additionalProperties: false
+      description: 'The permission catalog custom roles are built from: every resource with its actions, annotated with whether the resource only takes effect at organization scope (such a permission cannot be granted by a team- or project-scoped binding).'
+      tags:
+      - Roles
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      summary: List role permissions
+      x-summary-source: derived
+  /api/v1/roles/{id}:
+    get:
+      operationId: getRole
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                  builtIn:
+                    type: boolean
+                  createdAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  updatedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - permissions
+                - builtIn
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: 'Read one role: `admin`, `member` or `viewer`, or a custom role''s id. A custom id from another organization answers 404 custom_role_not_found.'
+      tags:
+      - Roles
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get role
+      x-summary-source: derived
+    patch:
+      operationId: updateRole
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                  builtIn:
+                    type: boolean
+                  createdAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  updatedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - name
+                - description
+                - permissions
+                - builtIn
+                - createdAt
+                - updatedAt
+                additionalProperties: false
+      description: 'Update a custom role. Partial: only the fields present are written; a permissions list replaces the set outright. A built-in role answers 409 role_is_built_in; adding a permission the caller does not hold on the organization answers 403 role_exceeds_caller_permissions.'
+      tags:
+      - Roles
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                description:
+                  anyOf:
+                  - type: string
+                    maxLength: 500
+                  - type: 'null'
+                permissions:
+                  minItems: 1
+                  type: array
+                  items:
+                    type: string
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Update role
+      x-summary-source: derived
+    delete:
+      operationId: deleteRole
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                required:
+                - success
+                additionalProperties: false
+      description: Delete a custom role. A role that anything still holds, a legacy team assignment or a role binding, answers 409 custom_role_in_use with the counts in meta. A built-in role answers 409 role_is_built_in.
+      tags:
+      - Roles
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete role
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

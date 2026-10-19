@@ -1,0 +1,2501 @@
+openapi: 3.2.0
+info:
+  title: LangWatch SCIM API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: SCIM
+paths:
+  /api/scim/v2/ServiceProviderConfig:
+    get:
+      operationId: scimGetServiceProviderConfig
+      responses:
+        '200':
+          description: The supported capabilities.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig
+                  documentationUri:
+                    type: string
+                  patch:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                    required:
+                    - supported
+                    additionalProperties: false
+                  bulk:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                      maxOperations:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      maxPayloadSize:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                    required:
+                    - supported
+                    - maxOperations
+                    - maxPayloadSize
+                    additionalProperties: false
+                  filter:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                      maxResults:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                    required:
+                    - supported
+                    - maxResults
+                    additionalProperties: false
+                  changePassword:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                    required:
+                    - supported
+                    additionalProperties: false
+                  sort:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                    required:
+                    - supported
+                    additionalProperties: false
+                  etag:
+                    type: object
+                    properties:
+                      supported:
+                        type: boolean
+                    required:
+                    - supported
+                    additionalProperties: false
+                  authenticationSchemes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                      required:
+                      - type
+                      - name
+                      - description
+                      additionalProperties: false
+                required:
+                - schemas
+                - documentationUri
+                - patch
+                - bulk
+                - filter
+                - changePassword
+                - sort
+                - etag
+                - authenticationSchemes
+                additionalProperties: false
+      description: 'What this SCIM implementation supports (RFC 7643 section 5), which is how an identity provider decides what it may call: PATCH and filtering are supported, bulk operations, sorting, ETags and password change are not. Unauthenticated, because a provider reads it while being configured, before a token exists.'
+      summary: Get the SCIM service provider configuration
+      tags:
+      - SCIM
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+  /api/scim/v2/ResourceTypes:
+    get:
+      operationId: scimListResourceTypes
+      responses:
+        '200':
+          description: The User and Group resource types.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:ListResponse
+                  totalResults:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  startIndex:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  itemsPerPage:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  Resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        schemas:
+                          type: array
+                          items:
+                            type: string
+                            const: urn:ietf:params:scim:schemas:core:2.0:ResourceType
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        endpoint:
+                          type: string
+                        schema:
+                          type: string
+                        meta:
+                          type: object
+                          properties:
+                            resourceType:
+                              type: string
+                              const: ResourceType
+                            location:
+                              type: string
+                          required:
+                          - resourceType
+                          - location
+                          additionalProperties: false
+                      required:
+                      - schemas
+                      - id
+                      - name
+                      - endpoint
+                      - schema
+                      - meta
+                      additionalProperties: false
+                required:
+                - schemas
+                - totalResults
+                - startIndex
+                - itemsPerPage
+                - Resources
+                additionalProperties: false
+      description: The resources this service provisions, User and Group, each naming the endpoint and the schema URN that serves it (RFC 7643 section 6). Unauthenticated, like the rest of SCIM discovery.
+      summary: List the SCIM resource types
+      tags:
+      - SCIM
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+  /api/scim/v2/Schemas:
+    get:
+      operationId: scimListSchemas
+      responses:
+        '200':
+          description: The User and Group schema definitions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:ListResponse
+                  totalResults:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  startIndex:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  itemsPerPage:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  Resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        schemas:
+                          type: array
+                          items:
+                            type: string
+                            const: urn:ietf:params:scim:schemas:core:2.0:Schema
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        attributes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              type:
+                                type: string
+                              multiValued:
+                                type: boolean
+                              required:
+                                type: boolean
+                              mutability:
+                                type: string
+                              returned:
+                                type: string
+                              caseExact:
+                                type: boolean
+                              uniqueness:
+                                type: string
+                              description:
+                                type: string
+                              subAttributes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    name:
+                                      type: string
+                                    type:
+                                      type: string
+                                    multiValued:
+                                      type: boolean
+                                    required:
+                                      type: boolean
+                                    mutability:
+                                      type: string
+                                    returned:
+                                      type: string
+                                    description:
+                                      type: string
+                                  required:
+                                  - name
+                                  - type
+                                  - multiValued
+                                  - required
+                                  - mutability
+                                  - returned
+                                  additionalProperties: false
+                            required:
+                            - name
+                            - type
+                            - multiValued
+                            - required
+                            - mutability
+                            - returned
+                            additionalProperties: false
+                        meta:
+                          type: object
+                          properties:
+                            resourceType:
+                              type: string
+                              const: Schema
+                            location:
+                              type: string
+                          required:
+                          - resourceType
+                          - location
+                          additionalProperties: false
+                      required:
+                      - schemas
+                      - id
+                      - name
+                      - description
+                      - attributes
+                      - meta
+                      additionalProperties: false
+                required:
+                - schemas
+                - totalResults
+                - startIndex
+                - itemsPerPage
+                - Resources
+                additionalProperties: false
+      description: 'The attribute definitions for the User and Group resources (RFC 7643 section 7), which an identity provider reads to build its attribute mapping. A LangWatch group is an access group: its membership drives role bindings, and it is not a team. Unauthenticated, like the rest of SCIM discovery.'
+      summary: List the SCIM resource schemas
+      tags:
+      - SCIM
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+  /api/scim/v2/Users:
+    get:
+      operationId: scimListUsers
+      responses:
+        '200':
+          description: A page of provisioned users.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:ListResponse
+                  totalResults:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  startIndex:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  itemsPerPage:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  Resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        schemas:
+                          type: array
+                          items:
+                            type: string
+                            const: urn:ietf:params:scim:schemas:core:2.0:User
+                        id:
+                          type: string
+                        externalId:
+                          type: string
+                        userName:
+                          type: string
+                        name:
+                          type: object
+                          properties:
+                            givenName:
+                              type: string
+                            familyName:
+                              type: string
+                          required:
+                          - givenName
+                          - familyName
+                          additionalProperties: false
+                        emails:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              primary:
+                                type: boolean
+                              value:
+                                type: string
+                              type:
+                                type: string
+                            required:
+                            - primary
+                            - value
+                            - type
+                            additionalProperties: false
+                        active:
+                          type: boolean
+                        meta:
+                          type: object
+                          properties:
+                            resourceType:
+                              type: string
+                              const: User
+                            created:
+                              type: string
+                            lastModified:
+                              type: string
+                          required:
+                          - resourceType
+                          - created
+                          - lastModified
+                          additionalProperties: false
+                      required:
+                      - schemas
+                      - id
+                      - userName
+                      - name
+                      - emails
+                      - active
+                      - meta
+                      additionalProperties: false
+                required:
+                - schemas
+                - totalResults
+                - startIndex
+                - itemsPerPage
+                - Resources
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'The members of the organization the token belongs to, as SCIM users. Two filter expressions are understood: `userName eq "someone@example.com"`, matched against the member''s email without regard to case, and `externalId eq "..."`, matched against the identifier the presented token''s own directory connection pushed. Any other filter is refused.'
+      summary: List provisioned users
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: query
+        name: filter
+        schema:
+          type: string
+        description: A SCIM filter. Only `attribute eq "..."` is understood; any other expression is refused.
+      - in: query
+        name: startIndex
+        schema:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        description: 1-based index of the first resource to return. Anything that does not parse as a positive integer is read as 1.
+      - in: query
+        name: count
+        schema:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 100
+        description: How many resources to return, capped at 100 (the `filter.maxResults` ServiceProviderConfig publishes). Anything that does not parse as a positive integer is read as 100, and anything above 100 is served as 100.
+    post:
+      operationId: scimCreateUser
+      responses:
+        '201':
+          description: The provisioned user.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:User
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  userName:
+                    type: string
+                  name:
+                    type: object
+                    properties:
+                      givenName:
+                        type: string
+                      familyName:
+                        type: string
+                    required:
+                    - givenName
+                    - familyName
+                    additionalProperties: false
+                  emails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        primary:
+                          type: boolean
+                        value:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - primary
+                      - value
+                      - type
+                      additionalProperties: false
+                  active:
+                    type: boolean
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: User
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - userName
+                - name
+                - emails
+                - active
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '409':
+          description: A member with this userName already exists in the organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: Adds a member to the organization, creating the LangWatch account when the email is new. Someone who already has an account is added and reactivated rather than refused, which is what lets a directory sync be re-run without special-casing the people it already knows. New members join with the MEMBER role at organization scope. `costCenter` on the enterprise user extension assigns their department, creating that department on first use.
+      summary: Provision a user
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                externalId:
+                  type: string
+                  minLength: 1
+                userName:
+                  type: string
+                  format: email
+                  pattern: ^(?:[A-Za-z0-9_'+\-]+\.)*[A-Za-z0-9_'+\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+                name:
+                  type: object
+                  properties:
+                    givenName:
+                      type: string
+                    familyName:
+                      type: string
+                emails:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      primary:
+                        type: boolean
+                      value:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - value
+                active:
+                  type: boolean
+                urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:
+                  type: object
+                  properties:
+                    costCenter:
+                      type:
+                      - string
+                      - 'null'
+                  additionalProperties: {}
+              required:
+              - schemas
+              - userName
+              additionalProperties: {}
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+  /api/scim/v2/Users/{id}:
+    get:
+      operationId: scimGetUser
+      responses:
+        '200':
+          description: The user.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:User
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  userName:
+                    type: string
+                  name:
+                    type: object
+                    properties:
+                      givenName:
+                        type: string
+                      familyName:
+                        type: string
+                    required:
+                    - givenName
+                    - familyName
+                    additionalProperties: false
+                  emails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        primary:
+                          type: boolean
+                        value:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - primary
+                      - value
+                      - type
+                      additionalProperties: false
+                  active:
+                    type: boolean
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: User
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - userName
+                - name
+                - emails
+                - active
+                - meta
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such member in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: Reads one member of the organization the token belongs to. An id that is not a member answers 404, whether or not it names a LangWatch account elsewhere.
+      summary: Get a provisioned user
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    put:
+      operationId: scimReplaceUser
+      responses:
+        '200':
+          description: The updated user.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:User
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  userName:
+                    type: string
+                  name:
+                    type: object
+                    properties:
+                      givenName:
+                        type: string
+                      familyName:
+                        type: string
+                    required:
+                    - givenName
+                    - familyName
+                    additionalProperties: false
+                  emails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        primary:
+                          type: boolean
+                        value:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - primary
+                      - value
+                      - type
+                      additionalProperties: false
+                  active:
+                    type: boolean
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: User
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - userName
+                - name
+                - emails
+                - active
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such member in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'Replaces the member''s attributes with the body. It is a whole-resource write, so an attribute the identity provider leaves out is reset rather than kept: omitting `active` reactivates the member. Send PATCH instead to change one attribute.'
+      summary: Replace a provisioned user
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                externalId:
+                  type: string
+                  minLength: 1
+                userName:
+                  type: string
+                  format: email
+                  pattern: ^(?:[A-Za-z0-9_'+\-]+\.)*[A-Za-z0-9_'+\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+                name:
+                  type: object
+                  properties:
+                    givenName:
+                      type: string
+                    familyName:
+                      type: string
+                emails:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      primary:
+                        type: boolean
+                      value:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - value
+                active:
+                  type: boolean
+                urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:
+                  type: object
+                  properties:
+                    costCenter:
+                      type:
+                      - string
+                      - 'null'
+                  additionalProperties: {}
+              required:
+              - schemas
+              - userName
+              additionalProperties: {}
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    patch:
+      operationId: scimPatchUser
+      responses:
+        '200':
+          description: The updated user.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:User
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  userName:
+                    type: string
+                  name:
+                    type: object
+                    properties:
+                      givenName:
+                        type: string
+                      familyName:
+                        type: string
+                    required:
+                    - givenName
+                    - familyName
+                    additionalProperties: false
+                  emails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        primary:
+                          type: boolean
+                        value:
+                          type: string
+                        type:
+                          type: string
+                      required:
+                      - primary
+                      - value
+                      - type
+                      additionalProperties: false
+                  active:
+                    type: boolean
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: User
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - userName
+                - name
+                - emails
+                - active
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such member in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'Applies RFC 7644 section 3.5.2 patch operations. What is implemented: `replace` of `active` (deactivating or reactivating the account), of `userName`, and of `name.givenName` / `name.familyName`, written either as an operation path or as keys inside a value object; and `add`, `replace` or `remove` of the enterprise `costCenter`, which reassigns the member''s department. `replace`, `add` and `remove` are the only operation names understood, read without regard to case, so the capitalized `Replace` that Entra ID writes is accepted; any other name, or a missing or non-string one, is rejected with a 400. An understood operation aimed at anything not listed above is accepted and changes nothing.'
+      summary: Update a provisioned user
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                Operations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      op:
+                        type: string
+                        enum:
+                        - replace
+                        - add
+                        - remove
+                      path:
+                        type: string
+                      value: {}
+                    required:
+                    - op
+              required:
+              - schemas
+              - Operations
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    delete:
+      operationId: scimDeleteUser
+      responses:
+        '200':
+          description: Success
+          content:
+            application/scim+json: {}
+        '204':
+          description: Deprovisioned. No body.
+          content: {}
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such member in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: Removes the member from the organization, drops the role bindings they held there, and deactivates their account. The LangWatch user record itself is kept, so past traces, evaluations and audit entries stay attributable.
+      summary: Deprovision a user
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/scim/v2/Groups:
+    get:
+      operationId: scimListGroups
+      responses:
+        '200':
+          description: A page of provisioned groups.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:ListResponse
+                  totalResults:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  startIndex:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  itemsPerPage:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  Resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        schemas:
+                          type: array
+                          items:
+                            type: string
+                            const: urn:ietf:params:scim:schemas:core:2.0:Group
+                        id:
+                          type: string
+                        externalId:
+                          type: string
+                        displayName:
+                          type: string
+                        members:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              value:
+                                type: string
+                              display:
+                                type: string
+                            required:
+                            - value
+                            additionalProperties: false
+                        meta:
+                          type: object
+                          properties:
+                            resourceType:
+                              type: string
+                              const: Group
+                            created:
+                              type: string
+                            lastModified:
+                              type: string
+                          required:
+                          - resourceType
+                          - created
+                          - lastModified
+                          additionalProperties: false
+                      required:
+                      - schemas
+                      - id
+                      - displayName
+                      - meta
+                      additionalProperties: false
+                required:
+                - schemas
+                - totalResults
+                - startIndex
+                - itemsPerPage
+                - Resources
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'The organization''s SCIM-provisioned access groups. Groups created in LangWatch itself are not listed: the directory sees what it provisioned, and nothing else. One filter expression is understood, `displayName eq "Engineering"`, matched without regard to case.'
+      summary: List provisioned groups
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: query
+        name: filter
+        schema:
+          type: string
+        description: A SCIM filter. Only `attribute eq "..."` is understood; any other expression is refused.
+      - in: query
+        name: startIndex
+        schema:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        description: 1-based index of the first resource to return. Anything that does not parse as a positive integer is read as 1.
+      - in: query
+        name: count
+        schema:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 100
+        description: How many resources to return, capped at 100 (the `filter.maxResults` ServiceProviderConfig publishes). Anything that does not parse as a positive integer is read as 100, and anything above 100 is served as 100.
+      - in: query
+        name: excludedAttributes
+        schema:
+          type: string
+        description: Comma-separated attribute names to leave out of the response. Only `members` is honoured, and it is what lets a directory page through groups without pulling every membership.
+    post:
+      operationId: scimCreateGroup
+      responses:
+        '201':
+          description: The provisioned group.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:Group
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  displayName:
+                    type: string
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                        display:
+                          type: string
+                      required:
+                      - value
+                      additionalProperties: false
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: Group
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - displayName
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '409':
+          description: A provisioned group with this displayName already exists in the organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'Creates an access group. Members are given as LangWatch user ids, the same ids the Users endpoints return; an id that is not a member of the organization is skipped rather than failing the call, so a group can be provisioned before everyone in it is. Granting the group access is a separate step: a group carries no permissions until a role binding is created for it.'
+      summary: Provision a group
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                externalId:
+                  type: string
+                  minLength: 1
+                displayName:
+                  type: string
+                members:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                      display:
+                        type: string
+                    required:
+                    - value
+              required:
+              - schemas
+              - displayName
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+  /api/scim/v2/Groups/{id}:
+    get:
+      operationId: scimGetGroup
+      responses:
+        '200':
+          description: The group.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:Group
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  displayName:
+                    type: string
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                        display:
+                          type: string
+                      required:
+                      - value
+                      additionalProperties: false
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: Group
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - displayName
+                - meta
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such group in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: Reads one provisioned group and its members. A group that exists but was created in LangWatch rather than provisioned is not readable here.
+      summary: Get a provisioned group
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: excludedAttributes
+        schema:
+          type: string
+        description: Comma-separated attribute names to leave out of the response. Only `members` is honoured, and it is what lets a directory page through groups without pulling every membership.
+    put:
+      operationId: scimReplaceGroup
+      responses:
+        '200':
+          description: The updated group.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:Group
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  displayName:
+                    type: string
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                        display:
+                          type: string
+                      required:
+                      - value
+                      additionalProperties: false
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: Group
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - displayName
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such group in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'Replaces the group''s display name and its membership with the body. Membership is a whole-resource write: a member absent from `members` is removed from the group, and omitting `members` empties it. Role bindings granted to the group are untouched.'
+      summary: Replace a provisioned group
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                externalId:
+                  type: string
+                  minLength: 1
+                displayName:
+                  type: string
+                members:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                      display:
+                        type: string
+                    required:
+                    - value
+              required:
+              - schemas
+              - displayName
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    patch:
+      operationId: scimPatchGroup
+      responses:
+        '200':
+          description: The updated group.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:schemas:core:2.0:Group
+                  id:
+                    type: string
+                  externalId:
+                    type: string
+                  displayName:
+                    type: string
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                        display:
+                          type: string
+                      required:
+                      - value
+                      additionalProperties: false
+                  meta:
+                    type: object
+                    properties:
+                      resourceType:
+                        type: string
+                        const: Group
+                      created:
+                        type: string
+                      lastModified:
+                        type: string
+                    required:
+                    - resourceType
+                    - created
+                    - lastModified
+                    additionalProperties: false
+                required:
+                - schemas
+                - id
+                - displayName
+                - meta
+                additionalProperties: false
+        '400':
+          description: The request body is not JSON, or does not match the SCIM schema for this operation.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such group in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: 'Applies RFC 7644 section 3.5.2 patch operations. What is implemented: `add` of members, `remove` of members (named by a value filter on the path, as Entra ID writes it, or in the operation value), `replace` of `displayName`, and `replace` of the whole member list. `replace`, `add` and `remove` are the only operation names understood, read without regard to case, so the capitalized `Add` / `Remove` that Entra ID writes are accepted; any other name, or a missing or non-string one, is rejected with a 400. An `add` or a `remove` aimed at anything other than members is accepted and changes nothing. A `replace` that is not a `displayName` rename is treated as a replacement of the whole member list, so one that carries no members empties the group.'
+      summary: Update a provisioned group
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/scim+json:
+            schema:
+              type: object
+              properties:
+                schemas:
+                  type: array
+                  items:
+                    type: string
+                Operations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      op:
+                        type: string
+                        enum:
+                        - replace
+                        - add
+                        - remove
+                      path:
+                        type: string
+                      value: {}
+                    required:
+                    - op
+              required:
+              - schemas
+              - Operations
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    delete:
+      operationId: scimDeleteGroup
+      responses:
+        '200':
+          description: Success
+          content:
+            application/scim+json: {}
+        '204':
+          description: Deprovisioned. No body.
+          content: {}
+        '401':
+          description: The Authorization header is missing, is not a bearer token, or names a token this deployment does not know.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '403':
+          description: The token is valid but the organization's plan no longer includes SCIM provisioning. Entitlement is checked on every call, so a directory connection stops the moment the Enterprise plan lapses.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+        '404':
+          description: No such group in this organization.
+          content:
+            application/scim+json:
+              schema:
+                type: object
+                properties:
+                  schemas:
+                    type: array
+                    items:
+                      type: string
+                      const: urn:ietf:params:scim:api:messages:2.0:Error
+                  status:
+                    type: string
+                  detail:
+                    type: string
+                  scimType:
+                    type: string
+                required:
+                - schemas
+                - status
+                - detail
+                additionalProperties: false
+      description: Deletes the group along with its memberships and every role binding granted through it, so the access it carried is revoked with it. The members themselves keep their organization membership and any access they hold directly.
+      summary: Deprovision a group
+      tags:
+      - SCIM
+      security:
+      - scim_bearer: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - scim_token
+        permissions: []
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/webhooks/auth0-scim:
+    post:
+      operationId: receiveAuth0ScimWebhook
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      description: Auth0's SCIM log stream, signed with the deployment's shared secret and tenanted by the SCIM token the delivery presents. A deployment that configured no secret answers 404, so a probe cannot learn whether the path is served here.
+      summary: Receive an Auth0 SCIM log-stream delivery
+      tags:
+      - SCIM
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

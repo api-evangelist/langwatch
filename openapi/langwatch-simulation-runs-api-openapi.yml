@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Simulation Runs API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Simulation Runs
 paths:
-  /api/simulation-runs:
+  /api/v1/simulation-runs:
     get:
+      operationId: getApiSimulationRuns
       responses:
         '200':
           description: Success
@@ -31,6 +32,8 @@ paths:
                           type: string
                         scenarioRunId:
                           type: string
+                        scenarioSetId:
+                          type: string
                         name:
                           type:
                           - string
@@ -42,30 +45,111 @@ paths:
                         status:
                           type: string
                         results:
-                          type:
-                          - object
-                          - 'null'
-                          properties:
-                            verdict:
-                              type:
-                              - string
-                              - 'null'
-                            reasoning:
-                              type:
-                              - string
-                              - 'null'
-                            metCriteria:
-                              type: array
-                              items:
-                                type: string
-                            unmetCriteria:
-                              type: array
-                              items:
-                                type: string
-                            error:
-                              type:
-                              - string
-                              - 'null'
+                          anyOf:
+                          - type: object
+                            properties:
+                              verdict:
+                                type:
+                                - string
+                                - 'null'
+                              reasoning:
+                                type:
+                                - string
+                                - 'null'
+                              metCriteria:
+                                type: array
+                                items:
+                                  type: string
+                              unmetCriteria:
+                                type: array
+                                items:
+                                  type: string
+                              inconclusiveCriteria:
+                                description: Criteria the judge could not check because the evidence was missing. Each is also in `unmetCriteria`.
+                                type: array
+                                items:
+                                  type: string
+                              criteria:
+                                description: Each criterion with its status (`passed`, `failed` or `inconclusive`) and the judge's reasoning for it, in the order the scenario declares them. Runs from SDKs before per-criterion verdicts carry an empty reasoning.
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    criterion:
+                                      type: string
+                                    requirement:
+                                      type: string
+                                    status:
+                                      type: string
+                                      enum:
+                                      - passed
+                                      - failed
+                                      - inconclusive
+                                    reasoning:
+                                      default: ''
+                                      type: string
+                                  required:
+                                  - criterion
+                                  - status
+                                  - reasoning
+                                  additionalProperties: false
+                              error:
+                                type:
+                                - string
+                                - 'null'
+                              evaluations:
+                                description: One result per evaluator that ran on the scenario. Absent on a run with no evaluators, and on servers that predate evaluators.
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    evaluatorId:
+                                      type: string
+                                    name:
+                                      type: string
+                                    status:
+                                      type: string
+                                      enum:
+                                      - passed
+                                      - failed
+                                      - scored
+                                      - skipped
+                                      - error
+                                    required:
+                                      type: boolean
+                                    passed:
+                                      type: boolean
+                                    score:
+                                      type: number
+                                    label:
+                                      type: string
+                                    details:
+                                      type: string
+                                    cost:
+                                      type: object
+                                      properties:
+                                        currency:
+                                          type: string
+                                        amount:
+                                          type: number
+                                      required:
+                                      - currency
+                                      - amount
+                                      additionalProperties: false
+                                    inputs:
+                                      type: object
+                                      propertyNames:
+                                        type: string
+                                      additionalProperties:
+                                        type: string
+                                  required:
+                                  - evaluatorId
+                                  - name
+                                  - status
+                                  - required
+                                  additionalProperties: false
+                            additionalProperties: false
+                          - type: 'null'
                         messages:
                           type: array
                           items:
@@ -78,6 +162,10 @@ paths:
                             required:
                             - role
                             - content
+                            additionalProperties: false
+                        messagesTruncated:
+                          description: True when `messages` holds only the first few messages of a longer conversation. Pass `include=messages` to read them all.
+                          type: boolean
                         timestamp:
                           type: number
                         updatedAt:
@@ -86,6 +174,34 @@ paths:
                           type: number
                         totalCost:
                           type: number
+                        roleCosts:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: number
+                        roleLatencies:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: number
+                        note:
+                          description: One short line saying why the run was started, as given when it was queued. Null on a run started without one.
+                          type:
+                          - string
+                          - 'null'
+                        scenarioVersion:
+                          description: The version of the scenario at the moment the run was queued. Null on runs recorded before versions existed.
+                          anyOf:
+                          - type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          - type: 'null'
                         platformUrl:
                           type: string
                           format: uri
@@ -102,65 +218,23 @@ paths:
                       - updatedAt
                       - durationInMs
                       - platformUrl
+                      additionalProperties: false
                   hasMore:
                     type: boolean
                   nextCursor:
                     type: string
                 required:
                 - runs
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiSimulation-runs
+                additionalProperties: false
+      description: List simulation runs, optionally filtered by scenarioSetId or batchRunId. Set-level and unfiltered listings trim each run to its first few messages and report the trim as `messagesTruncated`; pass `include=messages` to read whole conversations, which caps the page at 20 runs, ending on a batch boundary. A batch-scoped listing always carries whole conversations.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
       parameters:
       - in: query
         name: scenarioSetId
@@ -173,21 +247,262 @@ paths:
       - in: query
         name: limit
         schema:
+          default: 20
           type: integer
           exclusiveMinimum: 0
           maximum: 100
-          default: 20
       - in: query
         name: cursor
         schema:
           type: string
-      description: List simulation runs, optionally filtered by scenarioSetId or batchRunId
+      - in: query
+        name: include
+        schema:
+          type: string
+          const: messages
+        description: Pass `messages` to read whole conversations instead of the first few messages of each run. The page size is capped at 20 runs when set, and ends on a batch boundary.
       tags:
       - Simulation Runs
       summary: Get api simulation runs
       x-summary-source: derived
-  /api/simulation-runs/batches/list:
+  /api/v1/simulation-runs/{scenarioRunId}:
     get:
+      operationId: getApiSimulationRunsByScenarioRunId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioId:
+                    type: string
+                  batchRunId:
+                    type: string
+                  scenarioRunId:
+                    type: string
+                  scenarioSetId:
+                    type: string
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                  results:
+                    anyOf:
+                    - type: object
+                      properties:
+                        verdict:
+                          type:
+                          - string
+                          - 'null'
+                        reasoning:
+                          type:
+                          - string
+                          - 'null'
+                        metCriteria:
+                          type: array
+                          items:
+                            type: string
+                        unmetCriteria:
+                          type: array
+                          items:
+                            type: string
+                        inconclusiveCriteria:
+                          description: Criteria the judge could not check because the evidence was missing. Each is also in `unmetCriteria`.
+                          type: array
+                          items:
+                            type: string
+                        criteria:
+                          description: Each criterion with its status (`passed`, `failed` or `inconclusive`) and the judge's reasoning for it, in the order the scenario declares them. Runs from SDKs before per-criterion verdicts carry an empty reasoning.
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              criterion:
+                                type: string
+                              requirement:
+                                type: string
+                              status:
+                                type: string
+                                enum:
+                                - passed
+                                - failed
+                                - inconclusive
+                              reasoning:
+                                default: ''
+                                type: string
+                            required:
+                            - criterion
+                            - status
+                            - reasoning
+                            additionalProperties: false
+                        error:
+                          type:
+                          - string
+                          - 'null'
+                        evaluations:
+                          description: One result per evaluator that ran on the scenario. Absent on a run with no evaluators, and on servers that predate evaluators.
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              evaluatorId:
+                                type: string
+                              name:
+                                type: string
+                              status:
+                                type: string
+                                enum:
+                                - passed
+                                - failed
+                                - scored
+                                - skipped
+                                - error
+                              required:
+                                type: boolean
+                              passed:
+                                type: boolean
+                              score:
+                                type: number
+                              label:
+                                type: string
+                              details:
+                                type: string
+                              cost:
+                                type: object
+                                properties:
+                                  currency:
+                                    type: string
+                                  amount:
+                                    type: number
+                                required:
+                                - currency
+                                - amount
+                                additionalProperties: false
+                              inputs:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: string
+                            required:
+                            - evaluatorId
+                            - name
+                            - status
+                            - required
+                            additionalProperties: false
+                      additionalProperties: false
+                    - type: 'null'
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                        content:
+                          type: string
+                      required:
+                      - role
+                      - content
+                      additionalProperties: false
+                  messagesTruncated:
+                    description: True when `messages` holds only the first few messages of a longer conversation. Pass `include=messages` to read them all.
+                    type: boolean
+                  timestamp:
+                    type: number
+                  updatedAt:
+                    type: number
+                  durationInMs:
+                    type: number
+                  totalCost:
+                    type: number
+                  roleCosts:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: number
+                  roleLatencies:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: number
+                  note:
+                    description: One short line saying why the run was started, as given when it was queued. Null on a run started without one.
+                    type:
+                    - string
+                    - 'null'
+                  scenarioVersion:
+                    description: The version of the scenario at the moment the run was queued. Null on runs recorded before versions existed.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - scenarioId
+                - batchRunId
+                - scenarioRunId
+                - name
+                - description
+                - status
+                - results
+                - messages
+                - timestamp
+                - updatedAt
+                - durationInMs
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      description: Get a single simulation run by its ID
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: path
+        name: scenarioRunId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Simulation Runs
+      summary: Get api simulation runs by scenario run id
+      x-summary-source: derived
+  /api/v1/simulation-runs/batches/list:
+    get:
+      operationId: getApiSimulationRunsBatchesList
       responses:
         '200':
           description: Success
@@ -211,6 +526,8 @@ paths:
                           type: number
                         runningCount:
                           type: number
+                        settledCount:
+                          type: number
                         stalledCount:
                           type: number
                         lastRunAt:
@@ -222,8 +539,18 @@ paths:
                           - number
                           - 'null'
                         allCompletedAt:
+                          description: 'Deprecated: read settledCount and isComplete instead. It carries the last update time of a batch where no run is running.'
+                          deprecated: true
                           type:
                           - number
+                          - 'null'
+                        isComplete:
+                          type: boolean
+                          description: True when every run of the batch reached a terminal status.
+                        note:
+                          description: One short line saying why the batch was run, as given when it was queued. Null on a batch run without one.
+                          type:
+                          - string
                           - 'null'
                       required:
                       - batchRunId
@@ -231,70 +558,30 @@ paths:
                       - passCount
                       - failCount
                       - runningCount
+                      - settledCount
                       - stalledCount
                       - lastRunAt
                       - lastUpdatedAt
                       - firstCompletedAt
                       - allCompletedAt
+                      - isComplete
+                      additionalProperties: false
                   hasMore:
                     type: boolean
                   nextCursor:
                     type: string
                 required:
                 - batches
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiSimulation-runsBatchesList
+                additionalProperties: false
+      description: List batch summaries for a scenario set (pass/fail counts per batch)
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
       parameters:
       - in: query
         name: scenarioSetId
@@ -304,23 +591,21 @@ paths:
       - in: query
         name: limit
         schema:
+          default: 10
           type: integer
           exclusiveMinimum: 0
           maximum: 50
-          default: 10
-        required: false
       - in: query
         name: cursor
         schema:
           type: string
-        required: false
-      description: List batch summaries for a scenario set (pass/fail counts per batch)
       tags:
       - Simulation Runs
       summary: Get api simulation runs batches list
       x-summary-source: derived
-  /api/simulation-runs/{scenarioRunId}:
+  /api/v1/simulation-runs/batches/{batchRunId}:
     get:
+      operationId: getApiSimulationRunsBatchesByBatchRunId
       responses:
         '200':
           description: Success
@@ -329,111 +614,58 @@ paths:
               schema:
                 type: object
                 properties:
-                  scenarioId:
-                    type: string
                   batchRunId:
                     type: string
-                  scenarioRunId:
-                    type: string
-                  name:
+                  totalCount:
+                    type: number
+                  passCount:
+                    type: number
+                  failCount:
+                    type: number
+                  runningCount:
+                    type: number
+                  settledCount:
+                    type: number
+                  stalledCount:
+                    type: number
+                  lastRunAt:
+                    type: number
+                  lastUpdatedAt:
+                    type: number
+                  firstCompletedAt:
+                    type:
+                    - number
+                    - 'null'
+                  allCompletedAt:
+                    description: 'Deprecated: read settledCount and isComplete instead. It carries the last update time of a batch where no run is running.'
+                    deprecated: true
+                    type:
+                    - number
+                    - 'null'
+                  isComplete:
+                    type: boolean
+                    description: True when every run of the batch reached a terminal status.
+                  note:
+                    description: One short line saying why the batch was run, as given when it was queued. Null on a batch run without one.
                     type:
                     - string
                     - 'null'
-                  description:
-                    type:
-                    - string
-                    - 'null'
-                  status:
-                    type: string
-                  results:
-                    type:
-                    - object
-                    - 'null'
-                    properties:
-                      verdict:
-                        type:
-                        - string
-                        - 'null'
-                      reasoning:
-                        type:
-                        - string
-                        - 'null'
-                      metCriteria:
-                        type: array
-                        items:
-                          type: string
-                      unmetCriteria:
-                        type: array
-                        items:
-                          type: string
-                      error:
-                        type:
-                        - string
-                        - 'null'
-                  messages:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        role:
-                          type: string
-                        content:
-                          type: string
-                      required:
-                      - role
-                      - content
-                  timestamp:
-                    type: number
-                  updatedAt:
-                    type: number
-                  durationInMs:
-                    type: number
-                  totalCost:
-                    type: number
-                  platformUrl:
-                    type: string
-                    format: uri
                 required:
-                - scenarioId
                 - batchRunId
-                - scenarioRunId
-                - name
-                - description
-                - status
-                - results
-                - messages
-                - timestamp
-                - updatedAt
-                - durationInMs
-                - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                - totalCount
+                - passCount
+                - failCount
+                - runningCount
+                - settledCount
+                - stalledCount
+                - lastRunAt
+                - lastUpdatedAt
+                - firstCompletedAt
+                - allCompletedAt
+                - isComplete
+                additionalProperties: false
         '404':
-          description: Run not found
+          description: Not found
           content:
             application/json:
               schema:
@@ -441,47 +673,27 @@ paths:
                 properties:
                   error:
                     type: string
-                  message:
-                    type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiSimulation-runsByScenarioRunId
+      description: Get the summary of a single batch run, including its completion flag
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
       parameters:
-      - schema:
+      - in: path
+        name: batchRunId
+        schema:
           type: string
-        in: path
-        name: scenarioRunId
+          minLength: 1
         required: true
-      description: Get a single simulation run by its ID
       tags:
       - Simulation Runs
-      summary: Get api simulation runs by scenario run id
+      summary: Get api simulation runs batches by batch run id
       x-summary-source: derived
 components:
   securitySchemes:
@@ -494,3 +706,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

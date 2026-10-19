@@ -1,0 +1,828 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Groups API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Groups
+paths:
+  /api/v1/groups:
+    get:
+      operationId: getApiGroups
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+                        slug:
+                          type: string
+                          minLength: 1
+                        externalId:
+                          type:
+                          - string
+                          - 'null'
+                        scimSource:
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                          format: date-time
+                        memberCount:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                        bindings:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                minLength: 1
+                              role:
+                                type: string
+                                enum:
+                                - ADMIN
+                                - MEMBER
+                                - VIEWER
+                                - CUSTOM
+                              customRoleId:
+                                type:
+                                - string
+                                - 'null'
+                              customRoleName:
+                                type:
+                                - string
+                                - 'null'
+                              scopeType:
+                                type: string
+                                enum:
+                                - ORGANIZATION
+                                - TEAM
+                                - PROJECT
+                              scopeId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - id
+                            - role
+                            - customRoleId
+                            - customRoleName
+                            - scopeType
+                            - scopeId
+                            additionalProperties: false
+                      required:
+                      - id
+                      - name
+                      - slug
+                      - externalId
+                      - scimSource
+                      - createdAt
+                      - memberCount
+                      - bindings
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      limit:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      total:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - page
+                    - limit
+                    - total
+                    additionalProperties: false
+                required:
+                - data
+                - pagination
+                additionalProperties: false
+      description: List all groups for the organization
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: query
+        name: page
+        schema:
+          default: 1
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      summary: Get api groups
+      x-summary-source: derived
+    post:
+      operationId: postApiGroups
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  organizationId:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                  createdAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - organizationId
+                - name
+                - slug
+                - createdAt
+                additionalProperties: false
+      description: Create a new group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                bindings:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - MEMBER
+                        - VIEWER
+                        - CUSTOM
+                      customRoleId:
+                        type: string
+                        minLength: 1
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    - scopeType
+                    - scopeId
+                    additionalProperties: false
+                memberIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - name
+      summary: Post api groups
+      x-summary-source: derived
+  /api/v1/groups/{groupId}:
+    get:
+      operationId: getApiGroupsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  scimSource:
+                    type:
+                    - string
+                    - 'null'
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          minLength: 1
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        email:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      - email
+                      additionalProperties: false
+                  bindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        customRoleId:
+                          type:
+                          - string
+                          - 'null'
+                        customRoleName:
+                          type:
+                          - string
+                          - 'null'
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - id
+                      - role
+                      - customRoleId
+                      - customRoleName
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                required:
+                - id
+                - name
+                - slug
+                - externalId
+                - scimSource
+                - members
+                - bindings
+                additionalProperties: false
+      description: Get a group with members and bindings
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api groups by id
+      x-summary-source: derived
+    patch:
+      operationId: patchApiGroupsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                  slug:
+                    type: string
+                    minLength: 1
+                required:
+                - id
+                - name
+                - slug
+                additionalProperties: false
+      description: Rename a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+              required:
+              - name
+      summary: Patch api groups by id
+      x-summary-source: derived
+    delete:
+      operationId: deleteApiGroupsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Delete a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete api groups by id
+      x-summary-source: derived
+  /api/v1/groups/{groupId}/members:
+    get:
+      operationId: getApiGroupsByIdMembers
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          minLength: 1
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        email:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - userId
+                      - name
+                      - email
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: List members of a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api groups by id members
+      x-summary-source: derived
+    post:
+      operationId: postApiGroupsByIdMembers
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Add a member to a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  minLength: 1
+              required:
+              - userId
+      summary: Post api groups by id members
+      x-summary-source: derived
+  /api/v1/groups/{groupId}/members/{userId}:
+    delete:
+      operationId: deleteApiGroupsByIdMembersByUserId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Remove a member from a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete api groups by id members by user id
+      x-summary-source: derived
+  /api/v1/groups/{groupId}/bindings:
+    get:
+      operationId: getApiGroupsByIdBindings
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        customRoleId:
+                          type:
+                          - string
+                          - 'null'
+                        customRoleName:
+                          type:
+                          - string
+                          - 'null'
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - id
+                      - role
+                      - customRoleId
+                      - customRoleName
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+      description: List role bindings for a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get api groups by id bindings
+      x-summary-source: derived
+    post:
+      operationId: postApiGroupsByIdBindings
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  role:
+                    type: string
+                    enum:
+                    - ADMIN
+                    - MEMBER
+                    - VIEWER
+                    - CUSTOM
+                  scopeType:
+                    type: string
+                    enum:
+                    - ORGANIZATION
+                    - TEAM
+                    - PROJECT
+                  scopeId:
+                    type: string
+                    minLength: 1
+                required:
+                - id
+                - role
+                - scopeType
+                - scopeId
+                additionalProperties: false
+      description: Add a role binding to a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                  - ADMIN
+                  - MEMBER
+                  - VIEWER
+                  - CUSTOM
+                customRoleId:
+                  type: string
+                  minLength: 1
+                scopeType:
+                  type: string
+                  enum:
+                  - ORGANIZATION
+                  - TEAM
+                  - PROJECT
+                scopeId:
+                  type: string
+                  minLength: 1
+              required:
+              - role
+              - scopeType
+              - scopeId
+              additionalProperties: false
+      summary: Post api groups by id bindings
+      x-summary-source: derived
+  /api/v1/groups/{groupId}/bindings/{bindingId}:
+    delete:
+      operationId: deleteApiGroupsByIdBindingsByBindingId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+                additionalProperties: false
+      description: Remove a role binding from a group
+      tags:
+      - Groups
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: bindingId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete api groups by id bindings by binding id
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

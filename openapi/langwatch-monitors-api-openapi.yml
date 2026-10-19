@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Monitors API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Monitors
 paths:
-  /api/monitors:
+  /api/v1/monitors:
     get:
+      operationId: getApiMonitors
       responses:
         '200':
           description: Success
@@ -49,7 +50,9 @@ paths:
                     preconditions: {}
                     parameters: {}
                     mappings:
-                      type: 'null'
+                      anyOf:
+                      - {}
+                      - type: 'null'
                     threadIdleTimeout:
                       type:
                       - number
@@ -71,73 +74,32 @@ paths:
                   - sample
                   - level
                   - evaluatorId
+                  - preconditions
+                  - parameters
+                  - mappings
                   - threadIdleTimeout
                   - createdAt
                   - updatedAt
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiMonitors
-      parameters: []
+                  additionalProperties: false
       description: List all online evaluation monitors for the project
       tags:
       - Monitors
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
       summary: Get api monitors
       x-summary-source: derived
     post:
+      operationId: postApiMonitors
       responses:
         '201':
-          description: Monitor created
+          description: Success
           content:
             application/json:
               schema:
@@ -170,7 +132,9 @@ paths:
                   preconditions: {}
                   parameters: {}
                   mappings:
-                    type: 'null'
+                    anyOf:
+                    - {}
+                    - type: 'null'
                   threadIdleTimeout:
                     type:
                     - number
@@ -192,66 +156,27 @@ paths:
                 - sample
                 - level
                 - evaluatorId
+                - preconditions
+                - parameters
+                - mappings
                 - threadIdleTimeout
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiMonitors
-      parameters: []
+                additionalProperties: false
       description: Create a new online evaluation monitor
+      tags:
+      - Monitors
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -264,137 +189,68 @@ paths:
                   type: string
                   minLength: 1
                 executionMode:
+                  default: ON_MESSAGE
                   type: string
                   enum:
                   - ON_MESSAGE
                   - AS_GUARDRAIL
                   - MANUALLY
-                  default: ON_MESSAGE
                 preconditions:
+                  default: []
                   type: array
                   items: {}
-                  default: []
                 parameters:
-                  type: object
-                  additionalProperties: {}
                   default: {}
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    $ref: '#/components/schemas/JsonValue'
                 mappings:
-                  type:
-                  - object
-                  - 'null'
-                  properties:
-                    mapping:
-                      type: object
-                      additionalProperties:
-                        anyOf:
-                        - type: object
-                          properties:
-                            source:
-                              anyOf:
-                              - type: string
-                                enum:
-                                - trace_id
-                                - thread_id
-                                - timestamp
-                                - input
-                                - output
-                                - contexts
-                                - contexts.string_list
-                                - metrics.total_cost
-                                - metrics.first_token_ms
-                                - metrics.total_time_ms
-                                - metrics.prompt_tokens
-                                - metrics.completion_tokens
-                                - metrics.total_tokens
-                                - spans
-                                - spans.llm.input
-                                - spans.llm.output
-                                - metadata
-                                - evaluations
-                                - annotations
-                                - events
-                                - threads
-                                - threads_until_current
-                                - formatted_trace
-                              - type: string
-                                const: ''
-                            key:
-                              type: string
-                            subkey:
-                              type: string
-                            selectedFields:
-                              type: array
-                              items:
-                                type: string
-                            type:
-                              type: string
-                              const: trace
-                          required:
-                          - source
-                        - type: object
-                          properties:
-                            source:
-                              anyOf:
-                              - type: string
-                                enum:
-                                - thread_id
-                                - traces
-                                - formatted_traces
-                              - type: string
-                                const: ''
-                            key:
-                              type: string
-                            subkey:
-                              type: string
-                            selectedFields:
-                              type: array
-                              items:
-                                type: string
-                            type:
-                              type: string
-                              const: thread
-                          required:
-                          - source
-                          - type
-                    expansions:
-                      type: array
-                      items:
-                        type: string
-                        enum:
-                        - spans.llm.span_id
-                        - spans.all.span_id
-                        - annotations.id
-                        - events.event_id
-                  required:
-                  - mapping
-                  - expansions
+                  anyOf:
+                  - type: object
+                    properties:
+                      mapping:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      expansions:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mapping
+                    - expansions
+                  - type: 'null'
                 sample:
+                  default: 1
                   type: number
                   minimum: 0
                   maximum: 1
-                  default: 1
                 evaluatorId:
                   type: string
+                  minLength: 1
                 level:
+                  default: trace
                   type: string
                   enum:
                   - trace
                   - thread
-                  default: trace
                 threadIdleTimeout:
-                  type:
-                  - integer
-                  - 'null'
-                  exclusiveMinimum: 0
+                  anyOf:
+                  - type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                  - type: 'null'
               required:
               - name
               - checkType
-      tags:
-      - Monitors
       summary: Post api monitors
       x-summary-source: derived
-  /api/monitors/{id}:
+  /api/v1/monitors/{id}:
     get:
+      operationId: getApiMonitorsById
       responses:
         '200':
           description: Success
@@ -430,7 +286,9 @@ paths:
                   preconditions: {}
                   parameters: {}
                   mappings:
-                    type: 'null'
+                    anyOf:
+                    - {}
+                    - type: 'null'
                   threadIdleTimeout:
                     type:
                     - number
@@ -452,38 +310,16 @@ paths:
                 - sample
                 - level
                 - evaluatorId
+                - preconditions
+                - parameters
+                - mappings
                 - threadIdleTimeout
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Monitor not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -495,48 +331,33 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiMonitorsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Get a monitor by its ID
       tags:
       - Monitors
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The monitor id.
       summary: Get api monitors by id
       x-summary-source: derived
     patch:
+      operationId: patchApiMonitorsById
       responses:
         '200':
-          description: Monitor updated
+          description: Success
           content:
             application/json:
               schema:
@@ -569,7 +390,9 @@ paths:
                   preconditions: {}
                   parameters: {}
                   mappings:
-                    type: 'null'
+                    anyOf:
+                    - {}
+                    - type: 'null'
                   threadIdleTimeout:
                     type:
                     - number
@@ -591,38 +414,16 @@ paths:
                 - sample
                 - level
                 - evaluatorId
+                - preconditions
+                - parameters
+                - mappings
                 - threadIdleTimeout
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Monitor not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -634,41 +435,12 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: patchApiMonitorsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Update a monitor (name, enabled state, settings, etc.)
+      tags:
+      - Monitors
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -692,123 +464,70 @@ paths:
                   items: {}
                 parameters:
                   type: object
-                  additionalProperties: {}
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    $ref: '#/components/schemas/JsonValue'
                 mappings:
-                  type:
-                  - object
-                  - 'null'
-                  properties:
-                    mapping:
-                      type: object
-                      additionalProperties:
-                        anyOf:
-                        - type: object
-                          properties:
-                            source:
-                              anyOf:
-                              - type: string
-                                enum:
-                                - trace_id
-                                - thread_id
-                                - timestamp
-                                - input
-                                - output
-                                - contexts
-                                - contexts.string_list
-                                - metrics.total_cost
-                                - metrics.first_token_ms
-                                - metrics.total_time_ms
-                                - metrics.prompt_tokens
-                                - metrics.completion_tokens
-                                - metrics.total_tokens
-                                - spans
-                                - spans.llm.input
-                                - spans.llm.output
-                                - metadata
-                                - evaluations
-                                - annotations
-                                - events
-                                - threads
-                                - threads_until_current
-                                - formatted_trace
-                              - type: string
-                                const: ''
-                            key:
-                              type: string
-                            subkey:
-                              type: string
-                            selectedFields:
-                              type: array
-                              items:
-                                type: string
-                            type:
-                              type: string
-                              const: trace
-                          required:
-                          - source
-                        - type: object
-                          properties:
-                            source:
-                              anyOf:
-                              - type: string
-                                enum:
-                                - thread_id
-                                - traces
-                                - formatted_traces
-                              - type: string
-                                const: ''
-                            key:
-                              type: string
-                            subkey:
-                              type: string
-                            selectedFields:
-                              type: array
-                              items:
-                                type: string
-                            type:
-                              type: string
-                              const: thread
-                          required:
-                          - source
-                          - type
-                    expansions:
-                      type: array
-                      items:
-                        type: string
-                        enum:
-                        - spans.llm.span_id
-                        - spans.all.span_id
-                        - annotations.id
-                        - events.event_id
-                  required:
-                  - mapping
-                  - expansions
+                  anyOf:
+                  - type: object
+                    properties:
+                      mapping:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      expansions:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mapping
+                    - expansions
+                  - type: 'null'
                 sample:
                   type: number
                   minimum: 0
                   maximum: 1
                 evaluatorId:
-                  type:
-                  - string
-                  - 'null'
+                  anyOf:
+                  - type: string
+                    minLength: 1
+                  - type: 'null'
                 level:
                   type: string
                   enum:
                   - trace
                   - thread
                 threadIdleTimeout:
-                  type:
-                  - integer
-                  - 'null'
-                  exclusiveMinimum: 0
-      tags:
-      - Monitors
+                  anyOf:
+                  - type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                  - type: 'null'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The monitor id.
       summary: Patch api monitors by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiMonitorsById
       responses:
         '200':
-          description: Monitor deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -821,34 +540,9 @@ paths:
                 required:
                 - id
                 - deleted
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Monitor not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -860,49 +554,34 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiMonitorsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Delete a monitor
       tags:
       - Monitors
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The monitor id.
       summary: Delete api monitors by id
       x-summary-source: derived
-  /api/monitors/{id}/toggle:
+  /api/v1/monitors/{id}/toggle:
     post:
+      operationId: postApiMonitorsByIdToggle
       responses:
         '200':
-          description: Monitor toggled
+          description: Success
           content:
             application/json:
               schema:
@@ -915,34 +594,9 @@ paths:
                 required:
                 - id
                 - enabled
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Monitor not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -954,41 +608,28 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiMonitorsByIdToggle
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Enable or disable a monitor
+      tags:
+      - Monitors
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The monitor id.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -998,11 +639,24 @@ paths:
                   type: boolean
               required:
               - enabled
-      tags:
-      - Monitors
       summary: Post api monitors by id toggle
       x-summary-source: derived
 components:
+  schemas:
+    JsonValue:
+      anyOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: 'null'
+      - type: array
+        items:
+          $ref: '#/components/schemas/JsonValue'
+      - type: object
+        propertyNames:
+          type: string
+        additionalProperties:
+          $ref: '#/components/schemas/JsonValue'
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -1013,3 +667,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,1911 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Gateway Spend API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Gateway Spend
+paths:
+  /api/gateway/v1/spend-summaries:
+    get:
+      operationId: getApiGatewayV1SpendSummaries
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        group:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: string
+                        bucket_start:
+                          type:
+                          - string
+                          - 'null'
+                        event_count:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        settled_count:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        usage:
+                          type: object
+                          properties:
+                            input_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            output_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            cache_read_input_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            cache_creation_input_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            reasoning_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                            input_image_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                              description: Image tokens billed on the input side, 0 when no image was used. Priced at its own rate and disjoint from input_tokens, which never includes it.
+                            output_image_tokens:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                              description: 'Image tokens the answer was billed for, 0 when no answer held one. Priced at its own rate and disjoint from output_tokens: an image_generation row reports output_tokens 0 and its render here, so a reconciler reading output_tokens alone sees none of the image traffic.'
+                            image_count:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                              description: 'Images carried, 0 when none were. Display only: no rate prices it, so it never belongs in a cost sum.'
+                          required:
+                          - input_tokens
+                          - output_tokens
+                          - cache_read_input_tokens
+                          - cache_creation_input_tokens
+                          - reasoning_tokens
+                          - input_image_tokens
+                          - output_image_tokens
+                          - image_count
+                          additionalProperties: false
+                        cost:
+                          type: object
+                          properties:
+                            total_usd:
+                              type: string
+                              description: Display value. Decimal string, up to 9 fractional digits, trailing zeros trimmed, never exponent notation. Use nano_usd for arithmetic.
+                            nano_usd:
+                              type: integer
+                              minimum: -9007199254740991
+                              maximum: 9007199254740991
+                              description: Canonical integer cost, nano-USD. Rated as an integer and summed as one, so this is the figure to reconcile against.
+                          required:
+                          - total_usd
+                          - nano_usd
+                          additionalProperties: false
+                      required:
+                      - key
+                      - group
+                      - bucket_start
+                      - event_count
+                      - settled_count
+                      - usage
+                      - cost
+                      additionalProperties: false
+                  next_cursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - data
+                - next_cursor
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: 'Reconciliation checksum fast path: spend rollups with token classes and integer nano-USD cost. Settled (unpriced) requests are counted separately as settled_count and never included in cost sums. Diff individual items via /spend-events only when a checksum diverges. `group_by` takes one or two of virtual_key, end_user, project, model, provider, principal and request_type, comma-separated, and `bucket` adds an hour or day column in the `timezone` you name. `key` stays the first dimension''s value for consumers written against the single-dimension surface; read `group` to tell two dimensions apart. Paged by group key ascending: follow next_cursor until it comes back null, because a page that is full does not mean the window held nothing more. Grouping by model or provider, or into time buckets, is refused with `gateway_spend_group_by_unstable` while the window is recent enough that outcomes can still arrive, because those groups can move under a page walk and the totals would double-count some requests and miss others; ask for an older range, or send `allow_unstable` when an approximate shape is enough. Every filter here is accepted by /spend-events too, and the reverse holds apart from `status=admitted`: a rollup sums the cost of requests past admission, so an admitted request has none to contribute and that narrowing is refused rather than answered with a zero. Ask /spend-events for those.'
+      summary: List spend summaries
+      tags:
+      - Gateway Spend
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - gatewaySpend:view
+      parameters:
+      - in: query
+        name: group_by
+        schema:
+          example: model,end_user
+          type: string
+        required: true
+        description: 'One or two dimensions, comma separated: virtual_key, end_user, project, model, provider, principal, request_type. A dimension may not repeat. Each row''s `key` is the first dimension''s value and `group` names them all, so two rows may share a key.'
+      - in: query
+        name: bucket
+        schema:
+          default: none
+          type: string
+          enum:
+          - none
+          - hour
+          - day
+      - in: query
+        name: timezone
+        schema:
+          default: UTC
+          type: string
+          minLength: 1
+          maxLength: 64
+      - in: query
+        name: allow_unstable
+        schema:
+          example: 'true'
+          default: 'false'
+          type: string
+        description: true, 1, yes for yes; false, 0, no or omitted for no. Case does not matter, so a Python True is accepted as sent.
+      - in: query
+        name: from
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          example: 1782864000000
+        required: true
+        description: Milliseconds since the Unix epoch, not seconds. An epoch in seconds is a valid integer here and answers for 1970, so a mismatched unit reads as an empty window rather than as an error.
+      - in: query
+        name: to
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          example: 1782864000000
+        required: true
+        description: Milliseconds since the Unix epoch, not seconds. An epoch in seconds is a valid integer here and answers for 1970, so a mismatched unit reads as an empty window rather than as an error.
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 500
+      - in: query
+        name: limit
+        schema:
+          default: 500
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 1000
+      - in: query
+        name: project_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: team_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: external_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: virtual_key_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: end_user_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 256
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 256
+      - in: query
+        name: principal_user_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: model
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: provider_key
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: request_type
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 50
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 50
+      - in: query
+        name: label
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: metadata
+        schema:
+          anyOf:
+          - type: string
+            minLength: 3
+            maxLength: 640
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 3
+              maxLength: 640
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - success
+          - error
+          - confirmed
+          - failed
+          - settled
+        description: 'Narrow to one lifecycle status. `admitted` is not accepted here: a rollup sums the cost of requests past admission, and an admitted request is still in flight with no cost of its own yet. Ask /spend-events for those.'
+  /api/gateway/v1/spend-events:
+    get:
+      operationId: getApiGatewayV1SpendEvents
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        created:
+                          type: string
+                        schema_version:
+                          type: string
+                        data:
+                          type: object
+                          properties:
+                            event_id:
+                              type: string
+                            event_type:
+                              type: string
+                            gateway_request_id:
+                              type: string
+                            occurred_at:
+                              type: string
+                            usage:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  input_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  output_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  cache_read_input_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  cache_creation_input_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  reasoning_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                  input_image_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                    description: Image tokens billed on the input side, disjoint from input_tokens.
+                                  output_image_tokens:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                    description: Image tokens the answer was billed for, disjoint from output_tokens.
+                                  image_count:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                    description: 'Images the request carried. Display only: never part of a cost sum.'
+                                required:
+                                - input_tokens
+                                - output_tokens
+                                - cache_read_input_tokens
+                                - cache_creation_input_tokens
+                                - reasoning_tokens
+                                - input_image_tokens
+                                - output_image_tokens
+                                - image_count
+                                additionalProperties: false
+                              - type: 'null'
+                            cost:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  total_usd:
+                                    type: string
+                                    description: Display value. Use nano_usd for arithmetic.
+                                  nano_usd:
+                                    type: integer
+                                    minimum: -9007199254740991
+                                    maximum: 9007199254740991
+                                    description: Canonical integer cost, nano-USD.
+                                  rate_version:
+                                    type:
+                                    - string
+                                    - 'null'
+                                required:
+                                - total_usd
+                                - nano_usd
+                                additionalProperties: false
+                              - type: 'null'
+                            status:
+                              type: string
+                            needs_reconciliation:
+                              type:
+                              - boolean
+                              - 'null'
+                            settle_reason:
+                              type:
+                              - string
+                              - 'null'
+                            error:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  class:
+                                    type: string
+                                  http_status:
+                                    anyOf:
+                                    - type: integer
+                                      minimum: -9007199254740991
+                                      maximum: 9007199254740991
+                                    - type: 'null'
+                                required:
+                                - class
+                                - http_status
+                                additionalProperties: false
+                              - type: 'null'
+                            duration_ms:
+                              anyOf:
+                              - type: integer
+                                minimum: -9007199254740991
+                                maximum: 9007199254740991
+                              - type: 'null'
+                            labels:
+                              type: array
+                              items:
+                                type: string
+                            metadata:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          required:
+                          - event_id
+                          - event_type
+                          - gateway_request_id
+                          - occurred_at
+                          - usage
+                          - cost
+                          - status
+                          - needs_reconciliation
+                          - settle_reason
+                          - error
+                          - duration_ms
+                          - labels
+                          - metadata
+                          additionalProperties: {}
+                      required:
+                      - id
+                      - type
+                      - created
+                      - schema_version
+                      - data
+                      additionalProperties: false
+                  next_cursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - data
+                - next_cursor
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: 'Cursor-paged pull over the per-request spend record, ascending by insert order so rows folded late are never skipped by an in-flight cursor. Events are the same canonical objects webhook deliveries carry. Retention is a fixed 13 months, which bounds reconciliation and replay. When feeding a downstream biller, mind its dedup window (Metronome 34 days and Stripe meters 24h+ at the time of writing; both vendors own those numbers, so confirm the current one before you rely on it): re-pulling older ranges into a biller past its window can double-bill. Every filter here is accepted by /spend-summaries too, so a checksum that disagrees can be diffed on exactly the same narrowing; the one difference is `status=admitted`, which only this read answers, because an admitted request is still in flight and contributes no cost to a rollup. Repeat a filter to widen it (`model=a&model=b` matches either); name two different filters to narrow. `metadata` is written `key:value`, split on the first colon, and repeating a key widens that key. `team_id` and `external_id` name Postgres records and are resolved to the projects and keys they cover, so a team with no projects or an external id nobody minted answers with no spend rather than with everything.'
+      summary: List spend events
+      tags:
+      - Gateway Spend
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - gatewaySpend:view
+      parameters:
+      - in: query
+        name: from
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          example: 1782864000000
+        required: true
+        description: Milliseconds since the Unix epoch, not seconds. An epoch in seconds is a valid integer here and answers for 1970, so a mismatched unit reads as an empty window rather than as an error.
+      - in: query
+        name: to
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+          example: 1782864000000
+        required: true
+        description: Milliseconds since the Unix epoch, not seconds. An epoch in seconds is a valid integer here and answers for 1970, so a mismatched unit reads as an empty window rather than as an error.
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 500
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 200
+      - in: query
+        name: project_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: team_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: external_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: virtual_key_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: end_user_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 256
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 256
+      - in: query
+        name: principal_user_id
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: model
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: provider_key
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      - in: query
+        name: request_type
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 50
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 50
+      - in: query
+        name: label
+        schema:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 200
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 200
+      - in: query
+        name: metadata
+        schema:
+          anyOf:
+          - type: string
+            minLength: 3
+            maxLength: 640
+          - maxItems: 100
+            type: array
+            items:
+              type: string
+              minLength: 3
+              maxLength: 640
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - success
+          - error
+          - admitted
+          - confirmed
+          - failed
+          - settled
+  /api/gateway/v1/end-users/{id}/spend:
+    get:
+      operationId: getApiGatewayV1EndUsersByIdSpend
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      end_user_id:
+                        type: string
+                      window:
+                        type: string
+                      from:
+                        type: string
+                      to:
+                        type: string
+                      cost:
+                        type: object
+                        properties:
+                          total_usd:
+                            type: string
+                            description: Display value. Decimal string, up to 9 fractional digits, trailing zeros trimmed, never exponent notation. Use nano_usd for arithmetic.
+                          nano_usd:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                            description: Canonical integer cost, nano-USD. Rated as an integer and summed as one, so this is the figure to reconcile against.
+                        required:
+                        - total_usd
+                        - nano_usd
+                        additionalProperties: false
+                      request_count:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      usage:
+                        type: object
+                        properties:
+                          input_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          output_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          cache_read_input_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          cache_creation_input_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          reasoning_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          input_image_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                            description: Image tokens billed on the input side, 0 when no image was used. Priced at its own rate and disjoint from input_tokens, which never includes it.
+                          output_image_tokens:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                            description: 'Image tokens the answer was billed for, 0 when no answer held one. Priced at its own rate and disjoint from output_tokens: an image_generation row reports output_tokens 0 and its render here, so a reconciler reading output_tokens alone sees none of the image traffic.'
+                          image_count:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                            description: 'Images carried, 0 when none were. Display only: no rate prices it, so it never belongs in a cost sum.'
+                        required:
+                        - input_tokens
+                        - output_tokens
+                        - cache_read_input_tokens
+                        - cache_creation_input_tokens
+                        - reasoning_tokens
+                        - input_image_tokens
+                        - output_image_tokens
+                        - image_count
+                        additionalProperties: false
+                      caps:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            budget_id:
+                              type: string
+                            anchor_id:
+                              type: string
+                            window:
+                              type: string
+                            on_breach:
+                              type: string
+                              enum:
+                              - block
+                              - warn
+                            limit_usd:
+                              type: string
+                              description: The cap for this end user. Decimal string, up to 9 fractional digits, trailing zeros trimmed, never exponent notation.
+                            spent_usd:
+                              type: string
+                              description: Spend against that cap. Decimal string, up to 9 fractional digits, trailing zeros trimmed, never exponent notation.
+                            period_started_at:
+                              type: string
+                          required:
+                          - budget_id
+                          - anchor_id
+                          - window
+                          - on_breach
+                          - limit_usd
+                          - spent_usd
+                          - period_started_at
+                          additionalProperties: false
+                    required:
+                    - end_user_id
+                    - window
+                    - from
+                    - to
+                    - cost
+                    - request_count
+                    - usage
+                    - caps
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Windowed spend rollup for one external end user across the organization (the /customer/info-style read a rebilling integration polls). `caps` lists every attributed-user budget that applies to this end user, each with its limit and the spend against it. It is an empty array until such a budget template applies, never null.
+      summary: Read one end user's spend
+      tags:
+      - Gateway Spend
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - gatewaySpend:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: window
+        schema:
+          default: month
+          type: string
+          enum:
+          - day
+          - week
+          - month
+      - in: query
+        name: from
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: to
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: virtual_key_id
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+  /api/gateway/v1/spend-events/replay:
+    post:
+      operationId: postApiGatewayV1SpendEventsReplay
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      endpoint_id:
+                        type: string
+                      replay_id:
+                        type: string
+                      replayed:
+                        type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      window:
+                        type: object
+                        properties:
+                          from:
+                            type: string
+                          to:
+                            type: string
+                        required:
+                        - from
+                        - to
+                        additionalProperties: false
+                    required:
+                    - endpoint_id
+                    - replay_id
+                    - replayed
+                    - window
+                    additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: 'Re-delivers the window''s spend envelopes to ONE endpoint through the normal delivery path (per-endpoint stream, retry ladder, delivery log), honoring the endpoint''s event subscriptions. Envelope ids are UNCHANGED: your consumer''s event-id dedup decides what a redelivery means. Mind your downstream billing system''s finite dedup window (Metronome 34 days, Stripe 24h+): replaying older than that window can double-bill on your side, so prefer pull-and-diff for old ranges. The window is capped at 7 days and 10,000 envelopes per call; both caps are checked before any delivery is queued, so a refused replay ships nothing.'
+      summary: Replay spend events to an endpoint
+      tags:
+      - Gateway Spend
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - gatewaySpend:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: integer
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                to:
+                  type: integer
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
+                endpoint_id:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+              required:
+              - from
+              - to
+              - endpoint_id
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

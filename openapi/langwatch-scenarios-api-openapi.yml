@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Scenarios API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Scenarios
 paths:
-  /api/scenarios:
+  /api/v1/scenarios:
     get:
+      operationId: getApiScenarios
       responses:
         '200':
           description: Success
@@ -36,6 +37,88 @@ paths:
                       type: array
                       items:
                         type: string
+                    parameters:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                            pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                          description:
+                            type: string
+                            maxLength: 500
+                          defaultValue:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                          secret:
+                            type: boolean
+                          type:
+                            type: string
+                            enum:
+                            - string
+                            - number
+                            - boolean
+                          options:
+                            maxItems: 50
+                            type: array
+                            items:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
+                          required:
+                            type: boolean
+                        required:
+                        - name
+                        additionalProperties: false
+                    simulatorModel:
+                      description: The model that plays the user, or null for the project default. Absent on servers that predate model overrides on this family.
+                      type:
+                      - string
+                      - 'null'
+                    judgeModel:
+                      description: The model that judges the run, or null for the project default. Absent on servers that predate model overrides on this family.
+                      type:
+                      - string
+                      - 'null'
+                    maxTurns:
+                      description: The most conversation turns a run of this scenario takes, or null for the default. Absent on servers that predate turn limits on this family.
+                      anyOf:
+                      - type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      - type: 'null'
+                    minTurns:
+                      description: The fewest conversation turns before the judge may end a run, or null for the default. Absent on servers that predate turn limits on this family.
+                      anyOf:
+                      - type: integer
+                        minimum: -9007199254740991
+                        maximum: 9007199254740991
+                      - type: 'null'
+                    testSuiteId:
+                      description: The test suite this scenario is filed in, or null when unfiled. Absent on servers that predate test suites.
+                      type:
+                      - string
+                      - 'null'
+                    fields:
+                      description: The value this scenario carries for each field its test suite declares, keyed by field identifier. A field with no value has no key. Absent on servers that predate suite fields.
+                      type: object
+                      propertyNames:
+                        type: string
+                        maxLength: 64
+                      additionalProperties:
+                        anyOf:
+                        - type: string
+                          maxLength: 65536
+                        - type: number
+                        - type: boolean
                     platformUrl:
                       type: string
                       format: uri
@@ -45,70 +128,27 @@ paths:
                   - situation
                   - criteria
                   - labels
+                  - parameters
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiScenarios
-      parameters: []
+                  additionalProperties: false
       description: Get all scenarios for a project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
       tags:
       - Scenarios
       summary: Get api scenarios
       x-summary-source: derived
     post:
+      operationId: postApiScenarios
       responses:
         '201':
-          description: Scenario created
+          description: Success
           content:
             application/json:
               schema:
@@ -128,6 +168,88 @@ paths:
                     type: array
                     items:
                       type: string
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        description:
+                          type: string
+                          maxLength: 500
+                        defaultValue:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          maxItems: 50
+                          type: array
+                          items:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                  simulatorModel:
+                    description: The model that plays the user, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  judgeModel:
+                    description: The model that judges the run, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  maxTurns:
+                    description: The most conversation turns a run of this scenario takes, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  minTurns:
+                    description: The fewest conversation turns before the judge may end a run, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  testSuiteId:
+                    description: The test suite this scenario is filed in, or null when unfiled. Absent on servers that predate test suites.
+                    type:
+                    - string
+                    - 'null'
+                  fields:
+                    description: The value this scenario carries for each field its test suite declares, keyed by field identifier. A field with no value has no key. Absent on servers that predate suite fields.
+                    type: object
+                    propertyNames:
+                      type: string
+                      maxLength: 64
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                        maxLength: 65536
+                      - type: number
+                      - type: boolean
                   platformUrl:
                     type: string
                     format: uri
@@ -137,63 +259,20 @@ paths:
                 - situation
                 - criteria
                 - labels
+                - parameters
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiScenarios
-      parameters: []
+                additionalProperties: false
       description: Create a new scenario
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -205,15 +284,103 @@ paths:
                 situation:
                   type: string
                 criteria:
+                  default: []
                   type: array
                   items:
                     type: string
-                  default: []
                 labels:
+                  default: []
                   type: array
                   items:
                     type: string
-                  default: []
+                parameters:
+                  description: 'The parameters this scenario declares by name, each with an optional description and default. A run supplies values for these names, readable from the scenario''s own text as params.NAME. A parameter marked secret carries no default: its value is supplied per run, encrypted, delivered to the target as secrets.NAME, and never readable from the scenario''s own text.'
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      description:
+                        type: string
+                        maxLength: 500
+                      defaultValue:
+                        anyOf:
+                        - type: string
+                          maxLength: 4096
+                        - type: number
+                        - type: boolean
+                      secret:
+                        type: boolean
+                      type:
+                        type: string
+                        enum:
+                        - string
+                        - number
+                        - boolean
+                      options:
+                        maxItems: 50
+                        type: array
+                        items:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      required:
+                        type: boolean
+                    required:
+                    - name
+                    additionalProperties: false
+                simulatorModel:
+                  description: Model for the simulated user, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                judgeModel:
+                  description: Model for the judge, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                maxTurns:
+                  description: Maximum conversation turns for a run of this scenario. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 1
+                    maximum: 100
+                  - type: 'null'
+                minTurns:
+                  description: Minimum conversation turns before the judge may end the run. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 0
+                    maximum: 100
+                  - type: 'null'
+                testSuiteId:
+                  description: The test suite to file this scenario in. It must name a non-archived test suite of the same project. null files the scenario into the project's Default test suite.
+                  type:
+                  - string
+                  - 'null'
+                fields:
+                  description: 'The value for each field the test suite declares, keyed by field identifier: text, a number or a boolean, in the field''s own type. A field the suite does not declare answers 422 scenario_field_unknown; a value of the wrong type answers 422 scenario_field_type_invalid. An empty value clears the field.'
+                  type: object
+                  propertyNames:
+                    type: string
+                    maxLength: 64
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 65536
+                    - type: number
+                    - type: boolean
               required:
               - name
               - situation
@@ -221,8 +388,9 @@ paths:
       - Scenarios
       summary: Post api scenarios
       x-summary-source: derived
-  /api/scenarios/{id}:
+  /api/v1/scenarios/{id}:
     get:
+      operationId: getApiScenariosById
       responses:
         '200':
           description: Success
@@ -245,6 +413,88 @@ paths:
                     type: array
                     items:
                       type: string
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        description:
+                          type: string
+                          maxLength: 500
+                        defaultValue:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          maxItems: 50
+                          type: array
+                          items:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                  simulatorModel:
+                    description: The model that plays the user, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  judgeModel:
+                    description: The model that judges the run, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  maxTurns:
+                    description: The most conversation turns a run of this scenario takes, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  minTurns:
+                    description: The fewest conversation turns before the judge may end a run, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  testSuiteId:
+                    description: The test suite this scenario is filed in, or null when unfiled. Absent on servers that predate test suites.
+                    type:
+                    - string
+                    - 'null'
+                  fields:
+                    description: The value this scenario carries for each field its test suite declares, keyed by field identifier. A field with no value has no key. Absent on servers that predate suite fields.
+                    type: object
+                    propertyNames:
+                      type: string
+                      maxLength: 64
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                        maxLength: 65536
+                      - type: number
+                      - type: boolean
                   platformUrl:
                     type: string
                     format: uri
@@ -254,33 +504,9 @@ paths:
                 - situation
                 - criteria
                 - labels
+                - parameters
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
           description: Scenario not found
           content:
@@ -290,52 +516,33 @@ paths:
                 properties:
                   error:
                     type: string
-                  message:
-                    type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiScenariosById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Get a specific scenario by ID
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Scenarios
       summary: Get api scenarios by id
       x-summary-source: derived
     put:
+      operationId: putApiScenariosById
       responses:
         '200':
-          description: Scenario updated
+          description: Success
           content:
             application/json:
               schema:
@@ -355,6 +562,88 @@ paths:
                     type: array
                     items:
                       type: string
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        description:
+                          type: string
+                          maxLength: 500
+                        defaultValue:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          maxItems: 50
+                          type: array
+                          items:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                  simulatorModel:
+                    description: The model that plays the user, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  judgeModel:
+                    description: The model that judges the run, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  maxTurns:
+                    description: The most conversation turns a run of this scenario takes, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  minTurns:
+                    description: The fewest conversation turns before the judge may end a run, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  testSuiteId:
+                    description: The test suite this scenario is filed in, or null when unfiled. Absent on servers that predate test suites.
+                    type:
+                    - string
+                    - 'null'
+                  fields:
+                    description: The value this scenario carries for each field its test suite declares, keyed by field identifier. A field with no value has no key. Absent on servers that predate suite fields.
+                    type: object
+                    propertyNames:
+                      type: string
+                      maxLength: 64
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                        maxLength: 65536
+                      - type: number
+                      - type: boolean
                   platformUrl:
                     type: string
                     format: uri
@@ -364,33 +653,9 @@ paths:
                 - situation
                 - criteria
                 - labels
+                - parameters
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
           description: Scenario not found
           content:
@@ -400,45 +665,11 @@ paths:
                 properties:
                   error:
                     type: string
-                  message:
-                    type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: putApiScenariosById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Update an existing scenario
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -457,14 +688,377 @@ paths:
                   type: array
                   items:
                     type: string
+                parameters:
+                  description: 'The parameters this scenario declares by name, each with an optional description and default. A run supplies values for these names, readable from the scenario''s own text as params.NAME. A parameter marked secret carries no default: its value is supplied per run, encrypted, delivered to the target as secrets.NAME, and never readable from the scenario''s own text.'
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      description:
+                        type: string
+                        maxLength: 500
+                      defaultValue:
+                        anyOf:
+                        - type: string
+                          maxLength: 4096
+                        - type: number
+                        - type: boolean
+                      secret:
+                        type: boolean
+                      type:
+                        type: string
+                        enum:
+                        - string
+                        - number
+                        - boolean
+                      options:
+                        maxItems: 50
+                        type: array
+                        items:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      required:
+                        type: boolean
+                    required:
+                    - name
+                    additionalProperties: false
+                simulatorModel:
+                  description: Model for the simulated user, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                judgeModel:
+                  description: Model for the judge, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                maxTurns:
+                  description: Maximum conversation turns for a run of this scenario. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 1
+                    maximum: 100
+                  - type: 'null'
+                minTurns:
+                  description: Minimum conversation turns before the judge may end the run. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 0
+                    maximum: 100
+                  - type: 'null'
+                testSuiteId:
+                  description: The test suite to file this scenario in. It must name a non-archived test suite of the same project. null files the scenario into the project's Default test suite.
+                  type:
+                  - string
+                  - 'null'
+                fields:
+                  description: 'The value for each field the test suite declares, keyed by field identifier: text, a number or a boolean, in the field''s own type. A field the suite does not declare answers 422 scenario_field_unknown; a value of the wrong type answers 422 scenario_field_type_invalid. An empty value clears the field. Send the full record; an empty record clears every value.'
+                  type: object
+                  propertyNames:
+                    type: string
+                    maxLength: 64
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 65536
+                    - type: number
+                    - type: boolean
+              additionalProperties: false
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Scenarios
       summary: Put api scenarios by id
       x-summary-source: derived
-    delete:
+    patch:
+      operationId: patchApiScenariosById
       responses:
         '200':
-          description: Scenario archived
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  situation:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      type: string
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                        description:
+                          type: string
+                          maxLength: 500
+                        defaultValue:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                        secret:
+                          type: boolean
+                        type:
+                          type: string
+                          enum:
+                          - string
+                          - number
+                          - boolean
+                        options:
+                          maxItems: 50
+                          type: array
+                          items:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        required:
+                          type: boolean
+                      required:
+                      - name
+                      additionalProperties: false
+                  simulatorModel:
+                    description: The model that plays the user, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  judgeModel:
+                    description: The model that judges the run, or null for the project default. Absent on servers that predate model overrides on this family.
+                    type:
+                    - string
+                    - 'null'
+                  maxTurns:
+                    description: The most conversation turns a run of this scenario takes, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  minTurns:
+                    description: The fewest conversation turns before the judge may end a run, or null for the default. Absent on servers that predate turn limits on this family.
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                  testSuiteId:
+                    description: The test suite this scenario is filed in, or null when unfiled. Absent on servers that predate test suites.
+                    type:
+                    - string
+                    - 'null'
+                  fields:
+                    description: The value this scenario carries for each field its test suite declares, keyed by field identifier. A field with no value has no key. Absent on servers that predate suite fields.
+                    type: object
+                    propertyNames:
+                      type: string
+                      maxLength: 64
+                    additionalProperties:
+                      anyOf:
+                      - type: string
+                        maxLength: 65536
+                      - type: number
+                      - type: boolean
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - situation
+                - criteria
+                - labels
+                - parameters
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      description: Update an existing scenario
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                situation:
+                  type: string
+                criteria:
+                  type: array
+                  items:
+                    type: string
+                labels:
+                  type: array
+                  items:
+                    type: string
+                parameters:
+                  description: 'The parameters this scenario declares by name, each with an optional description and default. A run supplies values for these names, readable from the scenario''s own text as params.NAME. A parameter marked secret carries no default: its value is supplied per run, encrypted, delivered to the target as secrets.NAME, and never readable from the scenario''s own text.'
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      description:
+                        type: string
+                        maxLength: 500
+                      defaultValue:
+                        anyOf:
+                        - type: string
+                          maxLength: 4096
+                        - type: number
+                        - type: boolean
+                      secret:
+                        type: boolean
+                      type:
+                        type: string
+                        enum:
+                        - string
+                        - number
+                        - boolean
+                      options:
+                        maxItems: 50
+                        type: array
+                        items:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      required:
+                        type: boolean
+                    required:
+                    - name
+                    additionalProperties: false
+                simulatorModel:
+                  description: Model for the simulated user, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                judgeModel:
+                  description: Model for the judge, e.g. openai/gpt-5-mini. Null uses the project default.
+                  anyOf:
+                  - type: string
+                    maxLength: 200
+                    pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                  - type: 'null'
+                maxTurns:
+                  description: Maximum conversation turns for a run of this scenario. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 1
+                    maximum: 100
+                  - type: 'null'
+                minTurns:
+                  description: Minimum conversation turns before the judge may end the run. Null uses the default.
+                  anyOf:
+                  - type: integer
+                    minimum: 0
+                    maximum: 100
+                  - type: 'null'
+                testSuiteId:
+                  description: The test suite to file this scenario in. It must name a non-archived test suite of the same project. null files the scenario into the project's Default test suite.
+                  type:
+                  - string
+                  - 'null'
+                fields:
+                  description: 'The value for each field the test suite declares, keyed by field identifier: text, a number or a boolean, in the field''s own type. A field the suite does not declare answers 422 scenario_field_unknown; a value of the wrong type answers 422 scenario_field_type_invalid. An empty value clears the field. Send the full record; an empty record clears every value.'
+                  type: object
+                  propertyNames:
+                    type: string
+                    maxLength: 64
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 65536
+                    - type: number
+                    - type: boolean
+              additionalProperties: false
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Scenarios
+      summary: Patch api scenarios by id
+      x-summary-source: derived
+    delete:
+      operationId: deleteApiScenariosById
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
@@ -477,32 +1071,7 @@ paths:
                 required:
                 - id
                 - archived
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
           description: Scenario not found
           content:
@@ -512,47 +1081,328 @@ paths:
                 properties:
                   error:
                     type: string
-                  message:
-                    type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiScenariosById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Archive (soft-delete) a scenario
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Scenarios
       summary: Delete api scenarios by id
+      x-summary-source: derived
+  /api/v1/scenarios/{id}/versions:
+    get:
+      operationId: getApiScenariosByIdVersions
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                          description: The version number, counting from 1.
+                        authorLabel:
+                          description: 'Which surface wrote the version: user, api, cli or langy. Null on the synthesized Created entry of a scenario saved before versions were recorded.'
+                          type:
+                          - string
+                          - 'null'
+                        authorId:
+                          description: The user who saved the version. Null when the save came from an API key.
+                          type:
+                          - string
+                          - 'null'
+                        changeDescription:
+                          type:
+                          - string
+                          - 'null'
+                        changedFields:
+                          type: array
+                          items:
+                            type: string
+                          description: The fields whose value this save changed.
+                        createdAt:
+                          type: string
+                          description: When the version was written, in ISO 8601.
+                        isSynthesized:
+                          type: boolean
+                          description: True on the Created entry a scenario saved before versions were recorded shows. It has no stored snapshot, so it cannot be read back.
+                      required:
+                      - version
+                      - authorLabel
+                      - authorId
+                      - changeDescription
+                      - changedFields
+                      - createdAt
+                      - isSynthesized
+                      additionalProperties: false
+                  nextCursor:
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                    description: Pass as cursor to read the page below this one. Null on the last page.
+                required:
+                - versions
+                - nextCursor
+                additionalProperties: false
+        '404':
+          description: Scenario not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      description: List the saved versions of a scenario, newest first. A scenario saved before versions were recorded closes its history with a synthesized Created entry.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: cursor
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        description: Read the page below this version number.
+      tags:
+      - Scenarios
+      summary: Get api scenarios by id versions
+      x-summary-source: derived
+  /api/v1/scenarios/{id}/versions/{version}:
+    get:
+      operationId: getApiScenariosByIdVersionsByVersion
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: The version number, counting from 1.
+                  authorLabel:
+                    description: 'Which surface wrote the version: user, api, cli or langy. Null on the synthesized Created entry of a scenario saved before versions were recorded.'
+                    type:
+                    - string
+                    - 'null'
+                  authorId:
+                    description: The user who saved the version. Null when the save came from an API key.
+                    type:
+                    - string
+                    - 'null'
+                  changeDescription:
+                    type:
+                    - string
+                    - 'null'
+                  changedFields:
+                    type: array
+                    items:
+                      type: string
+                    description: The fields whose value this save changed.
+                  createdAt:
+                    type: string
+                    description: When the version was written, in ISO 8601.
+                  isSynthesized:
+                    type: boolean
+                    description: True on the Created entry a scenario saved before versions were recorded shows. It has no stored snapshot, so it cannot be read back.
+                  schemaVersion:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: The shape the snapshot was written in.
+                  snapshot:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      situation:
+                        type: string
+                      criteria:
+                        type: array
+                        items:
+                          type: string
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                      parameters:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            description:
+                              type: string
+                              maxLength: 500
+                            defaultValue:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
+                            secret:
+                              type: boolean
+                            type:
+                              type: string
+                              enum:
+                              - string
+                              - number
+                              - boolean
+                            options:
+                              maxItems: 50
+                              type: array
+                              items:
+                                anyOf:
+                                - type: string
+                                  maxLength: 4096
+                                - type: number
+                                - type: boolean
+                            required:
+                              type: boolean
+                          required:
+                          - name
+                          additionalProperties: false
+                      simulatorModel:
+                        type:
+                        - string
+                        - 'null'
+                      judgeModel:
+                        type:
+                        - string
+                        - 'null'
+                      maxTurns:
+                        type:
+                        - number
+                        - 'null'
+                      minTurns:
+                        type:
+                        - number
+                        - 'null'
+                      fields:
+                        description: The field values as this version saved them. Absent on servers that predate suite fields.
+                        type: object
+                        propertyNames:
+                          type: string
+                          maxLength: 64
+                        additionalProperties:
+                          anyOf:
+                          - type: string
+                            maxLength: 65536
+                          - type: number
+                          - type: boolean
+                    required:
+                    - name
+                    - situation
+                    - criteria
+                    - labels
+                    - parameters
+                    - simulatorModel
+                    - judgeModel
+                    - maxTurns
+                    - minTurns
+                    additionalProperties: false
+                    description: The editable content of the case as this version saved it.
+                required:
+                - version
+                - authorLabel
+                - authorId
+                - changeDescription
+                - changedFields
+                - createdAt
+                - isSynthesized
+                - schemaVersion
+                - snapshot
+                additionalProperties: false
+        '404':
+          description: Scenario or version not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+      description: Get one saved version of a scenario, with the name, situation, criteria, labels and parameters as that version saved them.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: version
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        required: true
+      tags:
+      - Scenarios
+      summary: Get api scenarios by id versions by version
       x-summary-source: derived
 components:
   securitySchemes:
@@ -565,3 +1415,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,654 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Grants API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Grants
+paths:
+  /api/v1/grants:
+    get:
+      operationId: listGrants
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  grants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        principal:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - user
+                              - group
+                              - apiKey
+                            id:
+                              type: string
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - type
+                          - id
+                          - name
+                          additionalProperties: false
+                        role:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                            builtIn:
+                              type: boolean
+                          required:
+                          - id
+                          - name
+                          - builtIn
+                          additionalProperties: false
+                        scope:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - organization
+                              - team
+                              - project
+                            id:
+                              type: string
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - type
+                          - id
+                          - name
+                          additionalProperties: false
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - expired
+                        expiresAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                        createdAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - principal
+                      - role
+                      - scope
+                      - status
+                      - expiresAt
+                      - createdAt
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - grants
+                - nextCursor
+                additionalProperties: false
+      description: 'List the organization''s grants, oldest first unless `order=newest`, each naming its principal (user, group or API key), role and scope. Filter by principal, role, scope or status; `status` is derived from `expiresAt`. Pages by cursor: pass `nextCursor` back as `cursor` until it is null.'
+      summary: List grants
+      tags:
+      - Grants
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: query
+        name: principalType
+        schema:
+          type: string
+          enum:
+          - user
+          - group
+          - apiKey
+      - in: query
+        name: principalId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      - in: query
+        name: roleId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      - in: query
+        name: scopeType
+        schema:
+          type: string
+          enum:
+          - organization
+          - team
+          - project
+      - in: query
+        name: scopeId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - active
+          - expired
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          minimum: 1
+          maximum: 200
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          pattern: ^\d{1,16}\.[A-Za-z0-9_-]{1,256}$
+      - in: query
+        name: order
+        schema:
+          type: string
+          enum:
+          - newest
+          - oldest
+    post:
+      operationId: createGrant
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  principal:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                        - group
+                        - apiKey
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  role:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      builtIn:
+                        type: boolean
+                    required:
+                    - id
+                    - name
+                    - builtIn
+                    additionalProperties: false
+                  scope:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - organization
+                        - team
+                        - project
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  status:
+                    type: string
+                    enum:
+                    - active
+                    - expired
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - principal
+                - role
+                - scope
+                - status
+                - expiresAt
+                - createdAt
+                additionalProperties: false
+      description: 'Grant a role to a user, group or API key on the organization, a team or a project. `roleId` is `admin`, `member`, `viewer` or a custom role''s id. Grants are never unique: each create is a new grant with its own id, up to the organization''s limit (409 grant_limit_reached). Pass `expiresAt` to time-box the access. Send `Idempotency-Key` to make a retry safe. A grant never confers a permission the caller does not hold at that scope: 403 grant_exceeds_caller_permissions names the missing permissions.'
+      summary: Grant a role
+      tags:
+      - Grants
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        description: 'A caller-chosen key, 8 to 255 characters, that makes this create safe to retry. The first request to use a key runs normally and its response is stored for 24 hours. A later request with the same key and the same body is not executed again: it returns the stored response, marked with `X-Idempotent-Replay: true`. The same key with a different body is refused 409 `idempotency_error`, as is a retry sent while the original is still running. Only successful responses are stored, so a create that failed can simply be retried with the same key.'
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 255
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                principal:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                      - user
+                      - group
+                      - apiKey
+                    id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                  required:
+                  - type
+                  - id
+                  additionalProperties: false
+                roleId:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                scope:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                      - organization
+                      - team
+                      - project
+                    id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                  required:
+                  - type
+                  - id
+                  additionalProperties: false
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+              - principal
+              - roleId
+              - scope
+              additionalProperties: false
+  /api/v1/grants/{grantId}:
+    get:
+      operationId: getGrant
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  principal:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                        - group
+                        - apiKey
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  role:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      builtIn:
+                        type: boolean
+                    required:
+                    - id
+                    - name
+                    - builtIn
+                    additionalProperties: false
+                  scope:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - organization
+                        - team
+                        - project
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  status:
+                    type: string
+                    enum:
+                    - active
+                    - expired
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - principal
+                - role
+                - scope
+                - status
+                - expiresAt
+                - createdAt
+                additionalProperties: false
+      description: Read one grant. An id outside the caller's organization answers 404 grant_not_found.
+      summary: Get a grant
+      tags:
+      - Grants
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: grantId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+        required: true
+    patch:
+      operationId: updateGrant
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  principal:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                        - group
+                        - apiKey
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  role:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      builtIn:
+                        type: boolean
+                    required:
+                    - id
+                    - name
+                    - builtIn
+                    additionalProperties: false
+                  scope:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - organization
+                        - team
+                        - project
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  status:
+                    type: string
+                    enum:
+                    - active
+                    - expired
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - principal
+                - role
+                - scope
+                - status
+                - expiresAt
+                - createdAt
+                additionalProperties: false
+      description: 'Change the role a grant confers. The principal and scope are the grant''s identity and do not change. Lowering the organization''s last administrator answers cannot_demote_last_admin. A grant never confers a permission the caller does not hold at that scope: 403 grant_exceeds_caller_permissions names the missing permissions.'
+      summary: Change a grant's role
+      tags:
+      - Grants
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: grantId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roleId:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+              required:
+              - roleId
+              additionalProperties: false
+    delete:
+      operationId: revokeGrant
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  revoked:
+                    type: boolean
+                    const: true
+                required:
+                - id
+                - revoked
+                additionalProperties: false
+      description: Revoke a grant. Identical grants each hold until revoked, so the access lasts until the last of them ends. Revoking the organization's last administrator answers cannot_remove_last_admin.
+      summary: Revoke a grant
+      tags:
+      - Grants
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: grantId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+        required: true
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

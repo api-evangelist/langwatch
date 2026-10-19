@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Workflows API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,105 @@ security:
 tags:
 - name: Workflows
 paths:
-  /api/workflows:
+  /api/v1/workflows/{id}/evaluate:
+    post:
+      operationId: postApiWorkflowsByIdEvaluate
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                  run_url:
+                    type: string
+                  workflow_version_id:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - run_id
+                - run_url
+                - workflow_version_id
+                - version
+                additionalProperties: false
+        '400':
+          description: The workflow has no committed version, or the run could not start
+          content: {}
+        '403':
+          description: The API key cannot read the evaluation run it would start
+          content: {}
+        '404':
+          description: The project holds no such workflow or dataset
+          content: {}
+        '422':
+          description: The body failed validation
+          content: {}
+      description: Trigger an evaluation run of a workflow's committed version through the evaluations pipeline. Evaluate the workflow's attached dataset, inline data, or a platform dataset id; parameters bind as constant entry inputs on every row. Returns a run id and a results URL to poll or open in the browser.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version_id:
+                  description: Committed version to evaluate; defaults to the latest commit
+                  type: string
+                data:
+                  description: Inline rows to evaluate instead of the workflow's attached dataset
+                  type: array
+                  items:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                dataset_id:
+                  description: Platform dataset id to evaluate; mutually exclusive with data
+                  type: string
+                parameters:
+                  description: Constant entry inputs applied to every row, e.g. a feature flag or PR number
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type:
+                    - string
+                    - number
+                    - boolean
+                row_indices:
+                  description: Subset of dataset row indices to evaluate
+                  type: array
+                  items:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:create
+        - evaluations:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Workflows
+      summary: Post api workflows by id evaluate
+      x-summary-source: derived
+  /api/v1/workflows:
     get:
+      operationId: getApiWorkflows
       responses:
         '200':
           description: Success
@@ -55,67 +152,23 @@ paths:
                   - createdAt
                   - updatedAt
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiWorkflows
-      parameters: []
+                  additionalProperties: false
       description: List all non-archived workflows for the project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:view
       tags:
       - Workflows
       summary: Get api workflows
       x-summary-source: derived
-  /api/workflows/{id}:
+  /api/v1/workflows/{id}:
     get:
+      operationId: getApiWorkflowsById
       responses:
         '200':
           description: Success
@@ -157,87 +210,35 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Workflow not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiWorkflowsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+          description: The project holds no workflow with this id
+          content: {}
       description: Get a workflow by its ID
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Workflows
       summary: Get api workflows by id
       x-summary-source: derived
     patch:
+      operationId: patchApiWorkflowsById
       responses:
         '200':
-          description: Workflow updated
+          description: Success
           content:
             application/json:
               schema:
@@ -276,80 +277,13 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Workflow not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: patchApiWorkflowsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+          description: The project holds no workflow with this id
+          content: {}
       description: Update a workflow's metadata (name, icon, description)
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -362,14 +296,30 @@ paths:
                   type: string
                 description:
                   type: string
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Workflows
       summary: Patch api workflows by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiWorkflowsById
       responses:
         '200':
-          description: Workflow archived
+          description: Success
           content:
             application/json:
               schema:
@@ -382,83 +332,294 @@ paths:
                 required:
                 - id
                 - archived
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Workflow not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiWorkflowsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+          description: The project holds no workflow with this id
+          content: {}
       description: Archive (soft-delete) a workflow
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Workflows
       summary: Delete api workflows by id
       x-summary-source: derived
+  /api/v1/optimization/{workflowId}/{versionId}:
+    post:
+      operationId: postApiOptimizationByWorkflowIdByVersionId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  status:
+                    type: string
+                    enum:
+                    - idle
+                    - waiting
+                    - running
+                    - success
+                    - error
+                    - skipped
+                  trace_id:
+                    type: string
+                  nodes:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  total_cost:
+                    type: number
+                  duration_ms:
+                    type: number
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      message:
+                        type: string
+                      node_id:
+                        type: string
+                      traceback:
+                        type: string
+                    required:
+                    - type
+                    - message
+                    additionalProperties: false
+                required:
+                - status
+                additionalProperties: false
+      description: Run one pinned version of an Optimization Studio workflow synchronously. Identical to `POST /api/workflows/{workflowId}/{versionId}/run`, which is the path to use in new integrations; this one stays for callers written against it. The body is the workflow's own input fields, named as its entry node names them.
+      summary: Run a workflow version (legacy path)
+      tags:
+      - Workflows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              additionalProperties: {}
+              description: The workflow's input fields, named as the workflow's entry node names them
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:manage
+      parameters:
+      - in: path
+        name: workflowId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: versionId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/workflows/{workflowId}/run:
+    post:
+      operationId: postApiWorkflowsByWorkflowIdRun
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  status:
+                    type: string
+                    enum:
+                    - idle
+                    - waiting
+                    - running
+                    - success
+                    - error
+                    - skipped
+                  trace_id:
+                    type: string
+                  nodes:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  total_cost:
+                    type: number
+                  duration_ms:
+                    type: number
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      message:
+                        type: string
+                      node_id:
+                        type: string
+                      traceback:
+                        type: string
+                    required:
+                    - type
+                    - message
+                    additionalProperties: false
+                required:
+                - status
+                additionalProperties: false
+      description: Run an Optimization Studio workflow synchronously and return its output. Runs the workflow's published version; address a specific version with the `{versionId}` form of this path. The body is the workflow's own input fields, named as its entry node names them.
+      summary: Run a workflow
+      tags:
+      - Workflows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              additionalProperties: {}
+              description: The workflow's input fields, named as the workflow's entry node names them
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:manage
+      parameters:
+      - in: path
+        name: workflowId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/workflows/{workflowId}/{versionId}/run:
+    post:
+      operationId: postApiWorkflowsByWorkflowIdByVersionIdRun
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  status:
+                    type: string
+                    enum:
+                    - idle
+                    - waiting
+                    - running
+                    - success
+                    - error
+                    - skipped
+                  trace_id:
+                    type: string
+                  nodes:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  total_cost:
+                    type: number
+                  duration_ms:
+                    type: number
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      message:
+                        type: string
+                      node_id:
+                        type: string
+                      traceback:
+                        type: string
+                    required:
+                    - type
+                    - message
+                    additionalProperties: false
+                required:
+                - status
+                additionalProperties: false
+      description: Run one pinned version of an Optimization Studio workflow synchronously and return its output. Use this when a caller must keep hitting the same version as the workflow is edited. The body is the workflow's own input fields, named as its entry node names them.
+      summary: Run a specific workflow version
+      tags:
+      - Workflows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              additionalProperties: {}
+              description: The workflow's input fields, named as the workflow's entry node names them
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - workflows:manage
+      parameters:
+      - in: path
+        name: workflowId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: versionId
+        schema:
+          type: string
+          minLength: 1
+        required: true
 components:
   securitySchemes:
     project_api_key:
@@ -470,3 +631,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,477 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Role Bindings API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Role Bindings
+paths:
+  /api/v1/role-bindings:
+    get:
+      operationId: listRoleBindings
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        principal:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - user
+                              - group
+                              - apiKey
+                            id:
+                              type: string
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - type
+                          - id
+                          - name
+                          additionalProperties: false
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        customRoleId:
+                          type:
+                          - string
+                          - 'null'
+                        customRoleName:
+                          type:
+                          - string
+                          - 'null'
+                        scopeType:
+                          type: string
+                          enum:
+                          - PROJECT
+                          - TEAM
+                          - ORGANIZATION
+                        scopeId:
+                          type: string
+                        scopeName:
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                          format: date-time
+                        expiresAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                      required:
+                      - id
+                      - principal
+                      - role
+                      - customRoleId
+                      - customRoleName
+                      - scopeType
+                      - scopeId
+                      - scopeName
+                      - createdAt
+                      - expiresAt
+                      additionalProperties: false
+                  totalCount:
+                    type: number
+                required:
+                - bindings
+                - totalCount
+                additionalProperties: false
+      description: List the organization's role bindings, each naming its principal (user, group or API key), role, scope, and the date its access ends if one was set. Filter by principal or scope; totalCount counts the filtered set. superseded by /api/grants, which answers the same rows as grants
+      tags:
+      - Role Bindings
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      deprecated: true
+      parameters:
+      - in: query
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: groupId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: apiKeyId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: scopeType
+        schema:
+          type: string
+          enum:
+          - PROJECT
+          - TEAM
+          - ORGANIZATION
+      - in: query
+        name: scopeId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+      summary: List role bindings
+      x-summary-source: derived
+    post:
+      operationId: createRoleBinding
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  principal:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                        - group
+                        - apiKey
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  role:
+                    type: string
+                    enum:
+                    - ADMIN
+                    - MEMBER
+                    - VIEWER
+                    - CUSTOM
+                  customRoleId:
+                    type:
+                    - string
+                    - 'null'
+                  customRoleName:
+                    type:
+                    - string
+                    - 'null'
+                  scopeType:
+                    type: string
+                    enum:
+                    - PROJECT
+                    - TEAM
+                    - ORGANIZATION
+                  scopeId:
+                    type: string
+                  scopeName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - principal
+                - role
+                - customRoleId
+                - customRoleName
+                - scopeType
+                - scopeId
+                - scopeName
+                - createdAt
+                - expiresAt
+                additionalProperties: false
+      description: 'Create a role binding for exactly one principal: a user, a group, or an API key. Every reference is checked against the caller''s organization; an identical binding is written again, because bindings are never unique. Pass expiresAt to time-box the access: it stops granting at that moment on its own, without being revoked, and a date that has already passed answers 422 grant_expiry_in_past. The response always carries the new binding''s id; the names of its principal, role and scope may be absent on this response alone, and a follow-up read carries them. superseded by /api/grants, which answers the same rows as grants'
+      tags:
+      - Role Bindings
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      deprecated: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  minLength: 1
+                groupId:
+                  type: string
+                  minLength: 1
+                apiKeyId:
+                  type: string
+                  minLength: 1
+                role:
+                  type: string
+                  enum:
+                  - ADMIN
+                  - MEMBER
+                  - VIEWER
+                  - CUSTOM
+                customRoleId:
+                  type: string
+                  minLength: 1
+                scopeType:
+                  type: string
+                  enum:
+                  - PROJECT
+                  - TEAM
+                  - ORGANIZATION
+                scopeId:
+                  type: string
+                  minLength: 1
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+              - role
+              - scopeType
+              - scopeId
+      summary: Create role binding
+      x-summary-source: derived
+  /api/v1/role-bindings/{id}:
+    patch:
+      operationId: updateRoleBinding
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  principal:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - user
+                        - group
+                        - apiKey
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - id
+                    - name
+                    additionalProperties: false
+                  role:
+                    type: string
+                    enum:
+                    - ADMIN
+                    - MEMBER
+                    - VIEWER
+                    - CUSTOM
+                  customRoleId:
+                    type:
+                    - string
+                    - 'null'
+                  customRoleName:
+                    type:
+                    - string
+                    - 'null'
+                  scopeType:
+                    type: string
+                    enum:
+                    - PROJECT
+                    - TEAM
+                    - ORGANIZATION
+                  scopeId:
+                    type: string
+                  scopeName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                required:
+                - id
+                - principal
+                - role
+                - customRoleId
+                - customRoleName
+                - scopeType
+                - scopeId
+                - scopeName
+                - createdAt
+                - expiresAt
+                additionalProperties: false
+      description: Change a binding's role (and custom role). The principal and scope are the binding's identity and do not change; create a new binding instead. superseded by /api/grants, which answers the same rows as grants
+      tags:
+      - Role Bindings
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      deprecated: true
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                  - ADMIN
+                  - MEMBER
+                  - VIEWER
+                  - CUSTOM
+                customRoleId:
+                  type: string
+                  minLength: 1
+              required:
+              - role
+      summary: Update role binding
+      x-summary-source: derived
+    delete:
+      operationId: deleteRoleBinding
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                required:
+                - success
+                additionalProperties: false
+      description: Delete a role binding. An id that does not exist in the caller's organization answers 404 role_binding_not_found. superseded by /api/grants, which answers the same rows as grants
+      tags:
+      - Role Bindings
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      deprecated: true
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Delete role binding
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

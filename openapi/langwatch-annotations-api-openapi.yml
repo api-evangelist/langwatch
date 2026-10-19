@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Annotations API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,174 +10,109 @@ security:
 tags:
 - name: Annotations
 paths:
-  /api/annotations:
+  /api/v1/annotations:
     get:
-      description: Returns all annotations for project
-      responses:
-        '200':
-          description: Annotation response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Annotation'
-        '400':
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Annotations
-      summary: Get api annotations
-      x-summary-source: derived
       operationId: getApiAnnotations
-      x-operation-id-source: derived
-  /api/annotations/trace/{id}:
-    get:
-      description: Returns all annotations for single trace
-      parameters:
-      - name: id
-        in: path
-        description: ID of trace to fetch
-        required: true
-        schema:
-          type: string
       responses:
         '200':
-          description: Annotation response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Annotation'
-        '400':
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Annotations
-      summary: Get api annotations trace by id
-      x-summary-source: derived
-      operationId: getApiAnnotationsTraceById
-      x-operation-id-source: derived
-    post:
-      description: Create an annotation for a single trace
-      parameters:
-      - name: id
-        in: path
-        description: ID of the trace to annotate
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Annotation data
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                comment:
-                  type: string
-                isThumbsUp:
-                  type: boolean
-                email:
-                  type: string
-      responses:
-        '200':
-          description: Annotation created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Annotation'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Annotations
-      summary: Create api annotations trace by id
-      x-summary-source: derived
-      operationId: postApiAnnotationsTraceById
-      x-operation-id-source: derived
-  /api/annotations/{id}:
-    get:
-      description: Returns a single annotation based on the ID supplied
-      parameters:
-      - name: id
-        in: path
-        description: ID of annotation to fetch
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Annotation response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Annotation'
-        '400':
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-      - Annotations
-      summary: Get api annotations by id
-      x-summary-source: derived
-      operationId: getApiAnnotationsById
-      x-operation-id-source: derived
-    delete:
-      description: Deletes a single annotation based on the ID supplied
-      parameters:
-      - name: id
-        in: path
-        description: ID of annotation to delete
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Annotation response
+          description: Success
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-        '400':
-          description: Unexpected error
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Annotation'
+                required:
+                - data
+                additionalProperties: false
+      summary: List annotations in the caller’s project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:view
+      parameters:
+      - in: query
+        name: anchor
+        schema:
+          default: all
+          type: string
+          enum:
+          - trace
+          - all
+      tags:
+      - Annotations
+  /api/v1/annotations/{id}:
+    get:
+      operationId: getApiAnnotationsId
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Annotation'
+                required:
+                - data
+                additionalProperties: false
+      summary: Get an annotation in the caller’s project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Annotations
-      summary: Delete api annotations by id
-      x-summary-source: derived
-      operationId: deleteApiAnnotationsById
-      x-operation-id-source: derived
     patch:
-      description: Updates a single annotation based on the ID supplied
+      operationId: patchApiAnnotationsId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Annotation'
+                required:
+                - data
+                additionalProperties: false
+      summary: Update an annotation in the caller’s project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:manage
       parameters:
-      - name: id
-        in: path
-        description: ID of annotation to delete
-        required: true
+      - in: path
+        name: id
         schema:
           type: string
+          minLength: 1
+        required: true
       requestBody:
         required: true
         content:
@@ -187,13 +122,23 @@ paths:
               properties:
                 comment:
                   type: string
+                  minLength: 1
                 isThumbsUp:
                   type: boolean
                 email:
-                  type: string
+                  type:
+                  - string
+                  - 'null'
+              required:
+              - comment
+              - isThumbsUp
+      tags:
+      - Annotations
+    delete:
+      operationId: deleteApiAnnotationsId
       responses:
         '200':
-          description: Annotation response
+          description: Success
           content:
             application/json:
               schema:
@@ -203,63 +148,213 @@ paths:
                     type: string
                   message:
                     type: string
-        '400':
-          description: Unexpected error
+                required:
+                - status
+                - message
+                additionalProperties: false
+      summary: Delete an annotation in the caller’s project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Annotations
+  /api/v1/annotations/trace/{id}:
+    get:
+      operationId: getApiAnnotationsTraceId
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Annotation'
+                required:
+                - data
+                additionalProperties: false
+      summary: List annotations on a trace in the caller’s project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: anchor
+        schema:
+          default: all
+          type: string
+          enum:
+          - trace
+          - all
       tags:
       - Annotations
-      summary: Update api annotations by id
-      x-summary-source: derived
-      operationId: patchApiAnnotationsById
-      x-operation-id-source: derived
+    post:
+      operationId: postApiAnnotationsTraceId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Annotation'
+                required:
+                - data
+                additionalProperties: false
+      summary: Create an unattributed annotation on a trace
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - annotations:create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  minLength: 1
+                isThumbsUp:
+                  type: boolean
+                email:
+                  type:
+                  - string
+                  - 'null'
+              required:
+              - comment
+              - isThumbsUp
+      tags:
+      - Annotations
 components:
   schemas:
-    Error:
-      required:
-      - error
-      - message
-      type: object
-      properties:
-        error:
-          type: integer
-          format: int32
-        message:
+    JsonValue:
+      anyOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: 'null'
+      - type: array
+        items:
+          $ref: '#/components/schemas/JsonValue'
+      - type: object
+        propertyNames:
           type: string
+        additionalProperties:
+          $ref: '#/components/schemas/JsonValue'
     Annotation:
-      required:
-      - name
       type: object
       properties:
         id:
-          description: The ID of the annotation
           type: string
+          minLength: 1
         projectId:
-          description: The ID of the project
           type: string
+          minLength: 1
         traceId:
-          description: The ID of the trace
           type: string
-        comment:
-          description: The comment of the annotation
-          type: string
-        isThumbsUp:
-          description: The thumbs up status of the annotation
-          type: boolean
+          minLength: 1
         userId:
-          description: The ID of the user
-          type: string
-        createdAt:
-          description: The created at of the annotation
-          type: string
-        updatedAt:
-          description: The updated at of the annotation
-          type: string
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
         email:
-          description: The email of the user
+          type:
+          - string
+          - 'null'
+        comment:
+          type:
+          - string
+          - 'null'
+        isThumbsUp:
+          type:
+          - boolean
+          - 'null'
+        scoreOptions:
+          type: object
+          propertyNames:
+            type: string
+          additionalProperties:
+            $ref: '#/components/schemas/JsonValue'
+        expectedOutput:
+          type:
+          - string
+          - 'null'
+        anchorKind:
+          type:
+          - string
+          - 'null'
+        anchorId:
+          type:
+          - string
+          - 'null'
+        anchorPath:
+          type:
+          - string
+          - 'null'
+        createdAt:
           type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - projectId
+      - traceId
+      - userId
+      - email
+      - comment
+      - isThumbsUp
+      - scoreOptions
+      - expectedOutput
+      - anchorKind
+      - anchorId
+      - anchorPath
+      - createdAt
+      - updatedAt
+      additionalProperties: {}
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -270,3 +365,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

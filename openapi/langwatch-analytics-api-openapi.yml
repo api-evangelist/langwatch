@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Analytics API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,11 +10,12 @@ security:
 tags:
 - name: Analytics
 paths:
-  /api/analytics/timeseries:
+  /api/v1/analytics/timeseries:
     post:
+      operationId: postApiAnalyticsTimeseries
       responses:
         '200':
-          description: Timeseries analytics data with current and previous periods
+          description: Success
           content:
             application/json:
               schema:
@@ -24,15 +25,20 @@ paths:
                     type: array
                     items:
                       type: object
+                      propertyNames:
+                        type: string
                       additionalProperties: {}
                   previousPeriod:
                     type: array
                     items:
                       type: object
+                      propertyNames:
+                        type: string
                       additionalProperties: {}
                 required:
                 - currentPeriod
                 - previousPeriod
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -85,27 +91,91 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiAnalyticsTimeseries
-      parameters: []
       description: Query analytics timeseries data with metrics, aggregations, and filters
+      tags:
+      - Analytics
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
                 startDate:
-                  anyOf:
-                  - type: number
-                  - type: string
+                  type:
+                  - number
+                  - string
                 endDate:
-                  anyOf:
-                  - type: number
-                  - type: string
+                  type:
+                  - number
+                  - string
                 query:
                   type: string
                 filters:
+                  default: {}
                   type: object
+                  propertyNames:
+                    type: string
+                    enum:
+                    - topics.topics
+                    - topics.subtopics
+                    - metadata.user_id
+                    - metadata.thread_id
+                    - metadata.customer_id
+                    - metadata.labels
+                    - metadata.key
+                    - metadata.value
+                    - metadata.prompt_ids
+                    - traces.origin
+                    - traces.error
+                    - traces.name
+                    - spans.type
+                    - spans.model
+                    - evaluations.evaluator_id
+                    - evaluations.evaluator_id.guardrails_only
+                    - evaluations.evaluator_id.has_passed
+                    - evaluations.evaluator_id.has_score
+                    - evaluations.evaluator_id.has_label
+                    - evaluations.passed
+                    - evaluations.score
+                    - evaluations.state
+                    - evaluations.label
+                    - events.event_type
+                    - events.metrics.key
+                    - events.metrics.value
+                    - events.event_details.key
+                    - annotations.hasAnnotation
+                  additionalProperties:
+                    anyOf:
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
                   properties:
                     topics.topics:
                       anyOf:
@@ -113,13 +183,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -130,13 +206,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -147,13 +229,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -164,13 +252,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -181,13 +275,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -198,13 +298,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -215,13 +321,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -232,13 +344,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -249,13 +367,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -266,13 +390,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -283,13 +413,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -300,13 +436,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -317,13 +459,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -334,13 +482,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -351,13 +505,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -368,13 +528,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -385,13 +551,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -402,13 +574,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -419,13 +597,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -436,13 +620,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -453,13 +643,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -470,13 +666,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -487,13 +689,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -504,13 +712,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -521,13 +735,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -538,13 +758,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -555,13 +781,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -572,25 +804,33 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
                               type: string
-                  additionalProperties: false
-                  default: {}
                 traceIds:
                   type: array
                   items:
                     type: string
                 negateFilters:
                   type: boolean
+                excludeOrigins:
+                  type: array
+                  items:
+                    type: string
                 series:
                   type: array
                   items:
@@ -598,26 +838,7 @@ paths:
                     properties:
                       metric:
                         type: string
-                        enum:
-                        - metadata.trace_id
-                        - metadata.user_id
-                        - metadata.thread_id
-                        - metadata.span_type
-                        - sentiment.thumbs_up_down
-                        - performance.completion_time
-                        - performance.first_token
-                        - performance.total_cost
-                        - performance.prompt_tokens
-                        - performance.completion_tokens
-                        - performance.total_tokens
-                        - performance.tokens_per_second
-                        - events.event_type
-                        - events.event_score
-                        - events.event_details
-                        - evaluations.evaluation_score
-                        - evaluations.evaluation_pass_rate
-                        - evaluations.evaluation_runs
-                        - threads.average_duration_per_thread
+                        minLength: 1
                       key:
                         type: string
                       subkey:
@@ -657,6 +878,60 @@ paths:
                         - aggregation
                       filters:
                         type: object
+                        propertyNames:
+                          type: string
+                          enum:
+                          - topics.topics
+                          - topics.subtopics
+                          - metadata.user_id
+                          - metadata.thread_id
+                          - metadata.customer_id
+                          - metadata.labels
+                          - metadata.key
+                          - metadata.value
+                          - metadata.prompt_ids
+                          - traces.origin
+                          - traces.error
+                          - traces.name
+                          - spans.type
+                          - spans.model
+                          - evaluations.evaluator_id
+                          - evaluations.evaluator_id.guardrails_only
+                          - evaluations.evaluator_id.has_passed
+                          - evaluations.evaluator_id.has_score
+                          - evaluations.evaluator_id.has_label
+                          - evaluations.passed
+                          - evaluations.score
+                          - evaluations.state
+                          - evaluations.label
+                          - events.event_type
+                          - events.metrics.key
+                          - events.metrics.value
+                          - events.event_details.key
+                          - annotations.hasAnnotation
+                        additionalProperties:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: array
+                              items:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
                         properties:
                           topics.topics:
                             anyOf:
@@ -664,13 +939,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -681,13 +962,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -698,13 +985,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -715,13 +1008,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -732,13 +1031,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -749,13 +1054,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -766,13 +1077,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -783,13 +1100,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -800,13 +1123,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -817,13 +1146,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -834,13 +1169,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -851,13 +1192,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -868,13 +1215,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -885,13 +1238,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -902,13 +1261,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -919,13 +1284,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -936,13 +1307,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -953,13 +1330,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -970,13 +1353,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -987,13 +1376,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1004,13 +1399,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1021,13 +1422,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1038,13 +1445,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1055,13 +1468,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1072,13 +1491,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1089,13 +1514,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1106,13 +1537,19 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
@@ -1123,18 +1560,23 @@ paths:
                               items:
                                 type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items:
                                   type: string
                             - type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items:
                                     type: string
-                        additionalProperties: false
                       asPercent:
                         type: boolean
                     required:
@@ -1142,21 +1584,7 @@ paths:
                     - aggregation
                 groupBy:
                   type: string
-                  enum:
-                  - topics.topics
-                  - traces.trace_name
-                  - metadata.user_id
-                  - metadata.thread_id
-                  - metadata.customer_id
-                  - metadata.labels
-                  - metadata.model
-                  - metadata.span_type
-                  - sentiment.thumbs_up_down
-                  - events.event_type
-                  - evaluations.evaluation_passed
-                  - evaluations.evaluation_label
-                  - evaluations.evaluation_processing_state
-                  - error.has_error
+                  minLength: 1
                 groupByKey:
                   type: string
                 timeScale:
@@ -1164,17 +1592,1585 @@ paths:
                   - type: string
                     const: full
                   - type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
                 timeZone:
                   type: string
+                shouldSkipPreviousPeriod:
+                  type: boolean
               required:
               - startDate
               - endDate
               - series
               - timeZone
-      tags:
-      - Analytics
       summary: Post api analytics timeseries
       x-summary-source: derived
+  /api/v1/analytics:
+    post:
+      operationId: postApiAnalytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPeriod:
+                    type: array
+                    items:
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                  previousPeriod:
+                    type: array
+                    items:
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                required:
+                - currentPeriod
+                - previousPeriod
+                additionalProperties: false
+        '400':
+          description: The body was not valid JSON, or failed validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Set when the request was rejected before validation
+                    type: string
+                  error:
+                    description: Set when the body parsed and then failed validation
+                    type: string
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+      description: Query analytics timeseries with metrics, aggregations and filters. Identical to `POST /api/analytics/timeseries`, which is the path to use in new integrations; this one stays for callers written against it.
+      summary: Query analytics timeseries (legacy path)
+      tags:
+      - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type:
+                  - number
+                  - string
+                endDate:
+                  type:
+                  - number
+                  - string
+                query:
+                  type: string
+                filters:
+                  default: {}
+                  type: object
+                  propertyNames:
+                    type: string
+                    enum:
+                    - topics.topics
+                    - topics.subtopics
+                    - metadata.user_id
+                    - metadata.thread_id
+                    - metadata.customer_id
+                    - metadata.labels
+                    - metadata.key
+                    - metadata.value
+                    - metadata.prompt_ids
+                    - traces.origin
+                    - traces.error
+                    - traces.name
+                    - spans.type
+                    - spans.model
+                    - evaluations.evaluator_id
+                    - evaluations.evaluator_id.guardrails_only
+                    - evaluations.evaluator_id.has_passed
+                    - evaluations.evaluator_id.has_score
+                    - evaluations.evaluator_id.has_label
+                    - evaluations.passed
+                    - evaluations.score
+                    - evaluations.state
+                    - evaluations.label
+                    - events.event_type
+                    - events.metrics.key
+                    - events.metrics.value
+                    - events.event_details.key
+                    - annotations.hasAnnotation
+                  additionalProperties:
+                    anyOf:
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                  properties:
+                    topics.topics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    topics.subtopics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.user_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.thread_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.customer_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.labels:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.prompt_ids:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.origin:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.error:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.name:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.model:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.guardrails_only:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.state:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_details.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    annotations.hasAnnotation:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                traceIds:
+                  type: array
+                  items:
+                    type: string
+                negateFilters:
+                  type: boolean
+                excludeOrigins:
+                  type: array
+                  items:
+                    type: string
+                series:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      metric:
+                        type: string
+                        minLength: 1
+                      key:
+                        type: string
+                      subkey:
+                        type: string
+                      aggregation:
+                        type: string
+                        enum:
+                        - terms
+                        - cardinality
+                        - avg
+                        - sum
+                        - min
+                        - max
+                        - median
+                        - p99
+                        - p95
+                        - p90
+                      pipeline:
+                        type: object
+                        properties:
+                          field:
+                            type: string
+                            enum:
+                            - trace_id
+                            - user_id
+                            - thread_id
+                            - customer_id
+                          aggregation:
+                            type: string
+                            enum:
+                            - sum
+                            - avg
+                            - min
+                            - max
+                        required:
+                        - field
+                        - aggregation
+                      filters:
+                        type: object
+                        propertyNames:
+                          type: string
+                          enum:
+                          - topics.topics
+                          - topics.subtopics
+                          - metadata.user_id
+                          - metadata.thread_id
+                          - metadata.customer_id
+                          - metadata.labels
+                          - metadata.key
+                          - metadata.value
+                          - metadata.prompt_ids
+                          - traces.origin
+                          - traces.error
+                          - traces.name
+                          - spans.type
+                          - spans.model
+                          - evaluations.evaluator_id
+                          - evaluations.evaluator_id.guardrails_only
+                          - evaluations.evaluator_id.has_passed
+                          - evaluations.evaluator_id.has_score
+                          - evaluations.evaluator_id.has_label
+                          - evaluations.passed
+                          - evaluations.score
+                          - evaluations.state
+                          - evaluations.label
+                          - events.event_type
+                          - events.metrics.key
+                          - events.metrics.value
+                          - events.event_details.key
+                          - annotations.hasAnnotation
+                        additionalProperties:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: array
+                              items:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                        properties:
+                          topics.topics:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          topics.subtopics:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.user_id:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.thread_id:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.customer_id:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.labels:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.key:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.value:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          metadata.prompt_ids:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          traces.origin:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          traces.error:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          traces.name:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          spans.type:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          spans.model:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.evaluator_id:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.evaluator_id.guardrails_only:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.evaluator_id.has_passed:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.evaluator_id.has_score:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.evaluator_id.has_label:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.passed:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.score:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.state:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          evaluations.label:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          events.event_type:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          events.metrics.key:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          events.metrics.value:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          events.event_details.key:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                          annotations.hasAnnotation:
+                            anyOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                      asPercent:
+                        type: boolean
+                    required:
+                    - metric
+                    - aggregation
+                groupBy:
+                  type: string
+                  minLength: 1
+                groupByKey:
+                  type: string
+                timeScale:
+                  anyOf:
+                  - type: string
+                    const: full
+                  - type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                timeZone:
+                  type: string
+                shouldSkipPreviousPeriod:
+                  type: boolean
+              required:
+              - startDate
+              - endDate
+              - series
+              - timeZone
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
 components:
   securitySchemes:
     project_api_key:
@@ -1186,3 +3182,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

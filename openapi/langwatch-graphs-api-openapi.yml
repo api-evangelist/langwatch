@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Graphs API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Graphs
 paths:
-  /api/graphs:
+  /api/v1/graphs:
     get:
+      operationId: getApiGraphs
       responses:
         '200':
           description: Success
@@ -28,12 +29,16 @@ paths:
                       type: string
                     graph:
                       type: object
+                      propertyNames:
+                        type: string
                       additionalProperties: {}
                     filters:
-                      type:
-                      - object
-                      - 'null'
-                      additionalProperties: {}
+                      anyOf:
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      - type: 'null'
                     dashboardId:
                       type:
                       - string
@@ -62,73 +67,30 @@ paths:
                   - rowSpan
                   - createdAt
                   - updatedAt
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiGraphs
+                  additionalProperties: false
+      description: List all custom graphs, optionally filtered by dashboard
+      tags:
+      - Graphs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
       parameters:
       - in: query
         name: dashboardId
         schema:
           type: string
-      description: List all custom graphs, optionally filtered by dashboard
-      tags:
-      - Graphs
       summary: Get api graphs
       x-summary-source: derived
     post:
+      operationId: postApiGraphs
       responses:
         '201':
-          description: Graph created
+          description: Success
           content:
             application/json:
               schema:
@@ -140,12 +102,16 @@ paths:
                     type: string
                   graph:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
                   filters:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
                   dashboardId:
                     type:
                     - string
@@ -174,62 +140,20 @@ paths:
                 - rowSpan
                 - createdAt
                 - updatedAt
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiGraphs
-      parameters: []
+                additionalProperties: false
       description: Create a custom graph on a dashboard
+      tags:
+      - Graphs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -240,11 +164,15 @@ paths:
                   minLength: 1
                 graph:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
                 dashboardId:
                   type: string
                 filters:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
                 gridColumn:
                   type: number
@@ -264,12 +192,11 @@ paths:
               required:
               - name
               - graph
-      tags:
-      - Graphs
       summary: Post api graphs
       x-summary-source: derived
-  /api/graphs/{id}:
+  /api/v1/graphs/{id}:
     get:
+      operationId: getApiGraphsById
       responses:
         '200':
           description: Success
@@ -284,12 +211,16 @@ paths:
                     type: string
                   graph:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
                   filters:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
                   dashboardId:
                     type:
                     - string
@@ -318,87 +249,32 @@ paths:
                 - rowSpan
                 - createdAt
                 - updatedAt
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Graph not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiGraphsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Get a custom graph by its ID
       tags:
       - Graphs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Get api graphs by id
       x-summary-source: derived
     patch:
+      operationId: patchApiGraphsById
       responses:
         '200':
-          description: Graph updated
+          description: Success
           content:
             application/json:
               schema:
@@ -410,12 +286,16 @@ paths:
                     type: string
                   graph:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
                   filters:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
                   dashboardId:
                     type:
                     - string
@@ -444,80 +324,12 @@ paths:
                 - rowSpan
                 - createdAt
                 - updatedAt
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Graph not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: patchApiGraphsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Update a custom graph's name, definition, or filters
+      tags:
+      - Graphs
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -528,18 +340,36 @@ paths:
                   minLength: 1
                 graph:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
                 filters:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
-      tags:
-      - Graphs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Patch api graphs by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiGraphsById
       responses:
         '200':
-          description: Graph deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -552,81 +382,25 @@ paths:
                 required:
                 - id
                 - deleted
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Graph not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiGraphsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Delete a custom graph
       tags:
       - Graphs
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Delete api graphs by id
       x-summary-source: derived
 components:
@@ -640,3 +414,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

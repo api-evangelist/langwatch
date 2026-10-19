@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Scenario Events API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,11 +10,12 @@ security:
 tags:
 - name: Scenario Events
 paths:
-  /api/scenario-events:
+  /api/v1/scenario-events:
     post:
+      operationId: postApiScenarioEvents
       responses:
         '201':
-          description: Event created successfully
+          description: Success
           content:
             application/json:
               schema:
@@ -28,6 +29,7 @@ paths:
                     - 'null'
                 required:
                 - success
+                additionalProperties: false
         '400':
           description: Invalid event data
           content:
@@ -78,10 +80,17 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiScenario-events
-      parameters: []
       description: Create a new scenario event
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -101,8 +110,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   metadata:
                     type: object
                     properties:
@@ -110,6 +119,24 @@ paths:
                         type: string
                       description:
                         type: string
+                      note:
+                        type: string
+                      agents:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            role:
+                              type: string
+                              enum:
+                              - agent
+                              - user
+                              - judge
+                          required:
+                          - name
+                          - role
                       langwatch:
                         type: object
                         properties:
@@ -122,12 +149,78 @@ paths:
                             - http
                             - code
                             - workflow
+                            - connected
+                            - voice
+                          targetKey:
+                            type: string
+                          targetParameters:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
                           simulationSuiteId:
                             type: string
+                          scenarioVersion:
+                            type: integer
+                            minimum: -9007199254740991
+                            maximum: 9007199254740991
+                          simulatorModel:
+                            type: string
+                          judgeModel:
+                            type: string
+                          resolvedSimulatorModel:
+                            type: string
+                          resolvedJudgeModel:
+                            type: string
+                          actorId:
+                            type: string
+                          actorLabel:
+                            type: string
+                            enum:
+                            - user
+                            - api
+                            - cli
+                          agentInstance:
+                            type: object
+                            properties:
+                              hostname:
+                                type: string
+                              label:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - hostname
+                            - label
+                          callerKind:
+                            type: string
+                            enum:
+                            - simulated
+                            - human
+                          caller:
+                            type: object
+                            properties:
+                              voice:
+                                type: string
+                              interruptProbability:
+                                type: number
+                              effects:
+                                type: string
+                            required:
+                            - voice
+                            - interruptProbability
+                            - effects
+                          isCutAtLimit:
+                            type: boolean
                         required:
                         - targetReferenceId
                         - targetType
-                    additionalProperties: true
+                    additionalProperties: {}
                 required:
                 - type
                 - timestamp
@@ -150,8 +243,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   status:
                     type: string
                     enum:
@@ -164,33 +257,107 @@ paths:
                     - STALLED
                     - QUEUED
                     - RUNNING
+                    - PENDING_EVALUATION
                   results:
-                    type:
-                    - object
-                    - 'null'
-                    properties:
-                      verdict:
-                        type: string
-                        enum:
-                        - success
-                        - failure
-                        - inconclusive
-                      reasoning:
-                        type: string
-                      metCriteria:
-                        type: array
-                        items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        verdict:
                           type: string
-                      unmetCriteria:
-                        type: array
-                        items:
+                          enum:
+                          - success
+                          - failure
+                          - inconclusive
+                        reasoning:
                           type: string
-                      error:
-                        type: string
-                    required:
-                    - verdict
-                    - metCriteria
-                    - unmetCriteria
+                        metCriteria:
+                          type: array
+                          items:
+                            type: string
+                        unmetCriteria:
+                          type: array
+                          items:
+                            type: string
+                        inconclusiveCriteria:
+                          type: array
+                          items:
+                            type: string
+                        criteria:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              criterion:
+                                type: string
+                              requirement:
+                                type: string
+                              status:
+                                type: string
+                                enum:
+                                - passed
+                                - failed
+                                - inconclusive
+                              reasoning:
+                                default: ''
+                                type: string
+                            required:
+                            - criterion
+                            - status
+                        error:
+                          type: string
+                        evaluations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              evaluatorId:
+                                type: string
+                              name:
+                                type: string
+                              status:
+                                type: string
+                                enum:
+                                - passed
+                                - failed
+                                - scored
+                                - skipped
+                                - error
+                              required:
+                                type: boolean
+                              passed:
+                                type: boolean
+                              score:
+                                type: number
+                              label:
+                                type: string
+                              details:
+                                type: string
+                              cost:
+                                type: object
+                                properties:
+                                  currency:
+                                    type: string
+                                  amount:
+                                    type: number
+                                required:
+                                - currency
+                                - amount
+                              inputs:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: string
+                            required:
+                            - evaluatorId
+                            - name
+                            - status
+                            - required
+                      required:
+                      - verdict
+                      - metCriteria
+                      - unmetCriteria
+                    - type: 'null'
                 required:
                 - type
                 - timestamp
@@ -206,351 +373,177 @@ paths:
                   timestamp:
                     type: number
                   rawEvent: {}
+                  batchRunId:
+                    type: string
+                  scenarioId:
+                    type: string
+                  scenarioRunId:
+                    type: string
+                  scenarioSetId:
+                    default: default
+                    type: string
                   messages:
                     type: array
                     items:
-                      allOf:
-                      - anyOf:
-                        - oneOf:
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              role:
-                                type: string
-                                const: developer
-                              content:
-                                type: string
-                              name:
-                                type: string
-                              encryptedValue:
-                                type: string
-                            required:
-                            - id
-                            - role
-                            - content
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              role:
-                                type: string
-                                const: system
-                              content:
-                                type: string
-                              name:
-                                type: string
-                              encryptedValue:
-                                type: string
-                            required:
-                            - id
-                            - role
-                            - content
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              role:
-                                type: string
-                                const: assistant
-                              content:
-                                type: string
-                              name:
-                                type: string
-                              encryptedValue:
-                                type: string
-                              toolCalls:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    type:
-                                      type: string
-                                      const: function
-                                    function:
-                                      type: object
-                                      properties:
-                                        name:
-                                          type: string
-                                        arguments:
-                                          type: string
-                                      required:
-                                      - name
-                                      - arguments
-                                    encryptedValue:
-                                      type: string
-                                  required:
-                                  - id
-                                  - type
-                                  - function
-                            required:
-                            - id
-                            - role
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              role:
-                                type: string
-                                const: user
-                              content:
-                                anyOf:
-                                - type: string
-                                - type: array
-                                  items:
-                                    oneOf:
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: text
-                                        text:
-                                          type: string
-                                      required:
-                                      - type
-                                      - text
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: image
-                                        source:
-                                          oneOf:
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: data
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                            - mimeType
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: url
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                        metadata: {}
-                                      required:
-                                      - type
-                                      - source
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: audio
-                                        source:
-                                          oneOf:
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: data
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                            - mimeType
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: url
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                        metadata: {}
-                                      required:
-                                      - type
-                                      - source
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: video
-                                        source:
-                                          oneOf:
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: data
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                            - mimeType
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: url
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                        metadata: {}
-                                      required:
-                                      - type
-                                      - source
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: document
-                                        source:
-                                          oneOf:
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: data
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                            - mimeType
-                                          - type: object
-                                            properties:
-                                              type:
-                                                type: string
-                                                const: url
-                                              value:
-                                                type: string
-                                              mimeType:
-                                                type: string
-                                            required:
-                                            - type
-                                            - value
-                                        metadata: {}
-                                      required:
-                                      - type
-                                      - source
-                                    - type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          const: binary
-                                        mimeType:
-                                          type: string
-                                        id:
-                                          type: string
-                                        url:
-                                          type: string
-                                        data:
-                                          type: string
-                                        filename:
-                                          type: string
-                                      required:
-                                      - type
-                                      - mimeType
-                              name:
-                                type: string
-                              encryptedValue:
-                                type: string
-                            required:
-                            - id
-                            - role
-                            - content
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              content:
-                                type: string
-                              role:
-                                type: string
-                                const: tool
-                              toolCallId:
-                                type: string
-                              error:
-                                type: string
-                              encryptedValue:
-                                type: string
-                            required:
-                            - id
-                            - content
-                            - role
-                            - toolCallId
-                          - type: object
-                            properties:
-                              id:
-                                type: string
-                              role:
-                                type: string
-                                const: activity
-                              activityType:
-                                type: string
-                              content:
+                      anyOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                          trace_id:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                            - developer
+                            - system
+                            - assistant
+                            - user
+                            - tool
+                            - activity
+                            - reasoning
+                          content:
+                            anyOf:
+                            - type: string
+                            - type: array
+                              items:
                                 type: object
+                                properties:
+                                  metadata: {}
                                 additionalProperties: {}
-                            required:
-                            - id
-                            - role
-                            - activityType
-                            - content
-                          - type: object
-                            properties:
-                              id:
+                            - type: object
+                              propertyNames:
                                 type: string
-                              role:
-                                type: string
-                                const: reasoning
-                              content:
-                                type: string
-                              encryptedValue:
-                                type: string
-                            required:
-                            - id
-                            - role
-                            - content
-                        - type: object
-                          properties:
-                            role:
+                              additionalProperties: {}
+                          name:
+                            type: string
+                          encryptedValue:
+                            type: string
+                          toolCallId:
+                            type: string
+                          error:
+                            type: string
+                          activityType:
+                            type: string
+                          toolCalls:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AgUiToolCall'
+                          tool_calls:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AgUiToolCall'
+                        required:
+                        - id
+                        - role
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                          trace_id:
+                            type: string
+                          role:
+                            type: string
+                          content:
+                            type: array
+                            items:
                               anyOf:
-                              - type: string
-                                const: system
-                              - type: string
-                                const: user
-                              - type: string
-                                const: assistant
-                              - type: string
-                                const: function
-                              - type: string
-                                const: tool
-                              - type: string
-                                const: unknown
-                            content:
-                              anyOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: text
+                                  text:
+                                    type: string
+                                  citations:
+                                    anyOf:
+                                    - type: array
+                                      items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - text
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: tool_use
+                                  id:
+                                    type: string
+                                  name:
+                                    type: string
+                                  input: {}
+                                required:
+                                - type
+                                - id
+                                - name
+                                - input
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: tool_result
+                                  tool_use_id:
+                                    type: string
+                                  content:
+                                    anyOf:
+                                    - type: string
+                                    - type: array
+                                      items: {}
+                                  is_error:
+                                    type: boolean
+                                required:
+                                - type
+                                - tool_use_id
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: thinking
+                                  thinking:
+                                    type: string
+                                  signature:
+                                    type: string
+                                required:
+                                - type
+                                - thinking
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: redacted_thinking
+                                  data:
+                                    type: string
+                                required:
+                                - type
+                                - data
+                        required:
+                        - content
+                      - type: object
+                        properties:
+                          id:
+                            type: string
+                          trace_id:
+                            type: string
+                          role:
+                            anyOf:
+                            - type: string
+                              const: system
+                            - type: string
+                              const: developer
+                            - type: string
+                              const: user
+                            - type: string
+                              const: assistant
+                            - type: string
+                              const: function
+                            - type: string
+                              const: tool
+                            - type: string
+                              const: unknown
+                          content:
+                            anyOf:
+                            - anyOf:
                               - type: string
                               - type: array
                                 items:
@@ -562,13 +555,6 @@ paths:
                                         const: text
                                       text:
                                         type: string
-                                    required:
-                                    - type
-                                  - type: object
-                                    properties:
-                                      type:
-                                        type: string
-                                        const: text
                                       content:
                                         type: string
                                     required:
@@ -626,95 +612,303 @@ paths:
                                       result: {}
                                     required:
                                     - type
-                              - type: 'null'
-                            parts:
-                              type: array
-                              items:
-                                anyOf:
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      const: text
-                                    text:
-                                      type: string
-                                  required:
-                                  - type
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      const: text
-                                    content:
-                                      type: string
-                                  required:
-                                  - type
-                                - type: object
-                                  properties:
-                                    text:
-                                      type: string
-                                  required:
-                                  - text
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      const: image_url
-                                    image_url:
-                                      type: object
-                                      properties:
-                                        url:
-                                          type: string
-                                        detail:
-                                          anyOf:
-                                          - type: string
-                                            const: auto
-                                          - type: string
-                                            const: low
-                                          - type: string
-                                            const: high
-                                      required:
-                                      - url
-                                  required:
-                                  - type
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      const: tool_call
-                                    toolName:
-                                      type: string
-                                    toolCallId:
-                                      type: string
-                                    args:
-                                      type: string
-                                  required:
-                                  - type
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      const: tool_result
-                                    toolName:
-                                      type: string
-                                    toolCallId:
-                                      type: string
-                                    result: {}
-                                  required:
-                                  - type
-                            function_call:
-                              type:
-                              - object
-                              - 'null'
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: binary
+                                      mimeType:
+                                        type: string
+                                      data:
+                                        type: string
+                                      url:
+                                        type: string
+                                      id:
+                                        type: string
+                                      filename:
+                                        type: string
+                                    required:
+                                    - type
+                                    - mimeType
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: input_audio
+                                      input_audio:
+                                        type: object
+                                        properties:
+                                          data:
+                                            type: string
+                                          format:
+                                            type: string
+                                          url:
+                                            type: string
+                                          mimeType:
+                                            type: string
+                                          id:
+                                            type: string
+                                    required:
+                                    - type
+                                    - input_audio
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: audio
+                                      source:
+                                        type: object
+                                        properties:
+                                          type:
+                                            anyOf:
+                                            - type: string
+                                              const: url
+                                            - type: string
+                                              const: data
+                                          value:
+                                            type: string
+                                          mimeType:
+                                            type: string
+                                        required:
+                                        - type
+                                        - value
+                                    required:
+                                    - type
+                                    - source
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: image
+                                      image:
+                                        type: string
+                                      mediaType:
+                                        type: string
+                                    required:
+                                    - type
+                                    - image
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: file
+                                      mediaType:
+                                        type: string
+                                      data:
+                                        type: string
+                                      url:
+                                        type: string
+                                      filename:
+                                        type: string
+                                    required:
+                                    - type
+                                    - mediaType
+                                  - type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                        const: file
+                                      file:
+                                        type: object
+                                        properties:
+                                          file_data:
+                                            type: string
+                                          file_id:
+                                            type: string
+                                          filename:
+                                            type: string
+                                    required:
+                                    - type
+                                    - file
+                            - type: 'null'
+                          parts:
+                            type: array
+                            items:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: text
+                                  text:
+                                    type: string
+                                  content:
+                                    type: string
+                                required:
+                                - type
+                              - type: object
+                                properties:
+                                  text:
+                                    type: string
+                                required:
+                                - text
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: image_url
+                                  image_url:
+                                    type: object
+                                    properties:
+                                      url:
+                                        type: string
+                                      detail:
+                                        anyOf:
+                                        - type: string
+                                          const: auto
+                                        - type: string
+                                          const: low
+                                        - type: string
+                                          const: high
+                                    required:
+                                    - url
+                                required:
+                                - type
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: tool_call
+                                  toolName:
+                                    type: string
+                                  toolCallId:
+                                    type: string
+                                  args:
+                                    type: string
+                                required:
+                                - type
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: tool_result
+                                  toolName:
+                                    type: string
+                                  toolCallId:
+                                    type: string
+                                  result: {}
+                                required:
+                                - type
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: binary
+                                  mimeType:
+                                    type: string
+                                  data:
+                                    type: string
+                                  url:
+                                    type: string
+                                  id:
+                                    type: string
+                                  filename:
+                                    type: string
+                                required:
+                                - type
+                                - mimeType
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: input_audio
+                                  input_audio:
+                                    type: object
+                                    properties:
+                                      data:
+                                        type: string
+                                      format:
+                                        type: string
+                                      url:
+                                        type: string
+                                      mimeType:
+                                        type: string
+                                      id:
+                                        type: string
+                                required:
+                                - type
+                                - input_audio
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: audio
+                                  source:
+                                    type: object
+                                    properties:
+                                      type:
+                                        anyOf:
+                                        - type: string
+                                          const: url
+                                        - type: string
+                                          const: data
+                                      value:
+                                        type: string
+                                      mimeType:
+                                        type: string
+                                    required:
+                                    - type
+                                    - value
+                                required:
+                                - type
+                                - source
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: image
+                                  image:
+                                    type: string
+                                  mediaType:
+                                    type: string
+                                required:
+                                - type
+                                - image
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: file
+                                  mediaType:
+                                    type: string
+                                  data:
+                                    type: string
+                                  url:
+                                    type: string
+                                  filename:
+                                    type: string
+                                required:
+                                - type
+                                - mediaType
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: file
+                                  file:
+                                    type: object
+                                    properties:
+                                      file_data:
+                                        type: string
+                                      file_id:
+                                        type: string
+                                      filename:
+                                        type: string
+                                required:
+                                - type
+                                - file
+                          function_call:
+                            anyOf:
+                            - type: object
                               properties:
                                 name:
                                   type: string
                                 arguments:
                                   type: string
-                            tool_calls:
-                              type:
-                              - array
-                              - 'null'
+                            - type: 'null'
+                          tool_calls:
+                            anyOf:
+                            - type: array
                               items:
                                 type: object
                                 properties:
@@ -733,40 +927,71 @@ paths:
                                 - id
                                 - type
                                 - function
-                            tool_call_id:
-                              type:
-                              - string
-                              - 'null'
-                            name:
-                              type:
-                              - string
-                              - 'null'
-                            reasoning_content:
-                              type:
-                              - string
-                              - 'null'
+                            - type: 'null'
+                          tool_call_id:
+                            type:
+                            - string
+                            - 'null'
+                          name:
+                            type:
+                            - string
+                            - 'null'
+                          reasoning_content:
+                            type:
+                            - string
+                            - 'null'
                       - type: object
                         properties:
                           id:
                             type: string
                           trace_id:
                             type: string
-                  batchRunId:
-                    type: string
-                  scenarioId:
-                    type: string
-                  scenarioRunId:
-                    type: string
-                  scenarioSetId:
-                    type: string
-                    default: default
+                          role:
+                            type: string
+                          content:
+                            type: array
+                            items:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: text
+                                  text:
+                                    type: string
+                                required:
+                                - type
+                                - text
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: input_audio
+                                  input_audio:
+                                    type: object
+                                    properties:
+                                      data:
+                                        type: string
+                                      format:
+                                        type: string
+                                      mimeType:
+                                        type: string
+                                      url:
+                                        type: string
+                                      id:
+                                        type: string
+                                required:
+                                - type
+                                - input_audio
+                        required:
+                        - content
                 required:
                 - type
                 - timestamp
-                - messages
                 - batchRunId
                 - scenarioId
                 - scenarioRunId
+                - messages
               - type: object
                 properties:
                   type:
@@ -782,8 +1007,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   messageId:
                     type: string
                   role:
@@ -813,8 +1038,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   messageId:
                     type: string
                   role:
@@ -823,6 +1048,8 @@ paths:
                     type: string
                   message:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
                   traceId:
                     type: string
@@ -851,8 +1078,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   messageId:
                     type: string
                   delta:
@@ -880,8 +1107,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   toolCallId:
                     type: string
                   toolCallName:
@@ -911,8 +1138,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   toolCallId:
                     type: string
                   delta:
@@ -940,8 +1167,8 @@ paths:
                   scenarioRunId:
                     type: string
                   scenarioSetId:
-                    type: string
                     default: default
+                    type: string
                   toolCallId:
                     type: string
                 required:
@@ -956,22 +1183,137 @@ paths:
       summary: Post api scenario events
       x-summary-source: derived
     delete:
+      operationId: deleteApiScenarioEvents
       responses:
         '200':
-          description: Events deleted successfully
+          description: Success
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  success:
+                  archived:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  failed:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  scenarioSetId:
+                    type: string
+                  hasMore:
+                    type: boolean
+                  scenarioRunId:
+                    type: string
+                required:
+                - archived
+                - failed
+                additionalProperties: false
+        '400':
+          description: Missing or invalid scope parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Scenario run not found in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Archive simulation runs. Pass exactly one of scenarioSetId (archives every run in the set; scenarioSetId=default targets the implicit default set) or scenarioRunId (archives that one run).
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      parameters:
+      - in: query
+        name: scenarioSetId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: scenarioRunId
+        schema:
+          type: string
+          minLength: 1
+      tags:
+      - Scenario Events
+      summary: Delete api scenario events
+      x-summary-source: derived
+  /api/v1/scenario-events/browser-tab:
+    post:
+      operationId: postApiScenarioEventsBrowserTab
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  delivered:
                     type: boolean
                   url:
-                    type:
-                    - string
-                    - 'null'
+                    type: string
                 required:
-                - success
+                - delivered
+                - url
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -1024,14 +1366,62 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: deleteApiScenario-events
-      parameters: []
-      description: Delete all events
+      description: Offer a batch run to an already-open simulations tab on the caller's machine. Returns whether a live tab took it.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tabKey:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                batchRunId:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                scenarioSetId:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+              required:
+              - tabKey
+              - batchRunId
       tags:
       - Scenario Events
-      summary: Delete api scenario events
+      summary: Post api scenario events browser tab
       x-summary-source: derived
 components:
+  schemas:
+    AgUiToolCall:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: function
+        function:
+          type: object
+          properties:
+            name:
+              type: string
+            arguments:
+              type: string
+          additionalProperties: {}
+        encryptedValue:
+          type: string
+      additionalProperties: {}
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -1042,3 +1432,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

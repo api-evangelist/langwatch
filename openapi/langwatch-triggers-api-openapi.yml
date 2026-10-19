@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Triggers API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Triggers
 paths:
-  /api/triggers:
+  /api/v1/triggers:
     get:
+      operationId: getApiTriggers
       responses:
         '200':
           description: Success
@@ -33,12 +34,182 @@ paths:
                       - ADD_TO_DATASET
                       - ADD_TO_ANNOTATION_QUEUE
                       - SEND_SLACK_MESSAGE
+                      - SEND_WEBHOOK
                     actionParams:
                       type: object
+                      propertyNames:
+                        type: string
                       additionalProperties: {}
+                      description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                    graphAlert:
+                      anyOf:
+                      - type: object
+                        properties:
+                          threshold:
+                            type: number
+                          operator:
+                            type: string
+                            enum:
+                            - gt
+                            - lt
+                            - gte
+                            - lte
+                            - eq
+                          timePeriod:
+                            anyOf:
+                            - type: number
+                              const: 1
+                            - type: number
+                              const: 5
+                            - type: number
+                              const: 15
+                            - type: number
+                              const: 30
+                            - type: number
+                              const: 60
+                            - type: number
+                              const: 1440
+                          seriesName:
+                            type: string
+                            minLength: 1
+                        required:
+                        - threshold
+                        - operator
+                        - timePeriod
+                        - seriesName
+                        additionalProperties: false
+                      - type: 'null'
+                      description: The rule an alert fires by. Null for anything that is not one.
+                    report:
+                      anyOf:
+                      - type: object
+                        properties:
+                          source:
+                            oneOf:
+                            - type: object
+                              properties:
+                                kind:
+                                  type: string
+                                  const: dashboard
+                                dashboardId:
+                                  type: string
+                                  minLength: 1
+                              required:
+                              - kind
+                              - dashboardId
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                kind:
+                                  type: string
+                                  const: customGraph
+                                customGraphId:
+                                  type: string
+                                  minLength: 1
+                              required:
+                              - kind
+                              - customGraphId
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                kind:
+                                  type: string
+                                  const: traceQuery
+                                filters:
+                                  default: {}
+                                  type: object
+                                  propertyNames:
+                                    type: string
+                                  additionalProperties: {}
+                                metric:
+                                  type: string
+                                topN:
+                                  default: 5
+                                  type: integer
+                                  minimum: 1
+                                  maximum: 100
+                              required:
+                              - kind
+                              - filters
+                              - topN
+                              additionalProperties: false
+                          schedule:
+                            type: object
+                            properties:
+                              cron:
+                                type: string
+                                minLength: 1
+                                maxLength: 120
+                              timezone:
+                                type: string
+                                minLength: 1
+                                maxLength: 64
+                            required:
+                            - cron
+                            - timezone
+                            additionalProperties: false
+                          compareToPrevious:
+                            default: false
+                            type: boolean
+                        required:
+                        - source
+                        - schedule
+                        - compareToPrevious
+                        additionalProperties: false
+                      - type: 'null'
+                      description: What a report renders and when. Null for anything else.
                     filters:
                       type: object
+                      propertyNames:
+                        type: string
                       additionalProperties: {}
+                    filterQuery:
+                      type:
+                      - string
+                      - 'null'
+                    kind:
+                      type: string
+                      enum:
+                      - AUTOMATION
+                      - ALERT
+                      - REPORT
+                      description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                    customGraphId:
+                      type:
+                      - string
+                      - 'null'
+                    notificationCadence:
+                      type:
+                      - string
+                      - 'null'
+                    traceDebounceMs:
+                      type:
+                      - number
+                      - 'null'
+                    templates:
+                      type: object
+                      properties:
+                        slackTemplateType:
+                          anyOf:
+                          - type: string
+                            enum:
+                            - string
+                            - block_kit
+                          - type: 'null'
+                        slackTemplate:
+                          type:
+                          - string
+                          - 'null'
+                        emailSubjectTemplate:
+                          type:
+                          - string
+                          - 'null'
+                        emailBodyTemplate:
+                          type:
+                          - string
+                          - 'null'
+                      additionalProperties: false
+                      description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
                     active:
                       type: boolean
                     message:
@@ -46,14 +217,13 @@ paths:
                       - string
                       - 'null'
                     alertType:
-                      type:
-                      - string
-                      - 'null'
-                      enum:
-                      - CRITICAL
-                      - WARNING
-                      - INFO
-                      - null
+                      anyOf:
+                      - type: string
+                        enum:
+                        - CRITICAL
+                        - WARNING
+                        - INFO
+                      - type: 'null'
                     createdAt:
                       type: string
                     updatedAt:
@@ -66,76 +236,40 @@ paths:
                   - name
                   - action
                   - actionParams
+                  - graphAlert
+                  - report
                   - filters
+                  - filterQuery
+                  - kind
+                  - customGraphId
+                  - notificationCadence
+                  - traceDebounceMs
+                  - templates
                   - active
                   - message
                   - alertType
                   - createdAt
                   - updatedAt
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiTriggers
-      parameters: []
-      description: List all active triggers (automations) for the project
+                  additionalProperties: false
+      description: List the project's automations, newest first. Paused automations are included.
       tags:
       - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:view
       summary: Get api triggers
       x-summary-source: derived
     post:
+      operationId: postApiTriggers
       responses:
         '201':
-          description: Trigger created
+          description: Success
           content:
             application/json:
               schema:
@@ -152,12 +286,182 @@ paths:
                     - ADD_TO_DATASET
                     - ADD_TO_ANNOTATION_QUEUE
                     - SEND_SLACK_MESSAGE
+                    - SEND_WEBHOOK
                   actionParams:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                    description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                  graphAlert:
+                    anyOf:
+                    - type: object
+                      properties:
+                        threshold:
+                          type: number
+                        operator:
+                          type: string
+                          enum:
+                          - gt
+                          - lt
+                          - gte
+                          - lte
+                          - eq
+                        timePeriod:
+                          anyOf:
+                          - type: number
+                            const: 1
+                          - type: number
+                            const: 5
+                          - type: number
+                            const: 15
+                          - type: number
+                            const: 30
+                          - type: number
+                            const: 60
+                          - type: number
+                            const: 1440
+                        seriesName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - threshold
+                      - operator
+                      - timePeriod
+                      - seriesName
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The rule an alert fires by. Null for anything that is not one.
+                  report:
+                    anyOf:
+                    - type: object
+                      properties:
+                        source:
+                          oneOf:
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: dashboard
+                              dashboardId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - dashboardId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: customGraph
+                              customGraphId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - customGraphId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: traceQuery
+                              filters:
+                                default: {}
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                              metric:
+                                type: string
+                              topN:
+                                default: 5
+                                type: integer
+                                minimum: 1
+                                maximum: 100
+                            required:
+                            - kind
+                            - filters
+                            - topN
+                            additionalProperties: false
+                        schedule:
+                          type: object
+                          properties:
+                            cron:
+                              type: string
+                              minLength: 1
+                              maxLength: 120
+                            timezone:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - cron
+                          - timezone
+                          additionalProperties: false
+                        compareToPrevious:
+                          default: false
+                          type: boolean
+                      required:
+                      - source
+                      - schedule
+                      - compareToPrevious
+                      additionalProperties: false
+                    - type: 'null'
+                    description: What a report renders and when. Null for anything else.
                   filters:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                  filterQuery:
+                    type:
+                    - string
+                    - 'null'
+                  kind:
+                    type: string
+                    enum:
+                    - AUTOMATION
+                    - ALERT
+                    - REPORT
+                    description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                  customGraphId:
+                    type:
+                    - string
+                    - 'null'
+                  notificationCadence:
+                    type:
+                    - string
+                    - 'null'
+                  traceDebounceMs:
+                    type:
+                    - number
+                    - 'null'
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    additionalProperties: false
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
                   active:
                     type: boolean
                   message:
@@ -165,14 +469,13 @@ paths:
                     - string
                     - 'null'
                   alertType:
-                    type:
-                    - string
-                    - 'null'
-                    enum:
-                    - CRITICAL
-                    - WARNING
-                    - INFO
-                    - null
+                    anyOf:
+                    - type: string
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                    - type: 'null'
                   createdAt:
                     type: string
                   updatedAt:
@@ -185,109 +488,1142 @@ paths:
                 - name
                 - action
                 - actionParams
+                - graphAlert
+                - report
                 - filters
+                - filterQuery
+                - kind
+                - customGraphId
+                - notificationCadence
+                - traceDebounceMs
+                - templates
                 - active
                 - message
                 - alertType
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiTriggers
-      parameters: []
-      description: Create a new trigger (automation)
+                additionalProperties: false
+      description: Create an automation. Send `customGraphId` + `graphAlert` for an alert on a metric, `report` for a scheduled report, or conditions for a trace automation. The delivery channel is fixed at creation.
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                action:
-                  type: string
-                  enum:
-                  - SEND_EMAIL
-                  - ADD_TO_DATASET
-                  - ADD_TO_ANNOTATION_QUEUE
-                  - SEND_SLACK_MESSAGE
-                actionParams:
-                  type: object
-                  additionalProperties: {}
-                  default: {}
-                filters:
-                  type: object
-                  additionalProperties: {}
-                  default: {}
-                message:
-                  type: string
-                alertType:
-                  type: string
-                  enum:
-                  - CRITICAL
-                  - WARNING
-                  - INFO
-              required:
-              - name
-              - action
-      tags:
-      - Triggers
+              oneOf:
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    const: SEND_EMAIL
+                  actionParams:
+                    type: object
+                    properties:
+                      members:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: string
+                        description: Who receives the email. Any address, not only teammates.
+                    required:
+                    - members
+                    additionalProperties: {}
+                    description: Email delivery.
+                  name:
+                    type: string
+                    minLength: 1
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  filterQuery:
+                    description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
+                    type:
+                    - string
+                    - 'null'
+                  message:
+                    type: string
+                  alertType:
+                    type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  customGraphId:
+                    description: Set to make this an alert on that graph. `graphAlert` and `alertType` are then required.
+                    type: string
+                  graphAlert:
+                    description: 'The rule an alert fires by: series, operator, threshold, window.'
+                    type: object
+                    properties:
+                      threshold:
+                        type: number
+                      operator:
+                        type: string
+                        enum:
+                        - gt
+                        - lt
+                        - gte
+                        - lte
+                        - eq
+                      timePeriod:
+                        anyOf:
+                        - type: number
+                          const: 1
+                        - type: number
+                          const: 5
+                        - type: number
+                          const: 15
+                        - type: number
+                          const: 30
+                        - type: number
+                          const: 60
+                        - type: number
+                          const: 1440
+                      seriesName:
+                        type: string
+                        minLength: 1
+                    required:
+                    - threshold
+                    - operator
+                    - timePeriod
+                    - seriesName
+                  report:
+                    description: What a scheduled report renders and when it sends.
+                    type: object
+                    properties:
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: dashboard
+                            dashboardId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - dashboardId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: customGraph
+                            customGraphId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - customGraphId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: traceQuery
+                            filters:
+                              default: {}
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            metric:
+                              type: string
+                            topN:
+                              default: 5
+                              type: integer
+                              minimum: 1
+                              maximum: 100
+                          required:
+                          - kind
+                      schedule:
+                        type: object
+                        properties:
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 120
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                        required:
+                        - cron
+                        - timezone
+                      compareToPrevious:
+                        default: false
+                        type: boolean
+                    required:
+                    - source
+                    - schedule
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  notificationCadence:
+                    type: string
+                    enum:
+                    - immediate
+                    - 5min_digest
+                    - 15min_digest
+                    - hourly_digest
+                    description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                  traceDebounceMs:
+                    type: integer
+                    minimum: 0
+                    maximum: 600000
+                    description: How long to wait for a trace to settle before the conditions are read.
+                required:
+                - action
+                - actionParams
+                - name
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    const: SEND_SLACK_MESSAGE
+                  actionParams:
+                    type: object
+                    properties:
+                      slackIntegrationId:
+                        description: 'The Slack connection this automation posts through: an organization connection or one of this project''s, listed under Settings, Integrations, Slack. A bot connection also needs `slackChannelId`; a webhook connection needs nothing else. Preferred over `slackWebhook` and `slackBotToken`, and what a read returns in their place.'
+                        type: string
+                      slackDelivery:
+                        description: How the message reaches Slack. `webhook` posts to an incoming webhook URL, `bot` posts as the LangWatch Slack app. With `slackIntegrationId` it follows the connection's kind. Absent without a connection means `webhook`.
+                        type: string
+                        enum:
+                        - webhook
+                        - bot
+                      slackWebhook:
+                        description: 'Legacy, accepted for one release: an incoming webhook URL, for `webhook` delivery. It is stored as a Slack connection (an existing one holding the same URL, else a new project connection) and the automation keeps only that connection''s id. Send `slackIntegrationId` instead.'
+                        type: string
+                      slackChannelId:
+                        description: The channel the bot posts in, for a bot connection or `bot` delivery. Invite the LangWatch app to it first.
+                        type: string
+                      slackBotToken:
+                        description: 'Legacy, accepted for one release: a bot token, for `bot` delivery. It is stored as a Slack connection (an existing one holding the same token, else a new project connection) and never reads back. Send `slackIntegrationId` instead.'
+                        type: string
+                      slackBotTokenSet:
+                        description: 'Legacy and ignored: no read returns it. An update that retypes no secret moves an automation''s own stored secret into a connection.'
+                        type: boolean
+                    additionalProperties: {}
+                    description: Slack delivery through a Slack connection (`slackIntegrationId`), plus `slackChannelId` when the connection is a bot.
+                  name:
+                    type: string
+                    minLength: 1
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  filterQuery:
+                    description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
+                    type:
+                    - string
+                    - 'null'
+                  message:
+                    type: string
+                  alertType:
+                    type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  customGraphId:
+                    description: Set to make this an alert on that graph. `graphAlert` and `alertType` are then required.
+                    type: string
+                  graphAlert:
+                    description: 'The rule an alert fires by: series, operator, threshold, window.'
+                    type: object
+                    properties:
+                      threshold:
+                        type: number
+                      operator:
+                        type: string
+                        enum:
+                        - gt
+                        - lt
+                        - gte
+                        - lte
+                        - eq
+                      timePeriod:
+                        anyOf:
+                        - type: number
+                          const: 1
+                        - type: number
+                          const: 5
+                        - type: number
+                          const: 15
+                        - type: number
+                          const: 30
+                        - type: number
+                          const: 60
+                        - type: number
+                          const: 1440
+                      seriesName:
+                        type: string
+                        minLength: 1
+                    required:
+                    - threshold
+                    - operator
+                    - timePeriod
+                    - seriesName
+                  report:
+                    description: What a scheduled report renders and when it sends.
+                    type: object
+                    properties:
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: dashboard
+                            dashboardId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - dashboardId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: customGraph
+                            customGraphId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - customGraphId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: traceQuery
+                            filters:
+                              default: {}
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            metric:
+                              type: string
+                            topN:
+                              default: 5
+                              type: integer
+                              minimum: 1
+                              maximum: 100
+                          required:
+                          - kind
+                      schedule:
+                        type: object
+                        properties:
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 120
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                        required:
+                        - cron
+                        - timezone
+                      compareToPrevious:
+                        default: false
+                        type: boolean
+                    required:
+                    - source
+                    - schedule
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  notificationCadence:
+                    type: string
+                    enum:
+                    - immediate
+                    - 5min_digest
+                    - 15min_digest
+                    - hourly_digest
+                    description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                  traceDebounceMs:
+                    type: integer
+                    minimum: 0
+                    maximum: 600000
+                    description: How long to wait for a trace to settle before the conditions are read.
+                required:
+                - action
+                - actionParams
+                - name
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    const: SEND_WEBHOOK
+                  actionParams:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: Where the request goes. https only, and not a private host.
+                      method:
+                        description: The HTTP method. Absent means POST.
+                        type: string
+                        enum:
+                        - POST
+                        - PUT
+                        - PATCH
+                      headers:
+                        description: 'Static headers sent with every delivery. The values are credentials: they read back as the placeholder, and sending the placeholder back keeps the stored ones. Changing `url` means sending the values again in the same request.'
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: string
+                      bodyTemplate:
+                        description: A Liquid template for the body. Absent sends the standard LangWatch envelope for a JSON content type, and an empty body for any other.
+                        type:
+                        - string
+                        - 'null'
+                      contentType:
+                        description: 'The `Content-Type` the delivery announces, which also decides how the body is treated: `application/json` (and any `+json` type) is checked and re-serialised; any other media type sends the rendered template verbatim. Absent means `application/json`.'
+                        type: string
+                      signingSecret:
+                        description: 'Signs every delivery so the receiver can verify it came from LangWatch. A credential: it reads back as the placeholder, and sending the placeholder back keeps the stored one.'
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - url
+                    additionalProperties: {}
+                    description: Delivery to a customer endpoint over HTTP, with a body in any media type.
+                  name:
+                    type: string
+                    minLength: 1
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  filterQuery:
+                    description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
+                    type:
+                    - string
+                    - 'null'
+                  message:
+                    type: string
+                  alertType:
+                    type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  customGraphId:
+                    description: Set to make this an alert on that graph. `graphAlert` and `alertType` are then required.
+                    type: string
+                  graphAlert:
+                    description: 'The rule an alert fires by: series, operator, threshold, window.'
+                    type: object
+                    properties:
+                      threshold:
+                        type: number
+                      operator:
+                        type: string
+                        enum:
+                        - gt
+                        - lt
+                        - gte
+                        - lte
+                        - eq
+                      timePeriod:
+                        anyOf:
+                        - type: number
+                          const: 1
+                        - type: number
+                          const: 5
+                        - type: number
+                          const: 15
+                        - type: number
+                          const: 30
+                        - type: number
+                          const: 60
+                        - type: number
+                          const: 1440
+                      seriesName:
+                        type: string
+                        minLength: 1
+                    required:
+                    - threshold
+                    - operator
+                    - timePeriod
+                    - seriesName
+                  report:
+                    description: What a scheduled report renders and when it sends.
+                    type: object
+                    properties:
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: dashboard
+                            dashboardId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - dashboardId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: customGraph
+                            customGraphId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - customGraphId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: traceQuery
+                            filters:
+                              default: {}
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            metric:
+                              type: string
+                            topN:
+                              default: 5
+                              type: integer
+                              minimum: 1
+                              maximum: 100
+                          required:
+                          - kind
+                      schedule:
+                        type: object
+                        properties:
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 120
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                        required:
+                        - cron
+                        - timezone
+                      compareToPrevious:
+                        default: false
+                        type: boolean
+                    required:
+                    - source
+                    - schedule
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  notificationCadence:
+                    type: string
+                    enum:
+                    - immediate
+                    - 5min_digest
+                    - 15min_digest
+                    - hourly_digest
+                    description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                  traceDebounceMs:
+                    type: integer
+                    minimum: 0
+                    maximum: 600000
+                    description: How long to wait for a trace to settle before the conditions are read.
+                required:
+                - action
+                - actionParams
+                - name
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    const: ADD_TO_DATASET
+                  actionParams:
+                    type: object
+                    properties:
+                      datasetId:
+                        type: string
+                        description: The dataset matched traces are appended to.
+                      datasetMapping:
+                        type: object
+                        properties:
+                          mapping:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          expansions:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mapping
+                        description: How a trace becomes a row in that dataset.
+                    required:
+                    - datasetId
+                    - datasetMapping
+                    additionalProperties: {}
+                    description: Append matched traces to a dataset.
+                  name:
+                    type: string
+                    minLength: 1
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  filterQuery:
+                    description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
+                    type:
+                    - string
+                    - 'null'
+                  message:
+                    type: string
+                  alertType:
+                    type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  customGraphId:
+                    description: Set to make this an alert on that graph. `graphAlert` and `alertType` are then required.
+                    type: string
+                  graphAlert:
+                    description: 'The rule an alert fires by: series, operator, threshold, window.'
+                    type: object
+                    properties:
+                      threshold:
+                        type: number
+                      operator:
+                        type: string
+                        enum:
+                        - gt
+                        - lt
+                        - gte
+                        - lte
+                        - eq
+                      timePeriod:
+                        anyOf:
+                        - type: number
+                          const: 1
+                        - type: number
+                          const: 5
+                        - type: number
+                          const: 15
+                        - type: number
+                          const: 30
+                        - type: number
+                          const: 60
+                        - type: number
+                          const: 1440
+                      seriesName:
+                        type: string
+                        minLength: 1
+                    required:
+                    - threshold
+                    - operator
+                    - timePeriod
+                    - seriesName
+                  report:
+                    description: What a scheduled report renders and when it sends.
+                    type: object
+                    properties:
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: dashboard
+                            dashboardId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - dashboardId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: customGraph
+                            customGraphId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - customGraphId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: traceQuery
+                            filters:
+                              default: {}
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            metric:
+                              type: string
+                            topN:
+                              default: 5
+                              type: integer
+                              minimum: 1
+                              maximum: 100
+                          required:
+                          - kind
+                      schedule:
+                        type: object
+                        properties:
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 120
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                        required:
+                        - cron
+                        - timezone
+                      compareToPrevious:
+                        default: false
+                        type: boolean
+                    required:
+                    - source
+                    - schedule
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  notificationCadence:
+                    type: string
+                    enum:
+                    - immediate
+                    - 5min_digest
+                    - 15min_digest
+                    - hourly_digest
+                    description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                  traceDebounceMs:
+                    type: integer
+                    minimum: 0
+                    maximum: 600000
+                    description: How long to wait for a trace to settle before the conditions are read.
+                required:
+                - action
+                - actionParams
+                - name
+              - type: object
+                properties:
+                  action:
+                    type: string
+                    const: ADD_TO_ANNOTATION_QUEUE
+                  actionParams:
+                    type: object
+                    properties:
+                      annotators:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                          required:
+                          - id
+                          - name
+                        description: Who the queued items go to.
+                    required:
+                    - annotators
+                    additionalProperties: {}
+                    description: Queue matched traces for a person to label.
+                  name:
+                    type: string
+                    minLength: 1
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                  filterQuery:
+                    description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
+                    type:
+                    - string
+                    - 'null'
+                  message:
+                    type: string
+                  alertType:
+                    type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  customGraphId:
+                    description: Set to make this an alert on that graph. `graphAlert` and `alertType` are then required.
+                    type: string
+                  graphAlert:
+                    description: 'The rule an alert fires by: series, operator, threshold, window.'
+                    type: object
+                    properties:
+                      threshold:
+                        type: number
+                      operator:
+                        type: string
+                        enum:
+                        - gt
+                        - lt
+                        - gte
+                        - lte
+                        - eq
+                      timePeriod:
+                        anyOf:
+                        - type: number
+                          const: 1
+                        - type: number
+                          const: 5
+                        - type: number
+                          const: 15
+                        - type: number
+                          const: 30
+                        - type: number
+                          const: 60
+                        - type: number
+                          const: 1440
+                      seriesName:
+                        type: string
+                        minLength: 1
+                    required:
+                    - threshold
+                    - operator
+                    - timePeriod
+                    - seriesName
+                  report:
+                    description: What a scheduled report renders and when it sends.
+                    type: object
+                    properties:
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: dashboard
+                            dashboardId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - dashboardId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: customGraph
+                            customGraphId:
+                              type: string
+                              minLength: 1
+                          required:
+                          - kind
+                          - customGraphId
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: traceQuery
+                            filters:
+                              default: {}
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            metric:
+                              type: string
+                            topN:
+                              default: 5
+                              type: integer
+                              minimum: 1
+                              maximum: 100
+                          required:
+                          - kind
+                      schedule:
+                        type: object
+                        properties:
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 120
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                        required:
+                        - cron
+                        - timezone
+                      compareToPrevious:
+                        default: false
+                        type: boolean
+                    required:
+                    - source
+                    - schedule
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  notificationCadence:
+                    type: string
+                    enum:
+                    - immediate
+                    - 5min_digest
+                    - 15min_digest
+                    - hourly_digest
+                    description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                  traceDebounceMs:
+                    type: integer
+                    minimum: 0
+                    maximum: 600000
+                    description: How long to wait for a trace to settle before the conditions are read.
+                required:
+                - action
+                - actionParams
+                - name
       summary: Post api triggers
       x-summary-source: derived
-  /api/triggers/{id}:
+  /api/v1/triggers/{triggerId}:
     get:
+      operationId: getApiTriggersById
       responses:
         '200':
           description: Success
@@ -307,12 +1643,182 @@ paths:
                     - ADD_TO_DATASET
                     - ADD_TO_ANNOTATION_QUEUE
                     - SEND_SLACK_MESSAGE
+                    - SEND_WEBHOOK
                   actionParams:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                    description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                  graphAlert:
+                    anyOf:
+                    - type: object
+                      properties:
+                        threshold:
+                          type: number
+                        operator:
+                          type: string
+                          enum:
+                          - gt
+                          - lt
+                          - gte
+                          - lte
+                          - eq
+                        timePeriod:
+                          anyOf:
+                          - type: number
+                            const: 1
+                          - type: number
+                            const: 5
+                          - type: number
+                            const: 15
+                          - type: number
+                            const: 30
+                          - type: number
+                            const: 60
+                          - type: number
+                            const: 1440
+                        seriesName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - threshold
+                      - operator
+                      - timePeriod
+                      - seriesName
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The rule an alert fires by. Null for anything that is not one.
+                  report:
+                    anyOf:
+                    - type: object
+                      properties:
+                        source:
+                          oneOf:
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: dashboard
+                              dashboardId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - dashboardId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: customGraph
+                              customGraphId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - customGraphId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: traceQuery
+                              filters:
+                                default: {}
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                              metric:
+                                type: string
+                              topN:
+                                default: 5
+                                type: integer
+                                minimum: 1
+                                maximum: 100
+                            required:
+                            - kind
+                            - filters
+                            - topN
+                            additionalProperties: false
+                        schedule:
+                          type: object
+                          properties:
+                            cron:
+                              type: string
+                              minLength: 1
+                              maxLength: 120
+                            timezone:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - cron
+                          - timezone
+                          additionalProperties: false
+                        compareToPrevious:
+                          default: false
+                          type: boolean
+                      required:
+                      - source
+                      - schedule
+                      - compareToPrevious
+                      additionalProperties: false
+                    - type: 'null'
+                    description: What a report renders and when. Null for anything else.
                   filters:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                  filterQuery:
+                    type:
+                    - string
+                    - 'null'
+                  kind:
+                    type: string
+                    enum:
+                    - AUTOMATION
+                    - ALERT
+                    - REPORT
+                    description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                  customGraphId:
+                    type:
+                    - string
+                    - 'null'
+                  notificationCadence:
+                    type:
+                    - string
+                    - 'null'
+                  traceDebounceMs:
+                    type:
+                    - number
+                    - 'null'
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    additionalProperties: false
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
                   active:
                     type: boolean
                   message:
@@ -320,14 +1826,13 @@ paths:
                     - string
                     - 'null'
                   alertType:
-                    type:
-                    - string
-                    - 'null'
-                    enum:
-                    - CRITICAL
-                    - WARNING
-                    - INFO
-                    - null
+                    anyOf:
+                    - type: string
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                    - type: 'null'
                   createdAt:
                     type: string
                   updatedAt:
@@ -340,41 +1845,24 @@ paths:
                 - name
                 - action
                 - actionParams
+                - graphAlert
+                - report
                 - filters
+                - filterQuery
+                - kind
+                - customGraphId
+                - notificationCadence
+                - traceDebounceMs
+                - templates
                 - active
                 - message
                 - alertType
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Trigger not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -386,48 +1874,32 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiTriggersById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Get a trigger by its ID
       tags:
       - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:view
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Get api triggers by id
       x-summary-source: derived
     patch:
+      operationId: patchApiTriggersById
       responses:
         '200':
-          description: Trigger updated
+          description: Success
           content:
             application/json:
               schema:
@@ -444,12 +1916,182 @@ paths:
                     - ADD_TO_DATASET
                     - ADD_TO_ANNOTATION_QUEUE
                     - SEND_SLACK_MESSAGE
+                    - SEND_WEBHOOK
                   actionParams:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                    description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                  graphAlert:
+                    anyOf:
+                    - type: object
+                      properties:
+                        threshold:
+                          type: number
+                        operator:
+                          type: string
+                          enum:
+                          - gt
+                          - lt
+                          - gte
+                          - lte
+                          - eq
+                        timePeriod:
+                          anyOf:
+                          - type: number
+                            const: 1
+                          - type: number
+                            const: 5
+                          - type: number
+                            const: 15
+                          - type: number
+                            const: 30
+                          - type: number
+                            const: 60
+                          - type: number
+                            const: 1440
+                        seriesName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - threshold
+                      - operator
+                      - timePeriod
+                      - seriesName
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The rule an alert fires by. Null for anything that is not one.
+                  report:
+                    anyOf:
+                    - type: object
+                      properties:
+                        source:
+                          oneOf:
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: dashboard
+                              dashboardId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - dashboardId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: customGraph
+                              customGraphId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - customGraphId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: traceQuery
+                              filters:
+                                default: {}
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                              metric:
+                                type: string
+                              topN:
+                                default: 5
+                                type: integer
+                                minimum: 1
+                                maximum: 100
+                            required:
+                            - kind
+                            - filters
+                            - topN
+                            additionalProperties: false
+                        schedule:
+                          type: object
+                          properties:
+                            cron:
+                              type: string
+                              minLength: 1
+                              maxLength: 120
+                            timezone:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - cron
+                          - timezone
+                          additionalProperties: false
+                        compareToPrevious:
+                          default: false
+                          type: boolean
+                      required:
+                      - source
+                      - schedule
+                      - compareToPrevious
+                      additionalProperties: false
+                    - type: 'null'
+                    description: What a report renders and when. Null for anything else.
                   filters:
                     type: object
+                    propertyNames:
+                      type: string
                     additionalProperties: {}
+                  filterQuery:
+                    type:
+                    - string
+                    - 'null'
+                  kind:
+                    type: string
+                    enum:
+                    - AUTOMATION
+                    - ALERT
+                    - REPORT
+                    description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                  customGraphId:
+                    type:
+                    - string
+                    - 'null'
+                  notificationCadence:
+                    type:
+                    - string
+                    - 'null'
+                  traceDebounceMs:
+                    type:
+                    - number
+                    - 'null'
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    additionalProperties: false
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
                   active:
                     type: boolean
                   message:
@@ -457,14 +2099,13 @@ paths:
                     - string
                     - 'null'
                   alertType:
-                    type:
-                    - string
-                    - 'null'
-                    enum:
-                    - CRITICAL
-                    - WARNING
-                    - INFO
-                    - null
+                    anyOf:
+                    - type: string
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                    - type: 'null'
                   createdAt:
                     type: string
                   updatedAt:
@@ -477,41 +2118,24 @@ paths:
                 - name
                 - action
                 - actionParams
+                - graphAlert
+                - report
                 - filters
+                - filterQuery
+                - kind
+                - customGraphId
+                - notificationCadence
+                - traceDebounceMs
+                - templates
                 - active
                 - message
                 - alertType
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Trigger not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -523,41 +2147,12 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: patchApiTriggersById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Update a trigger (name, active state, message, filters)
+                additionalProperties: false
+      description: Update an automation. Every field is optional and what is left out is left alone, except `actionParams`, which replaces the delivery configuration as a whole. The delivery channel and an alert's graph cannot be changed.
+      tags:
+      - Triggers
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -573,28 +2168,341 @@ paths:
                   - string
                   - 'null'
                 alertType:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - CRITICAL
+                    - WARNING
+                    - INFO
+                  - type: 'null'
+                filters:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    anyOf:
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                filterQuery:
+                  description: The trace query this automation is about, in the syntax the traces view uses. When set it supersedes `filters`.
                   type:
                   - string
                   - 'null'
+                action:
+                  type: string
                   enum:
-                  - CRITICAL
-                  - WARNING
-                  - INFO
-                  - null
-                filters:
-                  type: object
-                  additionalProperties: {}
+                  - SEND_EMAIL
+                  - ADD_TO_DATASET
+                  - ADD_TO_ANNOTATION_QUEUE
+                  - SEND_SLACK_MESSAGE
+                  - SEND_WEBHOOK
+                customGraphId:
+                  description: The graph this alert watches, which an update cannot change. Accepted so that writing the read response back works; a different graph is refused. Create an alert on the other graph and delete this one.
+                  type:
+                  - string
+                  - 'null'
                 actionParams:
+                  description: 'Replaces the delivery configuration as a whole rather than merging into it: send the fields this automation should have from now on, and anything left out is removed. The one exception is a credential the read hid: send back the `[redacted]` placeholder and the stored credential is kept (a Slack automation not yet on a connection has its stored secret moved into one), so reading an automation, changing one field and writing the whole object back is safe. Only this channel''s fields are accepted; anything else is refused rather than dropped, and the rule this automation fires by belongs in `graphAlert` or `report`.'
+                  anyOf:
+                  - type: object
+                    properties:
+                      members:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: string
+                        description: Who receives the email. Any address, not only teammates.
+                    required:
+                    - members
+                    additionalProperties: {}
+                    description: Email delivery.
+                  - type: object
+                    properties:
+                      slackIntegrationId:
+                        description: 'The Slack connection this automation posts through: an organization connection or one of this project''s, listed under Settings, Integrations, Slack. A bot connection also needs `slackChannelId`; a webhook connection needs nothing else. Preferred over `slackWebhook` and `slackBotToken`, and what a read returns in their place.'
+                        type: string
+                      slackDelivery:
+                        description: How the message reaches Slack. `webhook` posts to an incoming webhook URL, `bot` posts as the LangWatch Slack app. With `slackIntegrationId` it follows the connection's kind. Absent without a connection means `webhook`.
+                        type: string
+                        enum:
+                        - webhook
+                        - bot
+                      slackWebhook:
+                        description: 'Legacy, accepted for one release: an incoming webhook URL, for `webhook` delivery. It is stored as a Slack connection (an existing one holding the same URL, else a new project connection) and the automation keeps only that connection''s id. Send `slackIntegrationId` instead.'
+                        type: string
+                      slackChannelId:
+                        description: The channel the bot posts in, for a bot connection or `bot` delivery. Invite the LangWatch app to it first.
+                        type: string
+                      slackBotToken:
+                        description: 'Legacy, accepted for one release: a bot token, for `bot` delivery. It is stored as a Slack connection (an existing one holding the same token, else a new project connection) and never reads back. Send `slackIntegrationId` instead.'
+                        type: string
+                      slackBotTokenSet:
+                        description: 'Legacy and ignored: no read returns it. An update that retypes no secret moves an automation''s own stored secret into a connection.'
+                        type: boolean
+                    additionalProperties: {}
+                    description: Slack delivery through a Slack connection (`slackIntegrationId`), plus `slackChannelId` when the connection is a bot.
+                  - type: object
+                    properties:
+                      url:
+                        type: string
+                        description: Where the request goes. https only, and not a private host.
+                      method:
+                        description: The HTTP method. Absent means POST.
+                        type: string
+                        enum:
+                        - POST
+                        - PUT
+                        - PATCH
+                      headers:
+                        description: 'Static headers sent with every delivery. The values are credentials: they read back as the placeholder, and sending the placeholder back keeps the stored ones. Changing `url` means sending the values again in the same request.'
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: string
+                      bodyTemplate:
+                        description: A Liquid template for the body. Absent sends the standard LangWatch envelope for a JSON content type, and an empty body for any other.
+                        type:
+                        - string
+                        - 'null'
+                      contentType:
+                        description: 'The `Content-Type` the delivery announces, which also decides how the body is treated: `application/json` (and any `+json` type) is checked and re-serialised; any other media type sends the rendered template verbatim. Absent means `application/json`.'
+                        type: string
+                      signingSecret:
+                        description: 'Signs every delivery so the receiver can verify it came from LangWatch. A credential: it reads back as the placeholder, and sending the placeholder back keeps the stored one.'
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - url
+                    additionalProperties: {}
+                    description: Delivery to a customer endpoint over HTTP, with a body in any media type.
+                  - type: object
+                    properties:
+                      datasetId:
+                        type: string
+                        description: The dataset matched traces are appended to.
+                      datasetMapping:
+                        type: object
+                        properties:
+                          mapping:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          expansions:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mapping
+                        description: How a trace becomes a row in that dataset.
+                    required:
+                    - datasetId
+                    - datasetMapping
+                    additionalProperties: {}
+                    description: Append matched traces to a dataset.
+                  - type: object
+                    properties:
+                      annotators:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                          required:
+                          - id
+                          - name
+                        description: Who the queued items go to.
+                    required:
+                    - annotators
+                    additionalProperties: {}
+                    description: Queue matched traces for a person to label.
+                graphAlert:
+                  description: The rule this alert fires by. Only for an automation that is one.
                   type: object
-                  additionalProperties: {}
-      tags:
-      - Triggers
+                  properties:
+                    threshold:
+                      type: number
+                    operator:
+                      type: string
+                      enum:
+                      - gt
+                      - lt
+                      - gte
+                      - lte
+                      - eq
+                    timePeriod:
+                      anyOf:
+                      - type: number
+                        const: 1
+                      - type: number
+                        const: 5
+                      - type: number
+                        const: 15
+                      - type: number
+                        const: 30
+                      - type: number
+                        const: 60
+                      - type: number
+                        const: 1440
+                    seriesName:
+                      type: string
+                      minLength: 1
+                  required:
+                  - threshold
+                  - operator
+                  - timePeriod
+                  - seriesName
+                report:
+                  description: What this report renders and when. Only for one that is a report.
+                  type: object
+                  properties:
+                    source:
+                      oneOf:
+                      - type: object
+                        properties:
+                          kind:
+                            type: string
+                            const: dashboard
+                          dashboardId:
+                            type: string
+                            minLength: 1
+                        required:
+                        - kind
+                        - dashboardId
+                      - type: object
+                        properties:
+                          kind:
+                            type: string
+                            const: customGraph
+                          customGraphId:
+                            type: string
+                            minLength: 1
+                        required:
+                        - kind
+                        - customGraphId
+                      - type: object
+                        properties:
+                          kind:
+                            type: string
+                            const: traceQuery
+                          filters:
+                            default: {}
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          metric:
+                            type: string
+                          topN:
+                            default: 5
+                            type: integer
+                            minimum: 1
+                            maximum: 100
+                        required:
+                        - kind
+                    schedule:
+                      type: object
+                      properties:
+                        cron:
+                          type: string
+                          minLength: 1
+                          maxLength: 120
+                        timezone:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                      required:
+                      - cron
+                      - timezone
+                    compareToPrevious:
+                      default: false
+                      type: boolean
+                  required:
+                  - source
+                  - schedule
+                templates:
+                  type: object
+                  properties:
+                    slackTemplateType:
+                      anyOf:
+                      - type: string
+                        enum:
+                        - string
+                        - block_kit
+                      - type: 'null'
+                    slackTemplate:
+                      type:
+                      - string
+                      - 'null'
+                    emailSubjectTemplate:
+                      type:
+                      - string
+                      - 'null'
+                    emailBodyTemplate:
+                      type:
+                      - string
+                      - 'null'
+                  description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                notificationCadence:
+                  type: string
+                  enum:
+                  - immediate
+                  - 5min_digest
+                  - 15min_digest
+                  - hourly_digest
+                  description: How often a notification automation is allowed to send. A new one starts on a five-minute digest, which is what keeps a broad condition from sending a message per matching trace.
+                traceDebounceMs:
+                  type: integer
+                  minimum: 0
+                  maximum: 600000
+                  description: How long to wait for a trace to settle before the conditions are read.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:update
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Patch api triggers by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiTriggersById
       responses:
         '200':
-          description: Trigger deleted
+          description: Success
           content:
             application/json:
               schema:
@@ -607,34 +2515,9 @@ paths:
                 required:
                 - id
                 - deleted
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Trigger not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -646,44 +2529,1555 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiTriggersById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Delete (soft-delete) a trigger
       tags:
       - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:manage
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
       summary: Delete api triggers by id
       x-summary-source: derived
+  /api/v1/triggers/{triggerId}/fires:
+    get:
+      operationId: getApiTriggersByIdFires
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fires:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        triggerId:
+                          type: string
+                        customGraphId:
+                          type:
+                          - string
+                          - 'null'
+                        firedAt:
+                          type: string
+                        resolvedAt:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - triggerId
+                      - customGraphId
+                      - firedAt
+                      - resolvedAt
+                      additionalProperties: false
+                    description: One page of fires, newest first.
+                  nextCursor:
+                    description: Pass as `cursor` to read the page after this one. Null on the last page.
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - fires
+                - nextCursor
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: 'What this automation has done: its fires, newest first. Metadata only (no trace ids and no trace content). Send `nextCursor` back as `cursor` to read the page after this one.'
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:view
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: limit
+        schema:
+          default: 20
+          type: integer
+          minimum: 1
+          maximum: 100
+      - in: query
+        name: cursor
+        schema:
+          type: string
+        description: The `nextCursor` from the previous page. Omit for the newest fires.
+      summary: Get api triggers by id fires
+      x-summary-source: derived
+  /api/v1/triggers/{triggerId}/enable:
+    post:
+      operationId: postApiTriggersByIdEnable
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  action:
+                    type: string
+                    enum:
+                    - SEND_EMAIL
+                    - ADD_TO_DATASET
+                    - ADD_TO_ANNOTATION_QUEUE
+                    - SEND_SLACK_MESSAGE
+                    - SEND_WEBHOOK
+                  actionParams:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                    description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                  graphAlert:
+                    anyOf:
+                    - type: object
+                      properties:
+                        threshold:
+                          type: number
+                        operator:
+                          type: string
+                          enum:
+                          - gt
+                          - lt
+                          - gte
+                          - lte
+                          - eq
+                        timePeriod:
+                          anyOf:
+                          - type: number
+                            const: 1
+                          - type: number
+                            const: 5
+                          - type: number
+                            const: 15
+                          - type: number
+                            const: 30
+                          - type: number
+                            const: 60
+                          - type: number
+                            const: 1440
+                        seriesName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - threshold
+                      - operator
+                      - timePeriod
+                      - seriesName
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The rule an alert fires by. Null for anything that is not one.
+                  report:
+                    anyOf:
+                    - type: object
+                      properties:
+                        source:
+                          oneOf:
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: dashboard
+                              dashboardId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - dashboardId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: customGraph
+                              customGraphId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - customGraphId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: traceQuery
+                              filters:
+                                default: {}
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                              metric:
+                                type: string
+                              topN:
+                                default: 5
+                                type: integer
+                                minimum: 1
+                                maximum: 100
+                            required:
+                            - kind
+                            - filters
+                            - topN
+                            additionalProperties: false
+                        schedule:
+                          type: object
+                          properties:
+                            cron:
+                              type: string
+                              minLength: 1
+                              maxLength: 120
+                            timezone:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - cron
+                          - timezone
+                          additionalProperties: false
+                        compareToPrevious:
+                          default: false
+                          type: boolean
+                      required:
+                      - source
+                      - schedule
+                      - compareToPrevious
+                      additionalProperties: false
+                    - type: 'null'
+                    description: What a report renders and when. Null for anything else.
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  filterQuery:
+                    type:
+                    - string
+                    - 'null'
+                  kind:
+                    type: string
+                    enum:
+                    - AUTOMATION
+                    - ALERT
+                    - REPORT
+                    description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                  customGraphId:
+                    type:
+                    - string
+                    - 'null'
+                  notificationCadence:
+                    type:
+                    - string
+                    - 'null'
+                  traceDebounceMs:
+                    type:
+                    - number
+                    - 'null'
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    additionalProperties: false
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  active:
+                    type: boolean
+                  message:
+                    type:
+                    - string
+                    - 'null'
+                  alertType:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - action
+                - actionParams
+                - graphAlert
+                - report
+                - filters
+                - filterQuery
+                - kind
+                - customGraphId
+                - notificationCadence
+                - traceDebounceMs
+                - templates
+                - active
+                - message
+                - alertType
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Resume a paused automation. A report goes back on its schedule; the pause record is cleared.
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:update
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Post api triggers by id enable
+      x-summary-source: derived
+  /api/v1/triggers/{triggerId}/disable:
+    post:
+      operationId: postApiTriggersByIdDisable
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  action:
+                    type: string
+                    enum:
+                    - SEND_EMAIL
+                    - ADD_TO_DATASET
+                    - ADD_TO_ANNOTATION_QUEUE
+                    - SEND_SLACK_MESSAGE
+                    - SEND_WEBHOOK
+                  actionParams:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                    description: 'Where this automation delivers, with every credential value replaced by the `[redacted]` placeholder. Which channel is configured, which destination is set and which header names are in play all survive; the values never leave; a Slack automation names its connection by `slackIntegrationId` and carries no secret. Sending the placeholder back on an update keeps the stored value. The rule this automation fires by is not here: it is stated in `graphAlert` or `report`, and sending it in this field is refused.'
+                  graphAlert:
+                    anyOf:
+                    - type: object
+                      properties:
+                        threshold:
+                          type: number
+                        operator:
+                          type: string
+                          enum:
+                          - gt
+                          - lt
+                          - gte
+                          - lte
+                          - eq
+                        timePeriod:
+                          anyOf:
+                          - type: number
+                            const: 1
+                          - type: number
+                            const: 5
+                          - type: number
+                            const: 15
+                          - type: number
+                            const: 30
+                          - type: number
+                            const: 60
+                          - type: number
+                            const: 1440
+                        seriesName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - threshold
+                      - operator
+                      - timePeriod
+                      - seriesName
+                      additionalProperties: false
+                    - type: 'null'
+                    description: The rule an alert fires by. Null for anything that is not one.
+                  report:
+                    anyOf:
+                    - type: object
+                      properties:
+                        source:
+                          oneOf:
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: dashboard
+                              dashboardId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - dashboardId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: customGraph
+                              customGraphId:
+                                type: string
+                                minLength: 1
+                            required:
+                            - kind
+                            - customGraphId
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              kind:
+                                type: string
+                                const: traceQuery
+                              filters:
+                                default: {}
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                              metric:
+                                type: string
+                              topN:
+                                default: 5
+                                type: integer
+                                minimum: 1
+                                maximum: 100
+                            required:
+                            - kind
+                            - filters
+                            - topN
+                            additionalProperties: false
+                        schedule:
+                          type: object
+                          properties:
+                            cron:
+                              type: string
+                              minLength: 1
+                              maxLength: 120
+                            timezone:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - cron
+                          - timezone
+                          additionalProperties: false
+                        compareToPrevious:
+                          default: false
+                          type: boolean
+                      required:
+                      - source
+                      - schedule
+                      - compareToPrevious
+                      additionalProperties: false
+                    - type: 'null'
+                    description: What a report renders and when. Null for anything else.
+                  filters:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  filterQuery:
+                    type:
+                    - string
+                    - 'null'
+                  kind:
+                    type: string
+                    enum:
+                    - AUTOMATION
+                    - ALERT
+                    - REPORT
+                    description: 'What this automation is about: matching traces, a metric crossing a threshold, or a schedule.'
+                  customGraphId:
+                    type:
+                    - string
+                    - 'null'
+                  notificationCadence:
+                    type:
+                    - string
+                    - 'null'
+                  traceDebounceMs:
+                    type:
+                    - number
+                    - 'null'
+                  templates:
+                    type: object
+                    properties:
+                      slackTemplateType:
+                        anyOf:
+                        - type: string
+                          enum:
+                          - string
+                          - block_kit
+                        - type: 'null'
+                      slackTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailSubjectTemplate:
+                        type:
+                        - string
+                        - 'null'
+                      emailBodyTemplate:
+                        type:
+                        - string
+                        - 'null'
+                    additionalProperties: false
+                    description: The Liquid templates this automation's message is rendered from. Absent fields render the LangWatch default for the channel.
+                  active:
+                    type: boolean
+                  message:
+                    type:
+                    - string
+                    - 'null'
+                  alertType:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - CRITICAL
+                      - WARNING
+                      - INFO
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - name
+                - action
+                - actionParams
+                - graphAlert
+                - report
+                - filters
+                - filterQuery
+                - kind
+                - customGraphId
+                - notificationCadence
+                - traceDebounceMs
+                - templates
+                - active
+                - message
+                - alertType
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Pause an automation. A report stops claiming its schedule.
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:update
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Post api triggers by id disable
+      x-summary-source: derived
+  /api/v1/triggers/{triggerId}/test-fire:
+    post:
+      operationId: postApiTriggersByIdTestFire
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  channel:
+                    type: string
+                    enum:
+                    - email
+                    - slack
+                    - webhook
+                  recipientCount:
+                    type: number
+                  usedDefault:
+                    type: boolean
+                    description: Whether the LangWatch default message was rendered because this automation states no template of its own.
+                  missingVariables:
+                    type: array
+                    items:
+                      type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                  httpStatus:
+                    description: 'Webhook only: what the endpoint answered with.'
+                    type: number
+                required:
+                - channel
+                - recipientCount
+                - usedDefault
+                - missingVariables
+                - errors
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Send this automation's message to the destination it is configured with, so you can confirm it arrives. Nothing is recorded as a fire.
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:update
+      parameters:
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Post api triggers by id test fire
+      x-summary-source: derived
+  /api/v1/trigger/slack:
+    post:
+      operationId: postApiTriggerSlack
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+                additionalProperties: false
+        '400':
+          description: The body was not valid JSON
+          content: {}
+        '401':
+          description: Missing or invalid API key
+          content: {}
+        '403':
+          description: The API key lacks triggers:manage
+          content: {}
+        '422':
+          description: The body failed validation, the connection is not one this project can use (`slack_integration_missing`), or a bot connection was named without `slack_channel_id` (`invalid_action_params`)
+          content: {}
+      description: Create a trigger that posts to Slack when traces match its filters, through a Slack connection (`slack_connection_id`, plus `slack_channel_id` for a bot) or an incoming webhook URL (`slack_webhook`), which is stored as a connection. The trigger stores no secret of its own. The `/api/triggers` family supersedes this narrower form, which stays for callers written against it.
+      summary: Create a Slack alert trigger
+      tags:
+      - Triggers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - triggers:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slack_webhook:
+                  description: Incoming webhook URL the alert is posted to. It is stored as a Slack connection this project can use (an existing one holding the same URL, else a new project connection). Send this or `slack_connection_id`, not both.
+                  type: string
+                  format: uri
+                slack_connection_id:
+                  description: 'The Slack connection the alert posts through: an organization connection or one of this project''s, as `GET /api/slack-connections` and `langwatch slack-connection list` list them. Send this or `slack_webhook`, not both.'
+                  type: string
+                  minLength: 1
+                slack_channel_id:
+                  description: The channel a bot connection posts in; required with one. Invite the LangWatch app to it first.
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  description: How the trigger is listed in the app
+                message:
+                  description: Extra line included with each alert
+                  type: string
+                filters:
+                  default: {}
+                  description: Which traces the trigger fires on. An empty object fires on all of them.
+                  type: object
+                  propertyNames:
+                    type: string
+                    enum:
+                    - topics.topics
+                    - topics.subtopics
+                    - metadata.user_id
+                    - metadata.thread_id
+                    - metadata.customer_id
+                    - metadata.labels
+                    - metadata.key
+                    - metadata.value
+                    - metadata.prompt_ids
+                    - traces.origin
+                    - traces.error
+                    - traces.name
+                    - spans.type
+                    - spans.model
+                    - evaluations.evaluator_id
+                    - evaluations.evaluator_id.guardrails_only
+                    - evaluations.evaluator_id.has_passed
+                    - evaluations.evaluator_id.has_score
+                    - evaluations.evaluator_id.has_label
+                    - evaluations.passed
+                    - evaluations.score
+                    - evaluations.state
+                    - evaluations.label
+                    - events.event_type
+                    - events.metrics.key
+                    - events.metrics.value
+                    - events.event_details.key
+                    - annotations.hasAnnotation
+                  additionalProperties:
+                    anyOf:
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                  properties:
+                    topics.topics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    topics.subtopics:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.user_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.thread_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.customer_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.labels:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    metadata.prompt_ids:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.origin:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.error:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    traces.name:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    spans.model:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.guardrails_only:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.evaluator_id.has_label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.passed:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.score:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.state:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    evaluations.label:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_type:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.metrics.value:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    events.event_details.key:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                    annotations.hasAnnotation:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: array
+                            items:
+                              type: string
+                alert_type:
+                  type: string
+                  enum:
+                  - CRITICAL
+                  - WARNING
+                  - INFO
+              required:
+              - name
+              - alert_type
+  /api/v1/unsubscribe:
+    post:
+      operationId: confirmOneClickUnsubscribe
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required:
+                - ok
+                additionalProperties: false
+        '400':
+          description: The token is missing, invalid or tampered with
+          content: {}
+        '429':
+          description: Too many unsubscribe attempts from this caller
+          content: {}
+      description: Stop the automation named by the signed token in `token` from mailing this recipient.
+      summary: RFC 8058 one-click unsubscribe
+      tags:
+      - Triggers
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      parameters:
+      - in: query
+        name: token
+        schema:
+          type: string
 components:
   securitySchemes:
     project_api_key:
@@ -695,3 +4089,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

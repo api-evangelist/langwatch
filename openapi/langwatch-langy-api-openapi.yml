@@ -1,0 +1,1997 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Langy API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Langy
+paths:
+  /api/v1/langy/conversations:
+    post:
+      operationId: startLangyConversationTurn
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+            text/plain; charset=UTF-8: {}
+      description: 'Start a Langy conversation with one turn. The turn surface answers 202 with the accepted turn, 200 with the settled reply under Prefer: wait, and a plain 404 when the rollout is dark for the project.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - langy:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  minItems: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - user
+                        - assistant
+                        - system
+                      parts:
+                        type: array
+                        items:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            $ref: '#/components/schemas/JsonValue'
+                      content:
+                        type: string
+                    required:
+                    - role
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                modelOverride:
+                  type: string
+                  minLength: 1
+                adoptConversationId:
+                  type: boolean
+              required:
+              - messages
+              - idempotencyKey
+      tags:
+      - Langy
+      summary: Start langy conversation turn
+      x-summary-source: derived
+  /api/v1/langy/conversations/{conversationId}/messages:
+    post:
+      operationId: continueLangyConversationTurn
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+            text/plain; charset=UTF-8: {}
+      description: 'Continue one Langy conversation with a turn. The turn surface answers 202 with the accepted turn, 200 with the settled reply under Prefer: wait, and a plain 404 when the rollout is dark for the project.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - langy:create
+      parameters:
+      - in: path
+        name: conversationId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  minItems: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - user
+                        - assistant
+                        - system
+                      parts:
+                        type: array
+                        items:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            $ref: '#/components/schemas/JsonValue'
+                      content:
+                        type: string
+                    required:
+                    - role
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                modelOverride:
+                  type: string
+                  minLength: 1
+                adoptConversationId:
+                  type: boolean
+              required:
+              - messages
+              - idempotencyKey
+      tags:
+      - Langy
+      summary: Continue langy conversation turn
+      x-summary-source: derived
+  /api/v1/langy/ui/actions:
+    post:
+      operationId: langyUiActionsDispatch
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+            text/plain; charset=UTF-8: {}
+      description: The dispatch answers the action service's own outcome, and a plain 404 when the rollout is dark for the project.
+      requestBody:
+        required: true
+        content:
+          text/plain: {}
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      tags:
+      - Langy
+      summary: Langy ui actions dispatch
+      x-summary-source: derived
+    get:
+      operationId: langyUiActionsList
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+            text/plain; charset=UTF-8: {}
+      description: The catalogue publishes each action's own draft-07 payload schema, which the CLI reads as it stands.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      tags:
+      - Langy
+      summary: Langy ui actions list
+      x-summary-source: derived
+  /api/v1/langy/local/workspace:
+    get:
+      operationId: langyLocalWorkspace
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connected:
+                    type: boolean
+                  workspace:
+                    type: object
+                    properties:
+                      root:
+                        type: string
+                        minLength: 1
+                        maxLength: 4096
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      gitRepository:
+                        type: boolean
+                      gitBranch:
+                        type: string
+                        maxLength: 255
+                      gitRemote:
+                        type: string
+                        maxLength: 2048
+                      gitDirty:
+                        type: boolean
+                      os:
+                        type: string
+                        maxLength: 64
+                      nodeVersion:
+                        type: string
+                        maxLength: 64
+                      pythonVersion:
+                        type: string
+                        maxLength: 64
+                      ghAuthenticated:
+                        type: boolean
+                      packageManager:
+                        type: string
+                        maxLength: 32
+                    required:
+                    - root
+                    - name
+                    - os
+                    additionalProperties: false
+                  codeAccessPreference:
+                    anyOf:
+                    - type: string
+                      enum:
+                      - github
+                    - type: 'null'
+                  github:
+                    type: object
+                    properties:
+                      installed:
+                        type: boolean
+                      accountLogin:
+                        type: string
+                    required:
+                    - installed
+                    additionalProperties: false
+                  pendingRequest:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      conversationId:
+                        type: string
+                      conversationTitle:
+                        type: string
+                      conversationUrl:
+                        type: string
+                      projectId:
+                        type: string
+                      projectName:
+                        type: string
+                      createdAt:
+                        type: string
+                      expiresAt:
+                        type: string
+                    required:
+                    - id
+                    - conversationId
+                    - conversationTitle
+                    - conversationUrl
+                    - projectId
+                    - projectName
+                    - createdAt
+                    - expiresAt
+                    additionalProperties: false
+                required:
+                - connected
+                - codeAccessPreference
+                - github
+                additionalProperties: false
+      description: The code access card's own status document, as the command line reads it.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      parameters:
+      - in: query
+        name: conversationId
+        schema:
+          type: string
+      tags:
+      - Langy
+      summary: Langy local workspace
+      x-summary-source: derived
+  /api/v1/langy/local/requests:
+    post:
+      operationId: langyLocalCreateRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      conversationId:
+                        type: string
+                      conversationTitle:
+                        type: string
+                      conversationUrl:
+                        type: string
+                      projectId:
+                        type: string
+                      projectName:
+                        type: string
+                      createdAt:
+                        type: string
+                      expiresAt:
+                        type: string
+                    required:
+                    - id
+                    - conversationId
+                    - conversationTitle
+                    - conversationUrl
+                    - projectId
+                    - projectName
+                    - createdAt
+                    - expiresAt
+                    additionalProperties: false
+                  command:
+                    type: string
+                required:
+                - request
+                - command
+                additionalProperties: false
+      description: The recorded request and the command that approves it.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversationId:
+                  type: string
+                  minLength: 1
+              required:
+              - conversationId
+      tags:
+      - Langy
+      summary: Langy local create request
+      x-summary-source: derived
+  /api/v1/langy/local/calls:
+    post:
+      operationId: langyLocalStartCall
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  callId:
+                    type: string
+                required:
+                - callId
+                additionalProperties: false
+      description: The started call's own id.
+      requestBody:
+        required: true
+        content:
+          text/plain: {}
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      tags:
+      - Langy
+      summary: Langy local start call
+      x-summary-source: derived
+  /api/v1/langy/local/calls/{callId}:
+    get:
+      operationId: langyLocalReadCall
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  callId:
+                    type: string
+                  state:
+                    type: string
+                    enum:
+                    - pending
+                    - running
+                    - awaiting_permission
+                    - done
+                  ok:
+                    type: boolean
+                  text:
+                    type: string
+                  output:
+                    type: object
+                    properties:
+                      exitCode:
+                        anyOf:
+                        - type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        - type: 'null'
+                      stdout:
+                        type: string
+                      stderr:
+                        type: string
+                      truncated:
+                        type: boolean
+                      logPath:
+                        type: string
+                      pid:
+                        type: integer
+                        exclusiveMinimum: 0
+                        maximum: 9007199254740991
+                      durationMs:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - exitCode
+                    - stdout
+                    - stderr
+                    - truncated
+                    - durationMs
+                    additionalProperties: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        enum:
+                        - path_refused
+                        - command_refused
+                        - permission_denied
+                        - permission_expired
+                        - cancelled
+                        - timeout
+                        - exec_failed
+                        - not_found
+                        - key_refused
+                      message:
+                        type: string
+                        maxLength: 4000
+                    required:
+                    - code
+                    - message
+                    additionalProperties: false
+                required:
+                - callId
+                - state
+                additionalProperties: false
+      description: The call's answer, or not found while it is still running.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      parameters:
+      - in: path
+        name: callId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Langy
+      summary: Langy local read call
+      x-summary-source: derived
+  /api/v1/langy/local/calls/{callId}/cancel:
+    post:
+      operationId: langyLocalCancelCall
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  callId:
+                    type: string
+                  cancelled:
+                    type: boolean
+                    const: true
+                required:
+                - callId
+                - cancelled
+                additionalProperties: false
+      description: The cancelled call's own id.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      parameters:
+      - in: path
+        name: callId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Langy
+      summary: Langy local cancel call
+      x-summary-source: derived
+  /api/v1/langy/waits:
+    post:
+      operationId: langyLocalStartWait
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  waitId:
+                    type: string
+                required:
+                - waitId
+                additionalProperties: false
+      description: The started wait's own id.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversationId:
+                  type: string
+                  minLength: 1
+                turnId:
+                  type: string
+                  minLength: 1
+                toolCallId:
+                  type: string
+                  minLength: 1
+                kind:
+                  type: string
+                  const: question
+                questions:
+                  minItems: 1
+                  maxItems: 4
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                      header:
+                        type: string
+                        maxLength: 60
+                      options:
+                        minItems: 1
+                        maxItems: 8
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            label:
+                              type: string
+                              minLength: 1
+                              maxLength: 200
+                            description:
+                              type: string
+                              maxLength: 1000
+                            quiet:
+                              type: boolean
+                          required:
+                          - label
+                      multiple:
+                        type: boolean
+                      allowOther:
+                        type: boolean
+                      bare:
+                        type: boolean
+                    required:
+                    - question
+                    - options
+              required:
+              - conversationId
+              - turnId
+              - kind
+              - questions
+      tags:
+      - Langy
+      summary: Langy local start wait
+      x-summary-source: derived
+  /api/v1/langy/waits/{waitId}:
+    get:
+      operationId: langyLocalReadWait
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  waitId:
+                    type: string
+                  state:
+                    type: string
+                    enum:
+                    - pending
+                    - answered
+                    - expired
+                    - cancelled
+                  answers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        question:
+                          type: string
+                        selected:
+                          type: array
+                          items:
+                            type: string
+                        other:
+                          type: string
+                      required:
+                      - question
+                      - selected
+                      additionalProperties: false
+                required:
+                - waitId
+                - state
+                additionalProperties: false
+      description: The answered question, or not found while it is still waiting.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      parameters:
+      - in: path
+        name: waitId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Langy
+      summary: Langy local read wait
+      x-summary-source: derived
+  /api/v1/langy/control/requests:
+    get:
+      operationId: listLangyControlRequests
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requests:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        conversationId:
+                          type: string
+                        conversationTitle:
+                          type: string
+                        conversationUrl:
+                          type: string
+                        projectId:
+                          type: string
+                        projectName:
+                          type: string
+                        createdAt:
+                          type: string
+                        expiresAt:
+                          type: string
+                      required:
+                      - id
+                      - conversationId
+                      - conversationTitle
+                      - conversationUrl
+                      - projectId
+                      - projectName
+                      - createdAt
+                      - expiresAt
+                      additionalProperties: false
+                required:
+                - requests
+                additionalProperties: false
+      description: List the open requests Langy made for a folder of mine, on every project I can read. Only the person Langy asked ever sees a request, and each one expires fifteen minutes after it was made.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - langy:view
+      tags:
+      - Langy
+      summary: List langy control requests
+      x-summary-source: derived
+  /api/v1/langy/control/requests/{requestId}/approve:
+    post:
+      operationId: approveLangyControlRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionKey:
+                    type: string
+                  endpoint:
+                    type: string
+                  conversation:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      title:
+                        type: string
+                      url:
+                        type: string
+                    required:
+                    - id
+                    - title
+                    - url
+                    additionalProperties: false
+                required:
+                - sessionKey
+                - endpoint
+                - conversation
+                additionalProperties: false
+      description: 'Approve one request and share the current folder with the conversation that asked. Answers with a Langy session key scoped to that conversation, which is never shown again. A request is single use: a second approval is refused.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - langy:create
+      parameters:
+      - in: path
+        name: requestId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The control request id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workspace:
+                  type: object
+                  properties:
+                    root:
+                      type: string
+                      minLength: 1
+                      maxLength: 4096
+                    name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    gitRepository:
+                      type: boolean
+                    gitBranch:
+                      type: string
+                      maxLength: 255
+                    gitRemote:
+                      type: string
+                      maxLength: 2048
+                    gitDirty:
+                      type: boolean
+                    os:
+                      type: string
+                      maxLength: 64
+                    nodeVersion:
+                      type: string
+                      maxLength: 64
+                    pythonVersion:
+                      type: string
+                      maxLength: 64
+                    ghAuthenticated:
+                      type: boolean
+                    packageManager:
+                      type: string
+                      maxLength: 32
+                  required:
+                  - root
+                  - name
+                  - os
+              required:
+              - workspace
+      tags:
+      - Langy
+      summary: Approve langy control request
+      x-summary-source: derived
+  /api/v1/langy/control/requests/{requestId}/cancel:
+    post:
+      operationId: cancelLangyControlRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The request that was cancelled.
+                  cancelled:
+                    type: boolean
+                    const: true
+                    description: Always true once the request is gone.
+                required:
+                - id
+                - cancelled
+                additionalProperties: false
+      description: Refuse one request from the terminal. The card in the chat reads that sharing was cancelled, and Langy's next turn offers the choice again.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - langy:create
+      parameters:
+      - in: path
+        name: requestId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The control request id.
+      tags:
+      - Langy
+      summary: Cancel langy control request
+      x-summary-source: derived
+  /api/v1/langy/control/connect/register:
+    post:
+      operationId: registerLangyControlSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frame:
+                    anyOf:
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: registered
+                        instanceId:
+                          type: string
+                        heartbeatIntervalMs:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 9007199254740991
+                        conversation:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            title:
+                              type: string
+                            url:
+                              type: string
+                          required:
+                          - id
+                          - title
+                          - url
+                          additionalProperties: false
+                        policy:
+                          type: object
+                          properties:
+                            skipPermissions:
+                              type: boolean
+                          required:
+                          - skipPermissions
+                          additionalProperties: false
+                      required:
+                      - protocol
+                      - type
+                      - instanceId
+                      - heartbeatIntervalMs
+                      - conversation
+                      - policy
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: refused
+                        code:
+                          type: string
+                          enum:
+                          - api_key_invalid
+                          - key_type_not_allowed
+                          - conversation_mismatch
+                          - workspace_already_connected
+                          - replica_count_unsupported
+                          - protocol_invalid
+                        message:
+                          type: string
+                      required:
+                      - protocol
+                      - type
+                      - code
+                      - message
+                      additionalProperties: false
+                    description: The registered frame, or the refused frame with its reason.
+                  instanceToken:
+                    description: The token the poll and frames endpoints are addressed with, in the X-Agent-Instance-Token header. Present when the register was accepted.
+                    type: string
+                required:
+                - frame
+                additionalProperties: false
+      description: The registered frame with its instance token, or the refused frame with its reason.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                protocol:
+                  type: number
+                  const: 1
+                type:
+                  type: string
+                  const: register
+                cli:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                      maxLength: 64
+                    version:
+                      type: string
+                      minLength: 1
+                      maxLength: 64
+                  required:
+                  - name
+                  - version
+                instance:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      minLength: 1
+                      maxLength: 128
+                    hostname:
+                      type: string
+                      maxLength: 255
+                    username:
+                      type: string
+                      maxLength: 255
+                    pid:
+                      type: integer
+                      minimum: 0
+                      maximum: 9007199254740991
+                    startedAt:
+                      type: string
+                      maxLength: 64
+                    inFlightCallIds:
+                      default: []
+                      maxItems: 1000
+                      type: array
+                      items:
+                        type: string
+                        maxLength: 128
+                  required:
+                  - id
+                  - hostname
+                  - username
+                  - pid
+                  - startedAt
+                workspace:
+                  type: object
+                  properties:
+                    root:
+                      type: string
+                      minLength: 1
+                      maxLength: 4096
+                    name:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    gitRepository:
+                      type: boolean
+                    gitBranch:
+                      type: string
+                      maxLength: 255
+                    gitRemote:
+                      type: string
+                      maxLength: 2048
+                    gitDirty:
+                      type: boolean
+                    os:
+                      type: string
+                      maxLength: 64
+                    nodeVersion:
+                      type: string
+                      maxLength: 64
+                    pythonVersion:
+                      type: string
+                      maxLength: 64
+                    ghAuthenticated:
+                      type: boolean
+                    packageManager:
+                      type: string
+                      maxLength: 32
+                  required:
+                  - root
+                  - name
+                  - os
+              required:
+              - protocol
+              - type
+              - cli
+              - instance
+              - workspace
+      tags:
+      - Langy
+      summary: Register langy control session
+      x-summary-source: derived
+  /api/v1/langy/control/connect/poll:
+    get:
+      operationId: pollLangyControlSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frames:
+                    type: array
+                    items:
+                      oneOf:
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: registered
+                          instanceId:
+                            type: string
+                          heartbeatIntervalMs:
+                            type: integer
+                            exclusiveMinimum: 0
+                            maximum: 9007199254740991
+                          conversation:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              title:
+                                type: string
+                              url:
+                                type: string
+                            required:
+                            - id
+                            - title
+                            - url
+                            additionalProperties: false
+                          policy:
+                            type: object
+                            properties:
+                              skipPermissions:
+                                type: boolean
+                            required:
+                            - skipPermissions
+                            additionalProperties: false
+                        required:
+                        - protocol
+                        - type
+                        - instanceId
+                        - heartbeatIntervalMs
+                        - conversation
+                        - policy
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: refused
+                          code:
+                            type: string
+                            enum:
+                            - api_key_invalid
+                            - key_type_not_allowed
+                            - conversation_mismatch
+                            - workspace_already_connected
+                            - replica_count_unsupported
+                            - protocol_invalid
+                          message:
+                            type: string
+                        required:
+                        - protocol
+                        - type
+                        - code
+                        - message
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: call
+                          call:
+                            oneOf:
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_read
+                                params:
+                                  type: object
+                                  properties:
+                                    path:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 4096
+                                    offset:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 9007199254740991
+                                    limit:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 9007199254740991
+                                  required:
+                                  - path
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_write
+                                params:
+                                  type: object
+                                  properties:
+                                    path:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 4096
+                                    content:
+                                      type: string
+                                  required:
+                                  - path
+                                  - content
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_edit
+                                params:
+                                  type: object
+                                  properties:
+                                    path:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 4096
+                                    edits:
+                                      minItems: 1
+                                      maxItems: 200
+                                      type: array
+                                      items:
+                                        anyOf:
+                                        - type: object
+                                          properties:
+                                            oldText:
+                                              type: string
+                                              minLength: 1
+                                            newText:
+                                              type: string
+                                          required:
+                                          - oldText
+                                          - newText
+                                          additionalProperties: false
+                                        - type: object
+                                          properties:
+                                            append:
+                                              type: string
+                                              minLength: 1
+                                          required:
+                                          - append
+                                          additionalProperties: false
+                                  required:
+                                  - path
+                                  - edits
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_bash
+                                params:
+                                  type: object
+                                  properties:
+                                    command:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 20000
+                                    timeout:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 9007199254740991
+                                    background:
+                                      type: boolean
+                                  required:
+                                  - command
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_grep
+                                params:
+                                  type: object
+                                  properties:
+                                    pattern:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 2000
+                                    path:
+                                      type: string
+                                      maxLength: 4096
+                                    glob:
+                                      type: string
+                                      maxLength: 500
+                                    ignoreCase:
+                                      type: boolean
+                                    literal:
+                                      type: boolean
+                                    context:
+                                      type: integer
+                                      minimum: 0
+                                      maximum: 50
+                                    limit:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 5000
+                                  required:
+                                  - pattern
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_find
+                                params:
+                                  type: object
+                                  properties:
+                                    pattern:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 500
+                                    path:
+                                      type: string
+                                      maxLength: 4096
+                                    limit:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 20000
+                                  required:
+                                  - pattern
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_ls
+                                params:
+                                  type: object
+                                  properties:
+                                    path:
+                                      type: string
+                                      maxLength: 4096
+                                    limit:
+                                      type: integer
+                                      exclusiveMinimum: 0
+                                      maximum: 20000
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                callId:
+                                  type: string
+                                conversationId:
+                                  type: string
+                                turnId:
+                                  type: string
+                                deadlineAt:
+                                  type: integer
+                                  minimum: -9007199254740991
+                                  maximum: 9007199254740991
+                                tool:
+                                  type: string
+                                  const: local_langwatch_env
+                                params:
+                                  type: object
+                                  properties:
+                                    path:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 4096
+                                  additionalProperties: false
+                              required:
+                              - callId
+                              - conversationId
+                              - turnId
+                              - deadlineAt
+                              - tool
+                              - params
+                              additionalProperties: false
+                        required:
+                        - protocol
+                        - type
+                        - call
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: cancel
+                          callId:
+                            type: string
+                        required:
+                        - protocol
+                        - type
+                        - callId
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: permission
+                          callId:
+                            type: string
+                          decision:
+                            type: string
+                            enum:
+                            - allow_once
+                            - allow_pattern
+                            - deny
+                            - expired
+                        required:
+                        - protocol
+                        - type
+                        - callId
+                        - decision
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: policy
+                          skipPermissions:
+                            type: boolean
+                        required:
+                        - protocol
+                        - type
+                        - skipPermissions
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          protocol:
+                            type: number
+                            const: 1
+                          type:
+                            type: string
+                            const: disconnect
+                          reason:
+                            type: string
+                            maxLength: 500
+                        required:
+                        - protocol
+                        - type
+                        - reason
+                        additionalProperties: false
+                    description: The frames waiting for the folder; empty once the poll wait passes with none.
+                required:
+                - frames
+                additionalProperties: false
+      description: The frames waiting for the folder, or 410 when the instance token is not known.
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      parameters:
+      - in: query
+        name: inFlight
+        schema:
+          type: string
+        description: Comma-separated call ids this folder still holds.
+      tags:
+      - Langy
+      summary: Poll langy control session
+      x-summary-source: derived
+  /api/v1/langy/control/connect/frames:
+    post:
+      operationId: postLangyControlFrames
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: How many frames were taken.
+                required:
+                - accepted
+                additionalProperties: false
+      description: How many frames were taken, or 410 when the instance token is not known.
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                frames:
+                  minItems: 1
+                  maxItems: 100
+                  type: array
+                  items:
+                    oneOf:
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: register
+                        cli:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                            version:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                          required:
+                          - name
+                          - version
+                        instance:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              minLength: 1
+                              maxLength: 128
+                            hostname:
+                              type: string
+                              maxLength: 255
+                            username:
+                              type: string
+                              maxLength: 255
+                            pid:
+                              type: integer
+                              minimum: 0
+                              maximum: 9007199254740991
+                            startedAt:
+                              type: string
+                              maxLength: 64
+                            inFlightCallIds:
+                              default: []
+                              maxItems: 1000
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 128
+                          required:
+                          - id
+                          - hostname
+                          - username
+                          - pid
+                          - startedAt
+                        workspace:
+                          type: object
+                          properties:
+                            root:
+                              type: string
+                              minLength: 1
+                              maxLength: 4096
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 255
+                            gitRepository:
+                              type: boolean
+                            gitBranch:
+                              type: string
+                              maxLength: 255
+                            gitRemote:
+                              type: string
+                              maxLength: 2048
+                            gitDirty:
+                              type: boolean
+                            os:
+                              type: string
+                              maxLength: 64
+                            nodeVersion:
+                              type: string
+                              maxLength: 64
+                            pythonVersion:
+                              type: string
+                              maxLength: 64
+                            ghAuthenticated:
+                              type: boolean
+                            packageManager:
+                              type: string
+                              maxLength: 32
+                          required:
+                          - root
+                          - name
+                          - os
+                      required:
+                      - protocol
+                      - type
+                      - cli
+                      - instance
+                      - workspace
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: ack
+                        callId:
+                          type: string
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: result
+                        callId:
+                          type: string
+                        ok:
+                          type: boolean
+                        text:
+                          type: string
+                        output:
+                          type: object
+                          properties:
+                            exitCode:
+                              anyOf:
+                              - type: integer
+                                minimum: -9007199254740991
+                                maximum: 9007199254740991
+                              - type: 'null'
+                            stdout:
+                              type: string
+                            stderr:
+                              type: string
+                            truncated:
+                              type: boolean
+                            logPath:
+                              type: string
+                            pid:
+                              type: integer
+                              exclusiveMinimum: 0
+                              maximum: 9007199254740991
+                            durationMs:
+                              type: integer
+                              minimum: 0
+                              maximum: 9007199254740991
+                          required:
+                          - exitCode
+                          - stdout
+                          - stderr
+                          - truncated
+                          - durationMs
+                        error:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              enum:
+                              - path_refused
+                              - command_refused
+                              - permission_denied
+                              - permission_expired
+                              - cancelled
+                              - timeout
+                              - exec_failed
+                              - not_found
+                              - key_refused
+                            message:
+                              type: string
+                              maxLength: 4000
+                          required:
+                          - code
+                          - message
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                      - ok
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: permission_required
+                        callId:
+                          type: string
+                        summary:
+                          type: string
+                          maxLength: 4000
+                        pattern:
+                          type: string
+                          maxLength: 500
+                        reason:
+                          type: string
+                          maxLength: 500
+                        skipOffered:
+                          type: boolean
+                        segments:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              command:
+                                type: string
+                                maxLength: 4000
+                              pattern:
+                                type: string
+                                maxLength: 500
+                              readOnly:
+                                type: boolean
+                            required:
+                            - command
+                            - pattern
+                            - readOnly
+                        timeoutSeconds:
+                          type: integer
+                          exclusiveMinimum: 0
+                          maximum: 3600
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                      - summary
+                      - pattern
+                      - reason
+                      - skipOffered
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: permission_answered
+                        callId:
+                          type: string
+                        decision:
+                          type: string
+                          enum:
+                          - allow_once
+                          - allow_pattern
+                          - deny
+                        patterns:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 500
+                      required:
+                      - protocol
+                      - type
+                      - callId
+                      - decision
+                    - type: object
+                      properties:
+                        protocol:
+                          type: number
+                          const: 1
+                        type:
+                          type: string
+                          const: deregister
+                      required:
+                      - protocol
+                      - type
+                  description: Ack, result, permission_required and deregister frames, in order.
+              required:
+              - frames
+      tags:
+      - Langy
+      summary: Post langy control frames
+      x-summary-source: derived
+components:
+  schemas:
+    JsonValue:
+      anyOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: 'null'
+      - type: array
+        items:
+          $ref: '#/components/schemas/JsonValue'
+      - type: object
+        propertyNames:
+          type: string
+        additionalProperties:
+          $ref: '#/components/schemas/JsonValue'
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

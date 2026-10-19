@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: LangWatch Api Keys API
-  version: 1.0.0
+  title: LangWatch API Keys API
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,16 +10,12 @@ security:
 tags:
 - name: API Keys
 paths:
-  /api/api-keys:
+  /api/v1/api-keys:
     get:
       operationId: listApiKeys
-      summary: List API keys
-      description: List all API keys owned by the authenticated user in this organization. Requires organization:view permission.
-      security:
-      - admin_api_key: []
       responses:
         '200':
-          description: List of API keys
+          description: Success
           content:
             application/json:
               schema:
@@ -29,18 +25,81 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/ApiKeyInfo'
+                required:
+                - data
+                additionalProperties: false
         '401':
           description: Invalid or missing API key token
+          content: {}
         '403':
           description: Insufficient permissions (requires organization:view)
+          content: {}
+      description: List all API keys owned by the authenticated user in this organization. Requires organization:view permission.
+      summary: List API keys
       tags:
       - API Keys
-    post:
-      operationId: createApiKey
-      summary: Create an API key
-      description: Create a new API key. For service keys, pass keyType:"service". Optionally scope to specific projects via projectIds (ADMIN on each). Omit projectIds for full org access. The plaintext token is returned once — store it securely.
       security:
       - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:view
+    post:
+      operationId: createApiKey
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                  apiKey:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                    required:
+                    - id
+                    - name
+                    - createdAt
+                    additionalProperties: false
+                required:
+                - token
+                - apiKey
+                additionalProperties: false
+        '401':
+          description: Invalid or missing API key token
+          content: {}
+        '403':
+          description: Requested binding exceeds what the key making the request holds, or the scope does not belong to this organization (api_key_scope_violation); a service key or a key for another member was requested without organization admin rights (api_key_admin_required)
+          content: {}
+        '422':
+          description: Validation error, for example a missing name or empty bindings (validation_error), or a name LangWatch reserves for its own keys (api_key_reserved_name)
+          content: {}
+      description: Create a new API key. For service keys, pass keyType:"service". Optionally scope to specific projects via projectIds (ADMIN on each). Omit projectIds for full org access. Pass assignedToUserId to mint the key for another member, and permissionMode:"restricted" with a permissions list to grant exactly those permissions. Minting a service key or a key for another member requires organization admin rights, held by both the key making the request and its member. A key can grant at most what the key making the request holds. The plaintext token is returned once — store it securely.
+      summary: Create an API key
+      tags:
+      - API Keys
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
       requestBody:
         required: true
         content:
@@ -48,24 +107,47 @@ paths:
             schema:
               type: object
               properties:
+                keyType:
+                  default: personal
+                  description: A personal key acts as the user who created it and needs explicit bindings. A service key is not tied to a user.
+                  type: string
+                  enum:
+                  - personal
+                  - service
                 name:
                   type: string
                   minLength: 1
                   maxLength: 100
-                  description: Human-readable name for this token
+                  description: Human-readable name for this key
                 description:
                   type: string
                   maxLength: 500
-                  description: Optional description
                 expiresAt:
+                  description: ISO 8601 timestamp after which the key stops working
                   type: string
                   format: date-time
-                  description: Optional expiration date (ISO 8601)
-                bindings:
+                assignedToUserId:
+                  description: 'Organization admins only: the member who owns the key and whose access caps it. Defaults to the caller.'
+                  type: string
+                  minLength: 1
+                permissionMode:
+                  default: all
+                  type: string
+                  enum:
+                  - all
+                  - readonly
+                  - restricted
+                  description: '''all'' and ''readonly'' take their meaning from the bindings alone; ''restricted'' additionally requires an explicit permissions list.'
+                permissions:
                   type: array
-                  minItems: 1
+                  items:
+                    type: string
+                    pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  description: 'Restricted mode only: the exact resource:action permissions the key''s CUSTOM bindings grant.'
+                bindings:
+                  description: What this key may do, and where. Required for a personal key.
                   maxItems: 20
-                  description: Role bindings that define what this token can access
+                  type: array
                   items:
                     type: object
                     properties:
@@ -75,83 +157,414 @@ paths:
                         - ADMIN
                         - MEMBER
                         - VIEWER
-                        description: Role to grant
+                        - CUSTOM
+                        description: CUSTOM grants exactly the listed permissions and requires permissionMode 'restricted'.
                       scopeType:
                         type: string
                         enum:
                         - ORGANIZATION
                         - TEAM
                         - PROJECT
-                        description: Scope level
                       scopeId:
                         type: string
-                        description: ID of the organization, team, or project
+                        minLength: 1
                     required:
                     - role
                     - scopeType
                     - scopeId
-                keyType:
-                  type: string
-                  enum:
-                  - personal
-                  - service
-                  default: personal
-                  description: personal = tied to a user. service = not tied to any user, for automation.
                 projectIds:
+                  description: 'Service keys only: restricts the key to these projects'
+                  maxItems: 50
                   type: array
                   items:
                     type: string
-                  maxItems: 50
-                  description: 'For service keys with restricted scope: list of project IDs to grant ADMIN access to. Omit for full org access.'
+                    minLength: 1
               required:
               - name
-              - bindings
+  /api/v1/api-keys/{id}:
+    get:
+      operationId: getApiKey
       responses:
-        '201':
-          description: API key created. The token field contains the plaintext key — it is only shown once.
+        '200':
+          description: Success
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  token:
+                  id:
                     type: string
-                    description: Plaintext API key token (sk-lw-...). Store securely — shown only once.
-                  apiKey:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      createdAt:
-                        type: string
-                        format: date-time
+                    minLength: 1
+                  name:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  lastUsedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  revokedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  roleBindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - id
+                      - role
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                  keyType:
+                    type: string
+                    enum:
+                    - personal
+                    - service
+                  assignedToUserId:
+                    type:
+                    - string
+                    - 'null'
+                  createdByUserId:
+                    type:
+                    - string
+                    - 'null'
+                  permissionMode:
+                    type: string
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  bindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - role
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                required:
+                - id
+                - name
+                - description
+                - createdAt
+                - expiresAt
+                - lastUsedAt
+                - revokedAt
+                - roleBindings
+                - keyType
+                - assignedToUserId
+                - createdByUserId
+                - permissionMode
+                - permissions
+                - bindings
+                additionalProperties: false
         '401':
           description: Invalid or missing API key token
+          content: {}
         '403':
-          description: Requested binding exceeds the creator's own permissions, or scope does not belong to this organization
-        '422':
-          description: Validation error (missing name, empty bindings, etc.)
+          description: Insufficient permissions (requires organization:view)
+          content: {}
+        '404':
+          description: API key not found (api_key_not_found)
+          content: {}
+      description: Read one API key by id, including its role bindings, permission mode and explicit permissions. Returns your own keys; organization admins may read any key in the organization. The secret is never returned. An id that does not exist, belongs to another organization, or belongs to another member all answer 404 api_key_not_found, so the response cannot be used to probe for keys.
+      summary: Get an API key
       tags:
       - API Keys
-  /api/api-keys/{id}:
-    delete:
-      operationId: revokeApiKey
-      summary: Revoke an API key
-      description: Revoke (soft-delete) an API key. Revoked keys can no longer authenticate. Requires organization:manage permission.
       security:
       - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:view
       parameters:
-      - name: id
-        in: path
-        required: true
+      - in: path
+        name: id
         schema:
           type: string
-        description: API key ID
+          minLength: 1
+        required: true
+    patch:
+      operationId: updateApiKey
       responses:
         '200':
-          description: API key revoked successfully
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  expiresAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  lastUsedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  revokedAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  roleBindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - id
+                      - role
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                  keyType:
+                    type: string
+                    enum:
+                    - personal
+                    - service
+                  assignedToUserId:
+                    type:
+                    - string
+                    - 'null'
+                  createdByUserId:
+                    type:
+                    - string
+                    - 'null'
+                  permissionMode:
+                    type: string
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  bindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        scopeType:
+                          type: string
+                          enum:
+                          - ORGANIZATION
+                          - TEAM
+                          - PROJECT
+                        scopeId:
+                          type: string
+                          minLength: 1
+                      required:
+                      - role
+                      - scopeType
+                      - scopeId
+                      additionalProperties: false
+                required:
+                - id
+                - name
+                - description
+                - createdAt
+                - expiresAt
+                - lastUsedAt
+                - revokedAt
+                - roleBindings
+                - keyType
+                - assignedToUserId
+                - createdByUserId
+                - permissionMode
+                - permissions
+                - bindings
+                additionalProperties: false
+        '401':
+          description: Invalid or missing API key token
+          content: {}
+        '403':
+          description: Insufficient permissions (requires organization:manage), the requested binding exceeds what the key owner or the key making the request holds, or the scope does not belong to this organization (api_key_scope_violation)
+          content: {}
+        '404':
+          description: API key not found, or not yours to edit (api_key_not_found)
+          content: {}
+        '409':
+          description: API key is already revoked (api_key_already_revoked)
+          content: {}
+        '422':
+          description: Validation error, for example restricted mode without a permissions list (validation_error)
+          content: {}
+      description: Update an API key's name, description, permission mode, permissions or bindings. Every field is optional; bindings are replaced outright, and the response is exactly what a subsequent GET returns. You may update your own keys; organization admins may update any key in the organization. Bindings can never exceed the access of the member the key belongs to, and a key can grant at most what the key making the request holds. The token itself never changes.
+      summary: Update an API key
+      tags:
+      - API Keys
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                description:
+                  anyOf:
+                  - type: string
+                    maxLength: 500
+                  - type: 'null'
+                permissionMode:
+                  type: string
+                  enum:
+                  - all
+                  - readonly
+                  - restricted
+                  description: '''all'' and ''readonly'' take their meaning from the bindings alone; ''restricted'' additionally requires an explicit permissions list.'
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  description: 'Restricted mode only: the exact resource:action permissions the key''s CUSTOM bindings grant.'
+                bindings:
+                  description: Replaces the key's bindings outright. Whatever is accepted here is exactly what a subsequent GET returns.
+                  minItems: 1
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - MEMBER
+                        - VIEWER
+                        - CUSTOM
+                        description: CUSTOM grants exactly the listed permissions and requires permissionMode 'restricted'.
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    - scopeType
+                    - scopeId
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    delete:
+      operationId: revokeApiKey
+      responses:
+        '200':
+          description: Success
           content:
             application/json:
               schema:
@@ -159,16 +572,312 @@ paths:
                 properties:
                   success:
                     type: boolean
+                required:
+                - success
+                additionalProperties: false
         '401':
           description: Invalid or missing API key token
+          content: {}
         '403':
-          description: Not authorized to revoke this API key (owned by another user)
+          description: Not authorized to revoke this API key, which belongs to another member (api_key_not_owned)
+          content: {}
         '404':
-          description: API key not found
+          description: API key not found (api_key_not_found)
+          content: {}
         '409':
-          description: API key is already revoked
+          description: API key is already revoked (api_key_already_revoked)
+          content: {}
+      description: Revoke (soft-delete) an API key. Revoked keys can no longer authenticate. Requires organization:manage permission.
+      summary: Revoke an API key
       tags:
       - API Keys
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/api-keys/ingestion:
+    post:
+      operationId: createIngestionApiKey
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                  apiKey:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                    required:
+                    - id
+                    - name
+                    - createdAt
+                    additionalProperties: false
+                required:
+                - token
+                - apiKey
+                additionalProperties: false
+        '401':
+          description: Invalid or missing API key token
+          content: {}
+        '403':
+          description: The caller is not a person's sign-in session, lacks traces:create, or asked for any other shape (api_key_scope_violation)
+          content: {}
+        '422':
+          description: Validation error (validation_error)
+          content: {}
+      description: 'Mint the caller''s own ingestion key for the project their sign-in session is bound to, as `langwatch login --project` does. Only one shape is accepted: keyType "personal", owned by the caller, one CUSTOM binding to that project, permissionMode "restricted" and exactly the ingestion permissions. Name it after the machine; omit expiresAt for a key that never expires. Requires a person''s project session holding traces:create; an API key cannot mint one.'
+      summary: Create an ingestion API key
+      tags:
+      - API Keys
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyType:
+                  default: personal
+                  description: A personal key acts as the user who created it and needs explicit bindings. A service key is not tied to a user.
+                  type: string
+                  enum:
+                  - personal
+                  - service
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  description: Human-readable name for this key
+                description:
+                  type: string
+                  maxLength: 500
+                expiresAt:
+                  description: ISO 8601 timestamp after which the key stops working
+                  type: string
+                  format: date-time
+                assignedToUserId:
+                  description: 'Organization admins only: the member who owns the key and whose access caps it. Defaults to the caller.'
+                  type: string
+                  minLength: 1
+                permissionMode:
+                  default: all
+                  type: string
+                  enum:
+                  - all
+                  - readonly
+                  - restricted
+                  description: '''all'' and ''readonly'' take their meaning from the bindings alone; ''restricted'' additionally requires an explicit permissions list.'
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  description: 'Restricted mode only: the exact resource:action permissions the key''s CUSTOM bindings grant.'
+                bindings:
+                  description: What this key may do, and where. Required for a personal key.
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - MEMBER
+                        - VIEWER
+                        - CUSTOM
+                        description: CUSTOM grants exactly the listed permissions and requires permissionMode 'restricted'.
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    - scopeType
+                    - scopeId
+                projectIds:
+                  description: 'Service keys only: restricts the key to these projects'
+                  maxItems: 50
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+              required:
+              - name
+  /api/v1/api-keys/full-access:
+    post:
+      operationId: createFullAccessApiKey
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                  apiKey:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                    required:
+                    - id
+                    - name
+                    - createdAt
+                    additionalProperties: false
+                required:
+                - token
+                - apiKey
+                additionalProperties: false
+        '401':
+          description: Invalid or missing API key token
+          content: {}
+        '403':
+          description: The caller is not a person's sign-in session, lacks project:manage, or asked for any other shape (api_key_scope_violation)
+          content: {}
+        '422':
+          description: Validation error (validation_error)
+          content: {}
+      description: 'Mint the caller''s own API key for the project their sign-in session is bound to, as `langwatch login --project` does: it can do everything the caller can do in that project (prompts, datasets, evaluations, simulations, traces). Only one shape is accepted: keyType "personal", owned by the caller, one ADMIN binding to that project and permissionMode "all". Name it after the machine; omit expiresAt for a key that never expires. Requires a person''s project session holding project:manage; an API key cannot mint one.'
+      summary: Create a full-access API key
+      tags:
+      - API Keys
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyType:
+                  default: personal
+                  description: A personal key acts as the user who created it and needs explicit bindings. A service key is not tied to a user.
+                  type: string
+                  enum:
+                  - personal
+                  - service
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  description: Human-readable name for this key
+                description:
+                  type: string
+                  maxLength: 500
+                expiresAt:
+                  description: ISO 8601 timestamp after which the key stops working
+                  type: string
+                  format: date-time
+                assignedToUserId:
+                  description: 'Organization admins only: the member who owns the key and whose access caps it. Defaults to the caller.'
+                  type: string
+                  minLength: 1
+                permissionMode:
+                  default: all
+                  type: string
+                  enum:
+                  - all
+                  - readonly
+                  - restricted
+                  description: '''all'' and ''readonly'' take their meaning from the bindings alone; ''restricted'' additionally requires an explicit permissions list.'
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    pattern: ^[a-z][a-zA-Z0-9_-]*:[a-z][a-zA-Z0-9_-]*$
+                  description: 'Restricted mode only: the exact resource:action permissions the key''s CUSTOM bindings grant.'
+                bindings:
+                  description: What this key may do, and where. Required for a personal key.
+                  maxItems: 20
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - MEMBER
+                        - VIEWER
+                        - CUSTOM
+                        description: CUSTOM grants exactly the listed permissions and requires permissionMode 'restricted'.
+                      scopeType:
+                        type: string
+                        enum:
+                        - ORGANIZATION
+                        - TEAM
+                        - PROJECT
+                      scopeId:
+                        type: string
+                        minLength: 1
+                    required:
+                    - role
+                    - scopeType
+                    - scopeId
+                projectIds:
+                  description: 'Service keys only: restricts the key to these projects'
+                  maxItems: 50
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+              required:
+              - name
 components:
   schemas:
     ApiKeyInfo:
@@ -176,26 +885,31 @@ components:
       properties:
         id:
           type: string
+          minLength: 1
         name:
           type: string
         description:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         createdAt:
           type: string
           format: date-time
         expiresAt:
-          type: string
-          format: date-time
-          nullable: true
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
         lastUsedAt:
-          type: string
-          format: date-time
-          nullable: true
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
         revokedAt:
-          type: string
-          format: date-time
-          nullable: true
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
         roleBindings:
           type: array
           items:
@@ -203,12 +917,14 @@ components:
             properties:
               id:
                 type: string
+                minLength: 1
               role:
                 type: string
                 enum:
                 - ADMIN
                 - MEMBER
                 - VIEWER
+                - CUSTOM
               scopeType:
                 type: string
                 enum:
@@ -217,6 +933,23 @@ components:
                 - PROJECT
               scopeId:
                 type: string
+                minLength: 1
+            required:
+            - id
+            - role
+            - scopeType
+            - scopeId
+            additionalProperties: false
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+      - expiresAt
+      - lastUsedAt
+      - revokedAt
+      - roleBindings
+      additionalProperties: false
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -227,3 +960,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,943 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Governance / Ingestion Templates API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Governance / Ingestion Templates
+paths:
+  /api/v1/governance/ingestion-templates:
+    get:
+      operationId: getApiGovernanceIngestionTemplates
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        slug:
+                          type: string
+                        source_type:
+                          type: string
+                        display_name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        icon_asset:
+                          type:
+                          - string
+                          - 'null'
+                        credential_schema:
+                          type:
+                          - string
+                          - 'null'
+                        ottl_rules:
+                          type: string
+                        platform_published:
+                          type: boolean
+                        enabled:
+                          type: boolean
+                        organization_id:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - slug
+                      - source_type
+                      - display_name
+                      - description
+                      - icon_asset
+                      - credential_schema
+                      - ottl_rules
+                      - platform_published
+                      - enabled
+                      - organization_id
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Returns the union of platform-published default templates and any org-authored templates visible to the caller's organization. Disabled / archived rows are filtered out. `ottl_rules` is empty in this end-user shape; admins use GET /ingestion-templates/admin to read the canonical OTTL.
+      summary: List ingestion templates
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:view
+    post:
+      operationId: postApiGovernanceIngestionTemplates
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingestion_template:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      source_type:
+                        type: string
+                      display_name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      icon_asset:
+                        type:
+                        - string
+                        - 'null'
+                      credential_schema:
+                        type:
+                        - string
+                        - 'null'
+                      ottl_rules:
+                        type: string
+                      platform_published:
+                        type: boolean
+                      enabled:
+                        type: boolean
+                      organization_id:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - slug
+                    - source_type
+                    - display_name
+                    - description
+                    - icon_asset
+                    - credential_schema
+                    - ottl_rules
+                    - platform_published
+                    - enabled
+                    - organization_id
+                    additionalProperties: false
+                required:
+                - ingestion_template
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Creates a brand-new template scoped to the caller's organization. Slug is auto-generated. Platform rows (organizationId IS NULL) are NEVER created via this endpoint — admins customize platform defaults via POST /ingestion-templates/clone instead.
+      summary: Create org-authored ingestion template
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_type:
+                  type: string
+                display_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                description:
+                  type: string
+                  maxLength: 2000
+                icon_asset:
+                  type: string
+                  maxLength: 20000
+                credential_schema:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - otlp_token
+                    - static_api_key
+                    - agent_id
+                  - type: 'null'
+                ottl_rules:
+                  type: string
+                  maxLength: 50000
+              required:
+              - source_type
+              - display_name
+  /api/v1/governance/ingestion-templates/admin:
+    get:
+      operationId: getApiGovernanceIngestionTemplatesAdmin
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        slug:
+                          type: string
+                        source_type:
+                          type: string
+                        display_name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        icon_asset:
+                          type:
+                          - string
+                          - 'null'
+                        credential_schema:
+                          type:
+                          - string
+                          - 'null'
+                        ottl_rules:
+                          type: string
+                        platform_published:
+                          type: boolean
+                        enabled:
+                          type: boolean
+                        organization_id:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - slug
+                      - source_type
+                      - display_name
+                      - description
+                      - icon_asset
+                      - credential_schema
+                      - ottl_rules
+                      - platform_published
+                      - enabled
+                      - organization_id
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Same union as the user list but includes the canonical `ottl_rules` source for every row. Used by admin tooling to render the transparency block / authoring drawer.
+      summary: List ingestion templates (admin shape, includes OTTL)
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+  /api/v1/governance/ingestion-templates/{ingestionTemplateId}:
+    get:
+      operationId: getApiGovernanceIngestionTemplatesById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingestion_template:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      source_type:
+                        type: string
+                      display_name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      icon_asset:
+                        type:
+                        - string
+                        - 'null'
+                      credential_schema:
+                        type:
+                        - string
+                        - 'null'
+                      ottl_rules:
+                        type: string
+                      platform_published:
+                        type: boolean
+                      enabled:
+                        type: boolean
+                      organization_id:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - slug
+                    - source_type
+                    - display_name
+                    - description
+                    - icon_asset
+                    - credential_schema
+                    - ottl_rules
+                    - platform_published
+                    - enabled
+                    - organization_id
+                    additionalProperties: false
+                required:
+                - ingestion_template
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Single-template lookup by id, scoped to the caller's organization, including the canonical `ottl_rules`. Cross-org probes collapse to 404 (no enumeration vector). Members read the same row without `ottl_rules` from GET /ingestion-templates.
+      summary: Get ingestion template
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+      parameters:
+      - in: path
+        name: ingestionTemplateId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    delete:
+      operationId: deleteApiGovernanceIngestionTemplatesById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  archived:
+                    type: boolean
+                    const: true
+                required:
+                - archived
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Marks the row archived; existing ingestion keys continue to land traces but the row disappears from list views. Platform-published rows reject with 403.
+      summary: Soft-archive an org-authored template
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+      parameters:
+      - in: path
+        name: ingestionTemplateId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/governance/ingestion-templates/{ingestionTemplateId}/ottl-rules:
+    patch:
+      operationId: patchApiGovernanceIngestionTemplatesByIdOttlRules
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingestion_template:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      source_type:
+                        type: string
+                      display_name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      icon_asset:
+                        type:
+                        - string
+                        - 'null'
+                      credential_schema:
+                        type:
+                        - string
+                        - 'null'
+                      ottl_rules:
+                        type: string
+                      platform_published:
+                        type: boolean
+                      enabled:
+                        type: boolean
+                      organization_id:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - slug
+                    - source_type
+                    - display_name
+                    - description
+                    - icon_asset
+                    - credential_schema
+                    - ottl_rules
+                    - platform_published
+                    - enabled
+                    - organization_id
+                    additionalProperties: false
+                required:
+                - ingestion_template
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Audit-logged with line counts pre/post. Platform-published rows reject with 403. Admins must clone a platform row before editing it.
+      summary: Replace ottl_rules on an org-authored template
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+      parameters:
+      - in: path
+        name: ingestionTemplateId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ottl_rules:
+                  type: string
+                  maxLength: 50000
+              required:
+              - ottl_rules
+  /api/v1/governance/ingestion-templates/clone:
+    post:
+      operationId: postApiGovernanceIngestionTemplatesClone
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingestion_template:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      source_type:
+                        type: string
+                      display_name:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      icon_asset:
+                        type:
+                        - string
+                        - 'null'
+                      credential_schema:
+                        type:
+                        - string
+                        - 'null'
+                      ottl_rules:
+                        type: string
+                      platform_published:
+                        type: boolean
+                      enabled:
+                        type: boolean
+                      organization_id:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - slug
+                    - source_type
+                    - display_name
+                    - description
+                    - icon_asset
+                    - credential_schema
+                    - ottl_rules
+                    - platform_published
+                    - enabled
+                    - organization_id
+                    additionalProperties: false
+                required:
+                - ingestion_template
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Forks the source row's source_type / display_name / OTTL into a fresh org-authored row that the admin can then edit via PATCH /ingestion-templates/:id/ottl-rules.
+      summary: Clone a platform-published template into the caller's org
+      tags:
+      - Governance / Ingestion Templates
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - aiTools:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_template_id:
+                  type: string
+              required:
+              - source_template_id
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

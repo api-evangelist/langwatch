@@ -1,0 +1,1313 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Run Plans API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Run Plans
+paths:
+  /api/v1/run-plans:
+    get:
+      operationId: listRunPlans
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The run plan id.
+                    name:
+                      type: string
+                      description: 'The run plan name. This is the plan''s identity: a run started under this name joins this plan.'
+                    slug:
+                      type: string
+                      description: The plan's address in the platform. It is kept when the plan is renamed, so run history never moves.
+                    scope:
+                      oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: test_suites
+                          testSuiteIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - testSuiteIds
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: scenarios
+                        required:
+                        - mode
+                        additionalProperties: false
+                      description: 'What the run plan covers: all (every active scenario), test_suites (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or scenarios (the scenarioIds sent with the configuration). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    scenarioIds:
+                      type: array
+                      items:
+                        type: string
+                      description: The scenarios the last run of this plan covered.
+                    targets:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - prompt
+                            - http
+                            - code
+                            - workflow
+                            - connected
+                            - voice
+                          referenceId:
+                            type: string
+                            minLength: 1
+                          scenarioMappings:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: source
+                                  sourceId:
+                                    type: string
+                                    minLength: 1
+                                  path:
+                                    type: array
+                                    items:
+                                      type: string
+                                required:
+                                - type
+                                - sourceId
+                                - path
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: value
+                                  value:
+                                    type: string
+                                required:
+                                - type
+                                - value
+                                additionalProperties: false
+                          runParameters:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
+                          runSecretParameterNames:
+                            maxItems: 50
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 64
+                        required:
+                        - type
+                        - referenceId
+                        additionalProperties: false
+                      description: What the plan runs against, in the order the results show. A target carrying runParameters runs with those values.
+                    repeatCount:
+                      type: number
+                      description: How many times each scenario and target pairing runs.
+                    simulatorModel:
+                      description: The model that plays the user, or null for the scenario or project default.
+                      type:
+                      - string
+                      - 'null'
+                    judgeModel:
+                      description: The model that judges the run, or null for the scenario or project default.
+                      type:
+                      - string
+                      - 'null'
+                    labels:
+                      type: array
+                      items:
+                        type: string
+                      description: The labels the plan carries.
+                    evaluators:
+                      description: The plan's own evaluators. Absent on servers that predate evaluators on this family.
+                      maxItems: 20
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                            description: The attachment id. Stable across edits of the attachment.
+                          evaluatorId:
+                            type: string
+                            minLength: 1
+                            description: The id of the saved evaluator this attachment runs.
+                          required:
+                            type: boolean
+                            description: Whether a failing result fails the scenario. A score-only evaluator reports and never gates.
+                          mappings:
+                            type: object
+                            propertyNames:
+                              type: string
+                              minLength: 1
+                              maxLength: 128
+                            additionalProperties:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: source
+                                  sourceId:
+                                    type: string
+                                    enum:
+                                    - conversation
+                                    - scenario
+                                    - trace
+                                  path:
+                                    minItems: 1
+                                    maxItems: 3
+                                    type: array
+                                    items:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 256
+                                required:
+                                - type
+                                - sourceId
+                                - path
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: value
+                                  value:
+                                    type: string
+                                    maxLength: 65536
+                                required:
+                                - type
+                                - value
+                                additionalProperties: false
+                              description: Where one evaluator input reads its value. A source mapping names conversation (first_user_message, last_agent_message, transcript, messages), scenario (situation, criteria, or fields followed by a field identifier) or trace (contexts, spans, or tool_calls followed by a tool name and input or output). A value mapping is a literal.
+                            description: Where each evaluator input reads its value, keyed by input name. Inputs left out are unmapped; a required input left unmapped refuses the run.
+                        required:
+                        - id
+                        - evaluatorId
+                        - required
+                        - mappings
+                        additionalProperties: false
+                        description: One evaluator that runs after every scenario run, with where each of its inputs reads from.
+                    archivedAt:
+                      description: When the plan was archived, or null while it is active.
+                      type:
+                      - string
+                      - 'null'
+                    createdAt:
+                      type: string
+                      description: When the plan was created.
+                    updatedAt:
+                      type: string
+                      description: When the plan was last written.
+                    platformUrl:
+                      type: string
+                      format: uri
+                      description: Where to open this run plan in the LangWatch platform.
+                  required:
+                  - id
+                  - name
+                  - slug
+                  - scope
+                  - scenarioIds
+                  - targets
+                  - repeatCount
+                  - simulatorModel
+                  - judgeModel
+                  - labels
+                  - archivedAt
+                  - createdAt
+                  - updatedAt
+                  - platformUrl
+                  additionalProperties: false
+      description: List the project's run plans. Archived plans are left out unless includeArchived is set. Test suites are not run plans and are listed by the test suites family.
+      tags:
+      - Run Plans
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: query
+        name: includeArchived
+        schema:
+          default: 'false'
+          type: string
+        description: Include archived run plans in the list. true, 1, yes for yes; false, 0, no or omitted for no.
+      summary: List run plans
+      x-summary-source: derived
+  /api/v1/run-plans/run:
+    post:
+      operationId: runRunPlan
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scheduled:
+                    type: boolean
+                    description: True once the runs are queued.
+                  batchRunId:
+                    type: string
+                    description: The id of this batch. Every run started here carries it.
+                  setId:
+                    type: string
+                    description: The result set the batch is filed under in the platform.
+                  jobCount:
+                    type: number
+                    description: How many runs were queued.
+                  skippedArchived:
+                    type: object
+                    properties:
+                      scenarios:
+                        type: array
+                        items:
+                          type: string
+                        description: Scenarios left out because they are archived.
+                      targets:
+                        type: array
+                        items:
+                          type: string
+                        description: Targets left out because they are archived.
+                    required:
+                    - scenarios
+                    - targets
+                    additionalProperties: false
+                    description: What the run left out, and why.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        scenarioRunId:
+                          type: string
+                          description: The id of this single run.
+                        scenarioId:
+                          type: string
+                          description: The scenario that was run.
+                        target:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - prompt
+                              - http
+                              - code
+                              - workflow
+                              - connected
+                              - voice
+                            referenceId:
+                              type: string
+                              minLength: 1
+                            scenarioMappings:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                oneOf:
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: source
+                                    sourceId:
+                                      type: string
+                                      minLength: 1
+                                    path:
+                                      type: array
+                                      items:
+                                        type: string
+                                  required:
+                                  - type
+                                  - sourceId
+                                  - path
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: value
+                                    value:
+                                      type: string
+                                  required:
+                                  - type
+                                  - value
+                                  additionalProperties: false
+                            runParameters:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                anyOf:
+                                - type: string
+                                  maxLength: 4096
+                                - type: number
+                                - type: boolean
+                            runSecretParameterNames:
+                              maxItems: 50
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 64
+                          required:
+                          - type
+                          - referenceId
+                          additionalProperties: false
+                          description: What it was run against.
+                        name:
+                          description: The scenario name, when known.
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - scenarioRunId
+                      - scenarioId
+                      - target
+                      - name
+                      additionalProperties: false
+                    description: Every run this call queued.
+                  runPlanId:
+                    type: string
+                    description: The run plan this run was filed under.
+                  planName:
+                    type: string
+                    description: The name that plan answers to.
+                  created:
+                    type: boolean
+                    description: True when this run created the plan, false when it joined a plan already there.
+                  platformUrl:
+                    type: string
+                    format: uri
+                    description: Where to watch this run in the LangWatch platform.
+                required:
+                - scheduled
+                - batchRunId
+                - setId
+                - jobCount
+                - skippedArchived
+                - items
+                - runPlanId
+                - planName
+                - created
+                - platformUrl
+                additionalProperties: false
+      description: 'Run a configuration under a name. The name identifies the run plan: send a name already in use and that plan''s configuration is replaced with this one, send a new name and the plan is created, send no name and one is derived from what the run covers and what it runs against.'
+      tags:
+      - Run Plans
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: The run plan this run joins or creates. A run plan is identified by its name, so sending the same name again replaces that plan's configuration with this one. Leave it out and the name is derived from what the run covers and what it runs against. Up to 200 characters.
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                config:
+                  type: object
+                  properties:
+                    scope:
+                      oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: test_suites
+                          testSuiteIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - testSuiteIds
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: scenarios
+                        required:
+                        - mode
+                      description: 'What the run plan covers: all (every active scenario), test_suites (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or scenarios (the scenarioIds sent with the configuration). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    targets:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - prompt
+                            - http
+                            - code
+                            - workflow
+                            - connected
+                            - voice
+                          referenceId:
+                            type: string
+                            minLength: 1
+                          scenarioMappings:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: source
+                                  sourceId:
+                                    type: string
+                                    minLength: 1
+                                  path:
+                                    type: array
+                                    items:
+                                      type: string
+                                required:
+                                - type
+                                - sourceId
+                                - path
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: value
+                                  value:
+                                    type: string
+                                required:
+                                - type
+                                - value
+                                additionalProperties: false
+                          runParameters:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
+                          runSecretParameterNames:
+                            maxItems: 50
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 64
+                        required:
+                        - type
+                        - referenceId
+                        additionalProperties: false
+                      description: The prompts, agents or workflows every scenario runs against. Every target runs every scenario, so naming more than one compares them in the same run.
+                    repeatCount:
+                      description: How many times each scenario and target pairing runs. Between 1 and 5; defaults to 1.
+                      type: integer
+                      minimum: 1
+                      maximum: 5
+                    simulatorModel:
+                      description: The model that plays the user for every scenario in the run. Overrides each scenario's own choice. Leave it out for the scenario or project default.
+                      anyOf:
+                      - type: string
+                        maxLength: 200
+                        pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                      - type: 'null'
+                    judgeModel:
+                      description: The model that judges every scenario in the run. Overrides each scenario's own choice. Leave it out for the scenario or project default.
+                      anyOf:
+                      - type: string
+                        maxLength: 200
+                        pattern: ^[a-zA-Z0-9_-]+(?:\/[^\s/]+)+$
+                      - type: 'null'
+                    scenarioIds:
+                      description: The scenarios a test_suites or scenarios scope covers. Read by a scenarios scope alone; a scope that states a rule resolves its own list at run time.
+                      type: array
+                      items:
+                        type: string
+                    evaluators:
+                      description: The plan's own evaluators, run beside the ones attached to the test suites its scenarios belong to. A plan evaluator reads the conversation and the trace, never a scenario field. Leave it out to keep what the plan already holds.
+                      maxItems: 20
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                            maxLength: 64
+                            description: The attachment id. Stable across edits of the attachment.
+                          evaluatorId:
+                            type: string
+                            minLength: 1
+                            description: The id of the saved evaluator this attachment runs.
+                          required:
+                            type: boolean
+                            description: Whether a failing result fails the scenario. A score-only evaluator reports and never gates.
+                          mappings:
+                            type: object
+                            propertyNames:
+                              type: string
+                              minLength: 1
+                              maxLength: 128
+                            additionalProperties:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: source
+                                  sourceId:
+                                    type: string
+                                    enum:
+                                    - conversation
+                                    - scenario
+                                    - trace
+                                  path:
+                                    minItems: 1
+                                    maxItems: 3
+                                    type: array
+                                    items:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 256
+                                required:
+                                - type
+                                - sourceId
+                                - path
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: value
+                                  value:
+                                    type: string
+                                    maxLength: 65536
+                                required:
+                                - type
+                                - value
+                              description: Where one evaluator input reads its value. A source mapping names conversation (first_user_message, last_agent_message, transcript, messages), scenario (situation, criteria, or fields followed by a field identifier) or trace (contexts, spans, or tool_calls followed by a tool name and input or output). A value mapping is a literal.
+                            description: Where each evaluator input reads its value, keyed by input name. Inputs left out are unmapped; a required input left unmapped refuses the run.
+                        required:
+                        - id
+                        - evaluatorId
+                        - required
+                        - mappings
+                        description: One evaluator that runs after every scenario run, with where each of its inputs reads from.
+                  required:
+                  - scope
+                  - targets
+                  description: What this run covers and what it runs against. Written onto the run plan the name resolves.
+                idempotencyKey:
+                  description: 'Repeat the same key to make a retry join the batch the first call started instead of running everything again. Send the same request with it: the same key over a different configuration starts its own batch. Defaults to a new key per call.'
+                  type: string
+                parameters:
+                  description: Constant values applied to every scenario in the run, e.g. a fixture id or a tenant. A value supplied here overrides the scenario's own default for that name, and a target that names the same parameter in its runParameters overrides it for that target.
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 4096
+                    - type: number
+                    - type: boolean
+                note:
+                  description: One short line describing why this batch was run, e.g. a commit hash or what you changed. It is stored on every run of the batch and shown beside the run in the platform. Up to 200 characters.
+                  type: string
+                  maxLength: 200
+              required:
+              - config
+      summary: Run run plan
+      x-summary-source: derived
+  /api/v1/run-plans/{id}:
+    get:
+      operationId: getRunPlan
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The run plan id.
+                  name:
+                    type: string
+                    description: 'The run plan name. This is the plan''s identity: a run started under this name joins this plan.'
+                  slug:
+                    type: string
+                    description: The plan's address in the platform. It is kept when the plan is renamed, so run history never moves.
+                  scope:
+                    oneOf:
+                    - type: object
+                      properties:
+                        mode:
+                          type: string
+                          const: all
+                      required:
+                      - mode
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        mode:
+                          type: string
+                          const: test_suites
+                        testSuiteIds:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - mode
+                      - testSuiteIds
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        mode:
+                          type: string
+                          const: labels
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - mode
+                      - labels
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        mode:
+                          type: string
+                          const: scenarios
+                      required:
+                      - mode
+                      additionalProperties: false
+                    description: 'What the run plan covers: all (every active scenario), test_suites (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or scenarios (the scenarioIds sent with the configuration). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+                    description: The scenarios the last run of this plan covered.
+                  targets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - prompt
+                          - http
+                          - code
+                          - workflow
+                          - connected
+                          - voice
+                        referenceId:
+                          type: string
+                          minLength: 1
+                        scenarioMappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  minLength: 1
+                                path:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                        runParameters:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        runSecretParameterNames:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 64
+                      required:
+                      - type
+                      - referenceId
+                      additionalProperties: false
+                    description: What the plan runs against, in the order the results show. A target carrying runParameters runs with those values.
+                  repeatCount:
+                    type: number
+                    description: How many times each scenario and target pairing runs.
+                  simulatorModel:
+                    description: The model that plays the user, or null for the scenario or project default.
+                    type:
+                    - string
+                    - 'null'
+                  judgeModel:
+                    description: The model that judges the run, or null for the scenario or project default.
+                    type:
+                    - string
+                    - 'null'
+                  labels:
+                    type: array
+                    items:
+                      type: string
+                    description: The labels the plan carries.
+                  evaluators:
+                    description: The plan's own evaluators. Absent on servers that predate evaluators on this family.
+                    maxItems: 20
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                          description: The attachment id. Stable across edits of the attachment.
+                        evaluatorId:
+                          type: string
+                          minLength: 1
+                          description: The id of the saved evaluator this attachment runs.
+                        required:
+                          type: boolean
+                          description: Whether a failing result fails the scenario. A score-only evaluator reports and never gates.
+                        mappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                            minLength: 1
+                            maxLength: 128
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  enum:
+                                  - conversation
+                                  - scenario
+                                  - trace
+                                path:
+                                  minItems: 1
+                                  maxItems: 3
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 256
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                                  maxLength: 65536
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                            description: Where one evaluator input reads its value. A source mapping names conversation (first_user_message, last_agent_message, transcript, messages), scenario (situation, criteria, or fields followed by a field identifier) or trace (contexts, spans, or tool_calls followed by a tool name and input or output). A value mapping is a literal.
+                          description: Where each evaluator input reads its value, keyed by input name. Inputs left out are unmapped; a required input left unmapped refuses the run.
+                      required:
+                      - id
+                      - evaluatorId
+                      - required
+                      - mappings
+                      additionalProperties: false
+                      description: One evaluator that runs after every scenario run, with where each of its inputs reads from.
+                  archivedAt:
+                    description: When the plan was archived, or null while it is active.
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    description: When the plan was created.
+                  updatedAt:
+                    type: string
+                    description: When the plan was last written.
+                  platformUrl:
+                    type: string
+                    format: uri
+                    description: Where to open this run plan in the LangWatch platform.
+                required:
+                - id
+                - name
+                - slug
+                - scope
+                - scenarioIds
+                - targets
+                - repeatCount
+                - simulatorModel
+                - judgeModel
+                - labels
+                - archivedAt
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Read one run plan. An id the project does not hold, and a test suite id, both answer 404 suite_not_found.
+      tags:
+      - Run Plans
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The run plan id.
+      summary: Get run plan
+      x-summary-source: derived
+    delete:
+      operationId: archiveRunPlan
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The run plan that was archived.
+                  archived:
+                    type: boolean
+                    const: true
+                    description: Always true once the plan is archived.
+                required:
+                - id
+                - archived
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Archive a run plan. The plan stops being listed and its run history is kept. The scenarios it referenced are left where they are.
+      tags:
+      - Run Plans
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The run plan id.
+      summary: Archive run plan
+      x-summary-source: derived
+  /api/v1/run-plans/{id}/run:
+    post:
+      operationId: rerunRunPlan
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scheduled:
+                    type: boolean
+                    description: True once the runs are queued.
+                  batchRunId:
+                    type: string
+                    description: The id of this batch. Every run started here carries it.
+                  setId:
+                    type: string
+                    description: The result set the batch is filed under in the platform.
+                  jobCount:
+                    type: number
+                    description: How many runs were queued.
+                  skippedArchived:
+                    type: object
+                    properties:
+                      scenarios:
+                        type: array
+                        items:
+                          type: string
+                        description: Scenarios left out because they are archived.
+                      targets:
+                        type: array
+                        items:
+                          type: string
+                        description: Targets left out because they are archived.
+                    required:
+                    - scenarios
+                    - targets
+                    additionalProperties: false
+                    description: What the run left out, and why.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        scenarioRunId:
+                          type: string
+                          description: The id of this single run.
+                        scenarioId:
+                          type: string
+                          description: The scenario that was run.
+                        target:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - prompt
+                              - http
+                              - code
+                              - workflow
+                              - connected
+                              - voice
+                            referenceId:
+                              type: string
+                              minLength: 1
+                            scenarioMappings:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                oneOf:
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: source
+                                    sourceId:
+                                      type: string
+                                      minLength: 1
+                                    path:
+                                      type: array
+                                      items:
+                                        type: string
+                                  required:
+                                  - type
+                                  - sourceId
+                                  - path
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: value
+                                    value:
+                                      type: string
+                                  required:
+                                  - type
+                                  - value
+                                  additionalProperties: false
+                            runParameters:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                anyOf:
+                                - type: string
+                                  maxLength: 4096
+                                - type: number
+                                - type: boolean
+                            runSecretParameterNames:
+                              maxItems: 50
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 64
+                          required:
+                          - type
+                          - referenceId
+                          additionalProperties: false
+                          description: What it was run against.
+                        name:
+                          description: The scenario name, when known.
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - scenarioRunId
+                      - scenarioId
+                      - target
+                      - name
+                      additionalProperties: false
+                    description: Every run this call queued.
+                  runPlanId:
+                    type: string
+                    description: The run plan this run was filed under.
+                  planName:
+                    type: string
+                    description: The name that plan answers to.
+                  created:
+                    type: boolean
+                    description: True when this run created the plan, false when it joined a plan already there.
+                  platformUrl:
+                    type: string
+                    format: uri
+                    description: Where to watch this run in the LangWatch platform.
+                required:
+                - scheduled
+                - batchRunId
+                - setId
+                - jobCount
+                - skippedArchived
+                - items
+                - runPlanId
+                - planName
+                - created
+                - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Run a run plan again, with the configuration it already holds. To run a different configuration, post it to /run under the plan's name.
+      summary: Run a plan again
+      tags:
+      - Run Plans
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotencyKey:
+                  description: 'Repeat the same key to make a retry join the batch the first call started instead of running everything again. Send the same request with it: the same key over a different configuration starts its own batch. Defaults to a new key per call.'
+                  type: string
+                parameters:
+                  description: Constant values applied to every scenario in the run, e.g. a fixture id or a tenant. A value supplied here overrides the scenario's own default for that name, and a target that names the same parameter in its runParameters overrides it for that target.
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 4096
+                    - type: number
+                    - type: boolean
+                note:
+                  description: One short line describing why this batch was run, e.g. a commit hash or what you changed. It is stored on every run of the batch and shown beside the run in the platform. Up to 200 characters.
+                  type: string
+                  maxLength: 200
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The run plan id.
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

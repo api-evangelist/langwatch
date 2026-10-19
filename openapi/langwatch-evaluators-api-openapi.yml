@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Evaluators API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Evaluators
 paths:
-  /api/evaluators:
+  /api/v1/evaluators:
     get:
+      operationId: getApiEvaluators
       responses:
         '200':
           description: Success
@@ -35,10 +36,12 @@ paths:
                     type:
                       type: string
                     config:
-                      type:
-                      - object
-                      - 'null'
-                      additionalProperties: {}
+                      anyOf:
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      - type: 'null'
                     workflowId:
                       type:
                       - string
@@ -49,8 +52,10 @@ paths:
                       - 'null'
                     createdAt:
                       type: string
+                      format: date-time
                     updatedAt:
                       type: string
+                      format: date-time
                     fields:
                       type: array
                       items:
@@ -65,6 +70,7 @@ paths:
                         required:
                         - identifier
                         - type
+                        additionalProperties: false
                     outputFields:
                       type: array
                       items:
@@ -79,6 +85,7 @@ paths:
                         required:
                         - identifier
                         - type
+                        additionalProperties: false
                     workflowName:
                       type: string
                     workflowIcon:
@@ -100,66 +107,22 @@ paths:
                   - fields
                   - outputFields
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiEvaluators
-      parameters: []
+                  additionalProperties: false
       description: Get all evaluators for a project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
       tags:
       - Evaluators
       summary: Get api evaluators
       x-summary-source: derived
     post:
+      operationId: postApiEvaluators
       responses:
         '200':
           description: Success
@@ -181,10 +144,12 @@ paths:
                   type:
                     type: string
                   config:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
                   workflowId:
                     type:
                     - string
@@ -195,8 +160,10 @@ paths:
                     - 'null'
                   createdAt:
                     type: string
+                    format: date-time
                   updatedAt:
                     type: string
+                    format: date-time
                   fields:
                     type: array
                     items:
@@ -211,6 +178,7 @@ paths:
                       required:
                       - identifier
                       - type
+                      additionalProperties: false
                   outputFields:
                     type: array
                     items:
@@ -225,6 +193,7 @@ paths:
                       required:
                       - identifier
                       - type
+                      additionalProperties: false
                   workflowName:
                     type: string
                   workflowIcon:
@@ -246,62 +215,18 @@ paths:
                 - fields
                 - outputFields
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiEvaluators
-      parameters: []
+                additionalProperties: false
       description: Create a new evaluator
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -313,6 +238,8 @@ paths:
                   maxLength: 255
                 config:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
               required:
               - name
@@ -321,8 +248,9 @@ paths:
       - Evaluators
       summary: Post api evaluators
       x-summary-source: derived
-  /api/evaluators/{idOrSlug}:
+  /api/v1/evaluators/{idOrSlug}:
     get:
+      operationId: getApiEvaluatorsByIdOrSlug
       responses:
         '200':
           description: Success
@@ -344,10 +272,12 @@ paths:
                   type:
                     type: string
                   config:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
                   workflowId:
                     type:
                     - string
@@ -358,8 +288,10 @@ paths:
                     - 'null'
                   createdAt:
                     type: string
+                    format: date-time
                   updatedAt:
                     type: string
+                    format: date-time
                   fields:
                     type: array
                     items:
@@ -374,6 +306,7 @@ paths:
                       required:
                       - identifier
                       - type
+                      additionalProperties: false
                   outputFields:
                     type: array
                     items:
@@ -388,6 +321,7 @@ paths:
                       required:
                       - identifier
                       - type
+                      additionalProperties: false
                   workflowName:
                     type: string
                   workflowIcon:
@@ -409,6 +343,138 @@ paths:
                 - fields
                 - outputFields
                 - platformUrl
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Get a specific evaluator by ID or slug
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
+      parameters:
+      - in: path
+        name: idOrSlug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The evaluator id or its project-unique slug.
+      tags:
+      - Evaluators
+      summary: Get api evaluators by id or slug
+      x-summary-source: derived
+  /api/v1/evaluators/{id}:
+    put:
+      operationId: putApiEvaluatorsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  projectId:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    type: string
+                  config:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    - type: 'null'
+                  workflowId:
+                    type:
+                    - string
+                    - 'null'
+                  copiedFromEvaluatorId:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                        type:
+                          type: string
+                        optional:
+                          type: boolean
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  outputFields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                        type:
+                          type: string
+                        optional:
+                          type: boolean
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  workflowName:
+                    type: string
+                  workflowIcon:
+                    type: string
+                  platformUrl:
+                    type: string
+                    format: uri
+                required:
+                - id
+                - projectId
+                - name
+                - slug
+                - type
+                - config
+                - workflowId
+                - copiedFromEvaluatorId
+                - createdAt
+                - updatedAt
+                - fields
+                - outputFields
+                - platformUrl
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -422,21 +488,9 @@ paths:
                     type: string
                 required:
                 - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Evaluator not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -448,206 +502,10 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiEvaluatorsByIdOrSlug
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: idOrSlug
-        required: true
-      description: Get a specific evaluator by ID or slug
-      tags:
-      - Evaluators
-      summary: Get api evaluators by id or slug
-      x-summary-source: derived
-  /api/evaluators/{id}:
-    put:
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  projectId:
-                    type: string
-                  name:
-                    type: string
-                  slug:
-                    type:
-                    - string
-                    - 'null'
-                  type:
-                    type: string
-                  config:
-                    type:
-                    - object
-                    - 'null'
-                    additionalProperties: {}
-                  workflowId:
-                    type:
-                    - string
-                    - 'null'
-                  copiedFromEvaluatorId:
-                    type:
-                    - string
-                    - 'null'
-                  createdAt:
-                    type: string
-                  updatedAt:
-                    type: string
-                  fields:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                        type:
-                          type: string
-                        optional:
-                          type: boolean
-                      required:
-                      - identifier
-                      - type
-                  outputFields:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                        type:
-                          type: string
-                        optional:
-                          type: boolean
-                      required:
-                      - identifier
-                      - type
-                  workflowName:
-                    type: string
-                  workflowIcon:
-                    type: string
-                  platformUrl:
-                    type: string
-                    format: uri
-                required:
-                - id
-                - projectId
-                - name
-                - slug
-                - type
-                - config
-                - workflowId
-                - copiedFromEvaluatorId
-                - createdAt
-                - updatedAt
-                - fields
-                - outputFields
-                - platformUrl
-        '400':
-          description: Bad request (e.g. attempting to change evaluatorType)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Evaluator not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: putApiEvaluatorsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Update an existing evaluator
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -659,12 +517,31 @@ paths:
                   maxLength: 255
                 config:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The evaluator id.
       tags:
       - Evaluators
       summary: Put api evaluators by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiEvaluatorsById
       responses:
         '200':
           description: Success
@@ -677,34 +554,9 @@ paths:
                     type: boolean
                 required:
                 - success
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Evaluator not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -716,40 +568,24 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiEvaluatorsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
+                additionalProperties: false
       description: Archive (soft-delete) an evaluator
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The evaluator id.
       tags:
       - Evaluators
       summary: Delete api evaluators by id
@@ -765,3 +601,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

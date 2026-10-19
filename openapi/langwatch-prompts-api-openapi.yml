@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Prompts API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Prompts
 paths:
-  /api/prompts:
+  /api/v1/prompts:
     get:
+      operationId: getApiPrompts
       responses:
         '200':
           description: Success
@@ -31,12 +32,13 @@ paths:
                     scope:
                       type: string
                       enum:
-                      - ORGANIZATION
                       - PROJECT
+                      - ORGANIZATION
                     name:
                       type: string
                     updatedAt:
                       type: string
+                      format: date-time
                     projectId:
                       type: string
                     organizationId:
@@ -51,6 +53,7 @@ paths:
                       type: number
                     createdAt:
                       type: string
+                      format: date-time
                     commitMessage:
                       type:
                       - string
@@ -58,6 +61,7 @@ paths:
                     prompt:
                       type: string
                     messages:
+                      default: []
                       type: array
                       items:
                         type: object
@@ -73,8 +77,9 @@ paths:
                         required:
                         - role
                         - content
-                      default: []
+                        additionalProperties: false
                     inputs:
+                      default: []
                       type: array
                       items:
                         type: object
@@ -89,6 +94,7 @@ paths:
                             - float
                             - bool
                             - image
+                            - file
                             - list
                             - list[str]
                             - list[float]
@@ -99,8 +105,9 @@ paths:
                         required:
                         - identifier
                         - type
-                      default: []
+                        additionalProperties: false
                     outputs:
+                      minItems: 1
                       type: array
                       items:
                         type: object
@@ -123,11 +130,11 @@ paths:
                                 minLength: 1
                             required:
                             - type
-                            additionalProperties: true
+                            additionalProperties: {}
                         required:
                         - identifier
                         - type
-                      minItems: 1
+                        additionalProperties: false
                     model:
                       type: string
                       minLength: 1
@@ -147,6 +154,8 @@ paths:
                           properties:
                             records:
                               type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items: {}
@@ -160,37 +169,30 @@ paths:
                                   name:
                                     type: string
                                   type:
-                                    anyOf:
-                                    - type: string
-                                      const: string
-                                    - type: string
-                                      const: boolean
-                                    - type: string
-                                      const: number
-                                    - type: string
-                                      const: date
-                                    - type: string
-                                      const: list
-                                    - type: string
-                                      const: json
-                                    - type: string
-                                      const: spans
-                                    - type: string
-                                      const: rag_contexts
-                                    - type: string
-                                      const: chat_messages
-                                    - type: string
-                                      const: annotations
-                                    - type: string
-                                      const: evaluations
-                                    - type: string
-                                      const: image
+                                    type: string
+                                    enum:
+                                    - string
+                                    - boolean
+                                    - number
+                                    - date
+                                    - list
+                                    - json
+                                    - spans
+                                    - rag_contexts
+                                    - chat_messages
+                                    - annotations
+                                    - evaluations
+                                    - image
+                                    - file
                                 required:
                                 - name
                                 - type
+                                additionalProperties: false
                           required:
                           - records
                           - columnTypes
+                          additionalProperties: false
+                      additionalProperties: false
                     promptingTechnique:
                       type: object
                       properties:
@@ -212,6 +214,8 @@ paths:
                               properties:
                                 records:
                                   type: object
+                                  propertyNames:
+                                    type: string
                                   additionalProperties:
                                     type: array
                                     items: {}
@@ -225,39 +229,33 @@ paths:
                                       name:
                                         type: string
                                       type:
-                                        anyOf:
-                                        - type: string
-                                          const: string
-                                        - type: string
-                                          const: boolean
-                                        - type: string
-                                          const: number
-                                        - type: string
-                                          const: date
-                                        - type: string
-                                          const: list
-                                        - type: string
-                                          const: json
-                                        - type: string
-                                          const: spans
-                                        - type: string
-                                          const: rag_contexts
-                                        - type: string
-                                          const: chat_messages
-                                        - type: string
-                                          const: annotations
-                                        - type: string
-                                          const: evaluations
-                                        - type: string
-                                          const: image
+                                        type: string
+                                        enum:
+                                        - string
+                                        - boolean
+                                        - number
+                                        - date
+                                        - list
+                                        - json
+                                        - spans
+                                        - rag_contexts
+                                        - chat_messages
+                                        - annotations
+                                        - evaluations
+                                        - image
+                                        - file
                                     required:
                                     - name
                                     - type
+                                    additionalProperties: false
                               required:
                               - records
                               - columnTypes
+                              additionalProperties: false
+                          additionalProperties: false
                       required:
                       - type
+                      additionalProperties: false
                     responseFormat:
                       type: object
                       properties:
@@ -266,22 +264,26 @@ paths:
                           enum:
                           - json_schema
                         json_schema:
-                          type:
-                          - object
-                          - 'null'
-                          properties:
-                            name:
-                              type: string
-                            schema:
-                              type: object
-                              additionalProperties: true
-                          required:
-                          - name
-                          - schema
+                          anyOf:
+                          - type: object
+                            properties:
+                              name:
+                                type: string
+                              schema:
+                                type: object
+                                properties: {}
+                                additionalProperties: {}
+                            required:
+                            - name
+                            - schema
+                            additionalProperties: false
+                          - type: 'null'
                       required:
                       - type
                       - json_schema
+                      additionalProperties: false
                     tags:
+                      default: []
                       type: array
                       items:
                         type: object
@@ -293,7 +295,16 @@ paths:
                         required:
                         - name
                         - versionId
-                      default: []
+                        additionalProperties: false
+                    parameters:
+                      default: {}
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        $ref: '#/components/schemas/JsonValue'
+                    platformUrl:
+                      type: string
                   required:
                   - id
                   - handle
@@ -311,6 +322,9 @@ paths:
                   - outputs
                   - model
                   - tags
+                  - parameters
+                  - platformUrl
+                  additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -363,14 +377,21 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: getApiPrompts
-      parameters: []
       description: Get all prompts for a project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:view
       tags:
       - Prompts
       summary: Get api prompts
       x-summary-source: derived
     post:
+      operationId: postApiPrompts
       responses:
         '200':
           description: Success
@@ -388,12 +409,13 @@ paths:
                   scope:
                     type: string
                     enum:
-                    - ORGANIZATION
                     - PROJECT
+                    - ORGANIZATION
                   name:
                     type: string
                   updatedAt:
                     type: string
+                    format: date-time
                   projectId:
                     type: string
                   organizationId:
@@ -408,6 +430,7 @@ paths:
                     type: number
                   createdAt:
                     type: string
+                    format: date-time
                   commitMessage:
                     type:
                     - string
@@ -415,6 +438,7 @@ paths:
                   prompt:
                     type: string
                   messages:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -430,8 +454,9 @@ paths:
                       required:
                       - role
                       - content
-                    default: []
+                      additionalProperties: false
                   inputs:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -446,6 +471,7 @@ paths:
                           - float
                           - bool
                           - image
+                          - file
                           - list
                           - list[str]
                           - list[float]
@@ -456,8 +482,9 @@ paths:
                       required:
                       - identifier
                       - type
-                    default: []
+                      additionalProperties: false
                   outputs:
+                    minItems: 1
                     type: array
                     items:
                       type: object
@@ -480,11 +507,11 @@ paths:
                               minLength: 1
                           required:
                           - type
-                          additionalProperties: true
+                          additionalProperties: {}
                       required:
                       - identifier
                       - type
-                    minItems: 1
+                      additionalProperties: false
                   model:
                     type: string
                     minLength: 1
@@ -504,6 +531,8 @@ paths:
                         properties:
                           records:
                             type: object
+                            propertyNames:
+                              type: string
                             additionalProperties:
                               type: array
                               items: {}
@@ -517,37 +546,30 @@ paths:
                                 name:
                                   type: string
                                 type:
-                                  anyOf:
-                                  - type: string
-                                    const: string
-                                  - type: string
-                                    const: boolean
-                                  - type: string
-                                    const: number
-                                  - type: string
-                                    const: date
-                                  - type: string
-                                    const: list
-                                  - type: string
-                                    const: json
-                                  - type: string
-                                    const: spans
-                                  - type: string
-                                    const: rag_contexts
-                                  - type: string
-                                    const: chat_messages
-                                  - type: string
-                                    const: annotations
-                                  - type: string
-                                    const: evaluations
-                                  - type: string
-                                    const: image
+                                  type: string
+                                  enum:
+                                  - string
+                                  - boolean
+                                  - number
+                                  - date
+                                  - list
+                                  - json
+                                  - spans
+                                  - rag_contexts
+                                  - chat_messages
+                                  - annotations
+                                  - evaluations
+                                  - image
+                                  - file
                               required:
                               - name
                               - type
+                              additionalProperties: false
                         required:
                         - records
                         - columnTypes
+                        additionalProperties: false
+                    additionalProperties: false
                   promptingTechnique:
                     type: object
                     properties:
@@ -569,6 +591,8 @@ paths:
                             properties:
                               records:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items: {}
@@ -582,39 +606,33 @@ paths:
                                     name:
                                       type: string
                                     type:
-                                      anyOf:
-                                      - type: string
-                                        const: string
-                                      - type: string
-                                        const: boolean
-                                      - type: string
-                                        const: number
-                                      - type: string
-                                        const: date
-                                      - type: string
-                                        const: list
-                                      - type: string
-                                        const: json
-                                      - type: string
-                                        const: spans
-                                      - type: string
-                                        const: rag_contexts
-                                      - type: string
-                                        const: chat_messages
-                                      - type: string
-                                        const: annotations
-                                      - type: string
-                                        const: evaluations
-                                      - type: string
-                                        const: image
+                                      type: string
+                                      enum:
+                                      - string
+                                      - boolean
+                                      - number
+                                      - date
+                                      - list
+                                      - json
+                                      - spans
+                                      - rag_contexts
+                                      - chat_messages
+                                      - annotations
+                                      - evaluations
+                                      - image
+                                      - file
                                   required:
                                   - name
                                   - type
+                                  additionalProperties: false
                             required:
                             - records
                             - columnTypes
+                            additionalProperties: false
+                        additionalProperties: false
                     required:
                     - type
+                    additionalProperties: false
                   responseFormat:
                     type: object
                     properties:
@@ -623,22 +641,26 @@ paths:
                         enum:
                         - json_schema
                       json_schema:
-                        type:
-                        - object
-                        - 'null'
-                        properties:
-                          name:
-                            type: string
-                          schema:
-                            type: object
-                            additionalProperties: true
-                        required:
-                        - name
-                        - schema
+                        anyOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                            schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - name
+                          - schema
+                          additionalProperties: false
+                        - type: 'null'
                     required:
                     - type
                     - json_schema
+                    additionalProperties: false
                   tags:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -650,7 +672,16 @@ paths:
                       required:
                       - name
                       - versionId
-                    default: []
+                      additionalProperties: false
+                  parameters:
+                    default: {}
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      $ref: '#/components/schemas/JsonValue'
+                  platformUrl:
+                    type: string
                 required:
                 - id
                 - handle
@@ -668,6 +699,9 @@ paths:
                 - outputs
                 - model
                 - tags
+                - parameters
+                - platformUrl
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -734,10 +768,17 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiPrompts
-      parameters: []
       description: Create a new prompt with default initial version
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -747,11 +788,11 @@ paths:
                   type: string
                   pattern: ^[a-z0-9_-]+(?:\/[a-z0-9_-]+)?$
                 scope:
+                  default: PROJECT
                   type: string
                   enum:
-                  - ORGANIZATION
                   - PROJECT
-                  default: PROJECT
+                  - ORGANIZATION
                 model:
                   type: string
                 temperature:
@@ -795,6 +836,7 @@ paths:
                         - float
                         - bool
                         - image
+                        - file
                         - list
                         - list[str]
                         - list[float]
@@ -828,7 +870,7 @@ paths:
                             minLength: 1
                         required:
                         - type
-                        additionalProperties: true
+                        additionalProperties: {}
                     required:
                     - identifier
                     - type
@@ -841,15 +883,152 @@ paths:
                   items:
                     type: string
                     minLength: 1
+                parameters:
+                  default: {}
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    $ref: '#/components/schemas/JsonValue'
               required:
               - handle
               additionalProperties: false
+              examples:
+              - handle: support/tone-check
+                prompt: You are a helpful assistant. Answer in one short paragraph.
       tags:
       - Prompts
       summary: Post api prompts
       x-summary-source: derived
-  /api/prompts/tags:
+  /api/v1/prompts/{id}/tags/{tag}:
+    put:
+      operationId: putApiPromptsByIdTagsByTag
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configId:
+                    type: string
+                  versionId:
+                    type: string
+                  tag:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - configId
+                - versionId
+                - tag
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Prompt not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Invalid tag or version
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Assign a tag (e.g. "production", "staging") to a specific prompt version
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: tag
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                versionId:
+                  type: string
+              required:
+              - versionId
+      tags:
+      - Prompts
+      summary: Put api prompts by id tags by tag
+      x-summary-source: derived
+  /api/v1/prompts/tags:
     get:
+      operationId: getApiPromptsTags
       responses:
         '200':
           description: Success
@@ -866,10 +1045,12 @@ paths:
                       type: string
                     createdAt:
                       type: string
+                      format: date-time
                   required:
                   - id
                   - name
                   - createdAt
+                  additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -922,14 +1103,21 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: getApiPromptsTags
-      parameters: []
       description: List all prompt tag definitions for the organization
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:view
       tags:
       - Prompts
       summary: Get api prompts tags
       x-summary-source: derived
     post:
+      operationId: postApiPromptsTags
       responses:
         '201':
           description: Tag created
@@ -944,10 +1132,12 @@ paths:
                     type: string
                   createdAt:
                     type: string
+                    format: date-time
                 required:
                 - id
                 - name
                 - createdAt
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -1000,10 +1190,17 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiPromptsTags
-      parameters: []
       description: Create a custom prompt tag definition for the organization
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1017,8 +1214,9 @@ paths:
       - Prompts
       summary: Post api prompts tags
       x-summary-source: derived
-  /api/prompts/tags/{tag}:
+  /api/v1/prompts/tags/{tag}:
     put:
+      operationId: putApiPromptsTagsByTag
       responses:
         '200':
           description: Tag renamed
@@ -1033,10 +1231,12 @@ paths:
                     type: string
                   createdAt:
                     type: string
+                    format: date-time
                 required:
                 - id
                 - name
                 - createdAt
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -1089,15 +1289,23 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: putApiPromptsTagsByTag
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: tag
-        required: true
       description: Rename a prompt tag definition
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
+      parameters:
+      - in: path
+        name: tag
+        schema:
+          type: string
+        required: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1112,9 +1320,16 @@ paths:
       summary: Put api prompts tags by tag
       x-summary-source: derived
     delete:
+      operationId: deleteApiPromptsTagsByTag
       responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: {}
         '204':
           description: Tag deleted
+          content: {}
         '400':
           description: Bad Request
           content:
@@ -1167,317 +1382,340 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: deleteApiPromptsTagsByTag
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: tag
-        required: true
       description: Delete a prompt tag definition and cascade to assignments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
+      parameters:
+      - in: path
+        name: tag
+        schema:
+          type: string
+        required: true
       tags:
       - Prompts
       summary: Delete api prompts tags by tag
       x-summary-source: derived
-  /api/prompts/{id}:
+  /api/v1/prompts/{id}/versions:
     get:
+      operationId: getApiPromptsByIdVersions
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  handle:
-                    type:
-                    - string
-                    - 'null'
-                  scope:
-                    type: string
-                    enum:
-                    - ORGANIZATION
-                    - PROJECT
-                  name:
-                    type: string
-                  updatedAt:
-                    type: string
-                  projectId:
-                    type: string
-                  organizationId:
-                    type: string
-                  versionId:
-                    type: string
-                  authorId:
-                    type:
-                    - string
-                    - 'null'
-                  version:
-                    type: number
-                  createdAt:
-                    type: string
-                  commitMessage:
-                    type:
-                    - string
-                    - 'null'
-                  prompt:
-                    type: string
-                  messages:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        role:
-                          type: string
-                          enum:
-                          - user
-                          - assistant
-                          - system
-                        content:
-                          type: string
-                      required:
-                      - role
-                      - content
-                    default: []
-                  inputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                          minLength: 1
-                        type:
-                          type: string
-                          enum:
-                          - str
-                          - float
-                          - bool
-                          - image
-                          - list
-                          - list[str]
-                          - list[float]
-                          - list[int]
-                          - list[bool]
-                          - dict
-                          - chat_messages
-                      required:
-                      - identifier
-                      - type
-                    default: []
-                  outputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                          minLength: 1
-                        type:
-                          type: string
-                          enum:
-                          - str
-                          - float
-                          - bool
-                          - json_schema
-                        json_schema:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              minLength: 1
-                          required:
-                          - type
-                          additionalProperties: true
-                      required:
-                      - identifier
-                      - type
-                    minItems: 1
-                  model:
-                    type: string
-                    minLength: 1
-                  temperature:
-                    type: number
-                  maxTokens:
-                    type: number
-                  demonstrations:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      inline:
-                        type: object
-                        properties:
-                          records:
-                            type: object
-                            additionalProperties:
-                              type: array
-                              items: {}
-                          columnTypes:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                name:
-                                  type: string
-                                type:
-                                  anyOf:
-                                  - type: string
-                                    const: string
-                                  - type: string
-                                    const: boolean
-                                  - type: string
-                                    const: number
-                                  - type: string
-                                    const: date
-                                  - type: string
-                                    const: list
-                                  - type: string
-                                    const: json
-                                  - type: string
-                                    const: spans
-                                  - type: string
-                                    const: rag_contexts
-                                  - type: string
-                                    const: chat_messages
-                                  - type: string
-                                    const: annotations
-                                  - type: string
-                                    const: evaluations
-                                  - type: string
-                                    const: image
-                              required:
-                              - name
-                              - type
-                        required:
-                        - records
-                        - columnTypes
-                  promptingTechnique:
-                    type: object
-                    properties:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    handle:
                       type:
-                        type: string
-                        enum:
-                        - few_shot
-                        - in_context
-                        - chain_of_thought
-                      demonstrations:
+                      - string
+                      - 'null'
+                    scope:
+                      type: string
+                      enum:
+                      - PROJECT
+                      - ORGANIZATION
+                    name:
+                      type: string
+                    updatedAt:
+                      type: string
+                      format: date-time
+                    projectId:
+                      type: string
+                    organizationId:
+                      type: string
+                    versionId:
+                      type: string
+                    authorId:
+                      type:
+                      - string
+                      - 'null'
+                    version:
+                      type: number
+                    createdAt:
+                      type: string
+                      format: date-time
+                    commitMessage:
+                      type:
+                      - string
+                      - 'null'
+                    prompt:
+                      type: string
+                    messages:
+                      default: []
+                      type: array
+                      items:
                         type: object
                         properties:
-                          id:
+                          role:
                             type: string
-                          name:
+                            enum:
+                            - user
+                            - assistant
+                            - system
+                          content:
                             type: string
-                          inline:
+                        required:
+                        - role
+                        - content
+                        additionalProperties: false
+                    inputs:
+                      default: []
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          identifier:
+                            type: string
+                            minLength: 1
+                          type:
+                            type: string
+                            enum:
+                            - str
+                            - float
+                            - bool
+                            - image
+                            - file
+                            - list
+                            - list[str]
+                            - list[float]
+                            - list[int]
+                            - list[bool]
+                            - dict
+                            - chat_messages
+                        required:
+                        - identifier
+                        - type
+                        additionalProperties: false
+                    outputs:
+                      minItems: 1
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          identifier:
+                            type: string
+                            minLength: 1
+                          type:
+                            type: string
+                            enum:
+                            - str
+                            - float
+                            - bool
+                            - json_schema
+                          json_schema:
                             type: object
                             properties:
-                              records:
-                                type: object
-                                additionalProperties:
-                                  type: array
-                                  items: {}
-                              columnTypes:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    name:
-                                      type: string
-                                    type:
-                                      anyOf:
-                                      - type: string
-                                        const: string
-                                      - type: string
-                                        const: boolean
-                                      - type: string
-                                        const: number
-                                      - type: string
-                                        const: date
-                                      - type: string
-                                        const: list
-                                      - type: string
-                                        const: json
-                                      - type: string
-                                        const: spans
-                                      - type: string
-                                        const: rag_contexts
-                                      - type: string
-                                        const: chat_messages
-                                      - type: string
-                                        const: annotations
-                                      - type: string
-                                        const: evaluations
-                                      - type: string
-                                        const: image
-                                  required:
-                                  - name
-                                  - type
+                              type:
+                                type: string
+                                minLength: 1
                             required:
-                            - records
-                            - columnTypes
-                    required:
-                    - type
-                  responseFormat:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                        - json_schema
-                      json_schema:
+                            - type
+                            additionalProperties: {}
+                        required:
+                        - identifier
+                        - type
+                        additionalProperties: false
+                    model:
+                      type: string
+                      minLength: 1
+                    temperature:
+                      type: number
+                    maxTokens:
+                      type: number
+                    demonstrations:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        inline:
+                          type: object
+                          properties:
+                            records:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: array
+                                items: {}
+                            columnTypes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  name:
+                                    type: string
+                                  type:
+                                    type: string
+                                    enum:
+                                    - string
+                                    - boolean
+                                    - number
+                                    - date
+                                    - list
+                                    - json
+                                    - spans
+                                    - rag_contexts
+                                    - chat_messages
+                                    - annotations
+                                    - evaluations
+                                    - image
+                                    - file
+                                required:
+                                - name
+                                - type
+                                additionalProperties: false
+                          required:
+                          - records
+                          - columnTypes
+                          additionalProperties: false
+                      additionalProperties: false
+                    promptingTechnique:
+                      type: object
+                      properties:
                         type:
-                        - object
-                        - 'null'
+                          type: string
+                          enum:
+                          - few_shot
+                          - in_context
+                          - chain_of_thought
+                        demonstrations:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            inline:
+                              type: object
+                              properties:
+                                records:
+                                  type: object
+                                  propertyNames:
+                                    type: string
+                                  additionalProperties:
+                                    type: array
+                                    items: {}
+                                columnTypes:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      name:
+                                        type: string
+                                      type:
+                                        type: string
+                                        enum:
+                                        - string
+                                        - boolean
+                                        - number
+                                        - date
+                                        - list
+                                        - json
+                                        - spans
+                                        - rag_contexts
+                                        - chat_messages
+                                        - annotations
+                                        - evaluations
+                                        - image
+                                        - file
+                                    required:
+                                    - name
+                                    - type
+                                    additionalProperties: false
+                              required:
+                              - records
+                              - columnTypes
+                              additionalProperties: false
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    responseFormat:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - json_schema
+                        json_schema:
+                          anyOf:
+                          - type: object
+                            properties:
+                              name:
+                                type: string
+                              schema:
+                                type: object
+                                properties: {}
+                                additionalProperties: {}
+                            required:
+                            - name
+                            - schema
+                            additionalProperties: false
+                          - type: 'null'
+                      required:
+                      - type
+                      - json_schema
+                      additionalProperties: false
+                    tags:
+                      default: []
+                      type: array
+                      items:
+                        type: object
                         properties:
                           name:
                             type: string
-                          schema:
-                            type: object
-                            additionalProperties: true
+                          versionId:
+                            type: string
                         required:
                         - name
-                        - schema
-                    required:
-                    - type
-                    - json_schema
-                  tags:
-                    type: array
-                    items:
+                        - versionId
+                        additionalProperties: false
+                    parameters:
+                      default: {}
                       type: object
-                      properties:
-                        name:
-                          type: string
-                        versionId:
-                          type: string
-                      required:
-                      - name
-                      - versionId
-                    default: []
-                required:
-                - id
-                - handle
-                - scope
-                - name
-                - updatedAt
-                - projectId
-                - organizationId
-                - versionId
-                - version
-                - createdAt
-                - prompt
-                - messages
-                - inputs
-                - outputs
-                - model
-                - tags
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        $ref: '#/components/schemas/JsonValue'
+                    platformUrl:
+                      type: string
+                  required:
+                  - id
+                  - handle
+                  - scope
+                  - name
+                  - updatedAt
+                  - projectId
+                  - organizationId
+                  - versionId
+                  - version
+                  - createdAt
+                  - prompt
+                  - messages
+                  - inputs
+                  - outputs
+                  - model
+                  - tags
+                  - parameters
+                  - platformUrl
+                  additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -1543,33 +1781,28 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: getApiPromptsById
+      description: Get all versions for a prompt. Does not include base prompt data, only versioned data.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:view
       parameters:
-      - name: id
-        in: path
-        description: 'Prompt slug or shorthand. Supports three formats: (1) bare slug — "pizza-prompt" returns the latest version; (2) slug:tag — "pizza-prompt:production" returns the version pointed to by that tag; (3) slug:version — "pizza-prompt:2" returns that specific version number. "slug:latest" is equivalent to the bare slug. Cannot be combined with the tag or version query parameters.'
+      - in: path
+        name: id
+        schema:
+          type: string
         required: true
-        schema:
-          type: string
-      - name: version
-        in: query
-        description: Specific version number to retrieve. Cannot be used when the id path already contains a shorthand suffix.
-        required: false
-        schema:
-          type: integer
-          minimum: 0
-      - name: tag
-        in: query
-        description: Fetch the version pointed to by this tag (e.g., "production", "staging"). Cannot be used when the id path already contains a shorthand suffix.
-        required: false
-        schema:
-          type: string
-      description: Get a specific prompt by slug, with optional shorthand syntax for tags and versions. Pass a bare slug like "pizza-prompt" to get the latest version, "pizza-prompt:production" to resolve a tagged version, or "pizza-prompt:2" to fetch version 2. Alternatively, use the tag or version query parameters with a bare slug.
       tags:
       - Prompts
-      summary: Get api prompts by id
+      summary: Get api prompts by id versions
       x-summary-source: derived
-    put:
+  /api/v1/prompts/{id}/versions/{versionId}/restore:
+    post:
+      operationId: postApiPromptsByIdVersionsByVersionIdRestore
       responses:
         '200':
           description: Success
@@ -1587,12 +1820,13 @@ paths:
                   scope:
                     type: string
                     enum:
-                    - ORGANIZATION
                     - PROJECT
+                    - ORGANIZATION
                   name:
                     type: string
                   updatedAt:
                     type: string
+                    format: date-time
                   projectId:
                     type: string
                   organizationId:
@@ -1607,6 +1841,7 @@ paths:
                     type: number
                   createdAt:
                     type: string
+                    format: date-time
                   commitMessage:
                     type:
                     - string
@@ -1614,6 +1849,7 @@ paths:
                   prompt:
                     type: string
                   messages:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -1629,8 +1865,9 @@ paths:
                       required:
                       - role
                       - content
-                    default: []
+                      additionalProperties: false
                   inputs:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -1645,6 +1882,7 @@ paths:
                           - float
                           - bool
                           - image
+                          - file
                           - list
                           - list[str]
                           - list[float]
@@ -1655,8 +1893,9 @@ paths:
                       required:
                       - identifier
                       - type
-                    default: []
+                      additionalProperties: false
                   outputs:
+                    minItems: 1
                     type: array
                     items:
                       type: object
@@ -1679,11 +1918,11 @@ paths:
                               minLength: 1
                           required:
                           - type
-                          additionalProperties: true
+                          additionalProperties: {}
                       required:
                       - identifier
                       - type
-                    minItems: 1
+                      additionalProperties: false
                   model:
                     type: string
                     minLength: 1
@@ -1703,6 +1942,8 @@ paths:
                         properties:
                           records:
                             type: object
+                            propertyNames:
+                              type: string
                             additionalProperties:
                               type: array
                               items: {}
@@ -1716,37 +1957,30 @@ paths:
                                 name:
                                   type: string
                                 type:
-                                  anyOf:
-                                  - type: string
-                                    const: string
-                                  - type: string
-                                    const: boolean
-                                  - type: string
-                                    const: number
-                                  - type: string
-                                    const: date
-                                  - type: string
-                                    const: list
-                                  - type: string
-                                    const: json
-                                  - type: string
-                                    const: spans
-                                  - type: string
-                                    const: rag_contexts
-                                  - type: string
-                                    const: chat_messages
-                                  - type: string
-                                    const: annotations
-                                  - type: string
-                                    const: evaluations
-                                  - type: string
-                                    const: image
+                                  type: string
+                                  enum:
+                                  - string
+                                  - boolean
+                                  - number
+                                  - date
+                                  - list
+                                  - json
+                                  - spans
+                                  - rag_contexts
+                                  - chat_messages
+                                  - annotations
+                                  - evaluations
+                                  - image
+                                  - file
                               required:
                               - name
                               - type
+                              additionalProperties: false
                         required:
                         - records
                         - columnTypes
+                        additionalProperties: false
+                    additionalProperties: false
                   promptingTechnique:
                     type: object
                     properties:
@@ -1768,6 +2002,8 @@ paths:
                             properties:
                               records:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items: {}
@@ -1781,39 +2017,33 @@ paths:
                                     name:
                                       type: string
                                     type:
-                                      anyOf:
-                                      - type: string
-                                        const: string
-                                      - type: string
-                                        const: boolean
-                                      - type: string
-                                        const: number
-                                      - type: string
-                                        const: date
-                                      - type: string
-                                        const: list
-                                      - type: string
-                                        const: json
-                                      - type: string
-                                        const: spans
-                                      - type: string
-                                        const: rag_contexts
-                                      - type: string
-                                        const: chat_messages
-                                      - type: string
-                                        const: annotations
-                                      - type: string
-                                        const: evaluations
-                                      - type: string
-                                        const: image
+                                      type: string
+                                      enum:
+                                      - string
+                                      - boolean
+                                      - number
+                                      - date
+                                      - list
+                                      - json
+                                      - spans
+                                      - rag_contexts
+                                      - chat_messages
+                                      - annotations
+                                      - evaluations
+                                      - image
+                                      - file
                                   required:
                                   - name
                                   - type
+                                  additionalProperties: false
                             required:
                             - records
                             - columnTypes
+                            additionalProperties: false
+                        additionalProperties: false
                     required:
                     - type
+                    additionalProperties: false
                   responseFormat:
                     type: object
                     properties:
@@ -1822,22 +2052,26 @@ paths:
                         enum:
                         - json_schema
                       json_schema:
-                        type:
-                        - object
-                        - 'null'
-                        properties:
-                          name:
-                            type: string
-                          schema:
-                            type: object
-                            additionalProperties: true
-                        required:
-                        - name
-                        - schema
+                        anyOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                            schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - name
+                          - schema
+                          additionalProperties: false
+                        - type: 'null'
                     required:
                     - type
                     - json_schema
+                    additionalProperties: false
                   tags:
+                    default: []
                     type: array
                     items:
                       type: object
@@ -1849,7 +2083,16 @@ paths:
                       required:
                       - name
                       - versionId
-                    default: []
+                      additionalProperties: false
+                  parameters:
+                    default: {}
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      $ref: '#/components/schemas/JsonValue'
+                  platformUrl:
+                    type: string
                 required:
                 - id
                 - handle
@@ -1867,6 +2110,817 @@ paths:
                 - outputs
                 - model
                 - tags
+                - parameters
+                - platformUrl
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Prompt or version not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Restore a prompt to a previous version. Creates a new version with the same config data as the specified version.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: versionId
+        schema:
+          type: string
+        required: true
+      tags:
+      - Prompts
+      summary: Post api prompts by id versions by version id restore
+      x-summary-source: derived
+  /api/v1/prompts/{id}:
+    get:
+      operationId: getApiPromptsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  handle:
+                    type:
+                    - string
+                    - 'null'
+                  scope:
+                    type: string
+                    enum:
+                    - PROJECT
+                    - ORGANIZATION
+                  name:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  projectId:
+                    type: string
+                  organizationId:
+                    type: string
+                  versionId:
+                    type: string
+                  authorId:
+                    type:
+                    - string
+                    - 'null'
+                  version:
+                    type: number
+                  createdAt:
+                    type: string
+                    format: date-time
+                  commitMessage:
+                    type:
+                    - string
+                    - 'null'
+                  prompt:
+                    type: string
+                  messages:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum:
+                          - user
+                          - assistant
+                          - system
+                        content:
+                          type: string
+                      required:
+                      - role
+                      - content
+                      additionalProperties: false
+                  inputs:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - str
+                          - float
+                          - bool
+                          - image
+                          - file
+                          - list
+                          - list[str]
+                          - list[float]
+                          - list[int]
+                          - list[bool]
+                          - dict
+                          - chat_messages
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  outputs:
+                    minItems: 1
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - str
+                          - float
+                          - bool
+                          - json_schema
+                        json_schema:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              minLength: 1
+                          required:
+                          - type
+                          additionalProperties: {}
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  model:
+                    type: string
+                    minLength: 1
+                  temperature:
+                    type: number
+                  maxTokens:
+                    type: number
+                  demonstrations:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      inline:
+                        type: object
+                        properties:
+                          records:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: array
+                              items: {}
+                          columnTypes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                                type:
+                                  type: string
+                                  enum:
+                                  - string
+                                  - boolean
+                                  - number
+                                  - date
+                                  - list
+                                  - json
+                                  - spans
+                                  - rag_contexts
+                                  - chat_messages
+                                  - annotations
+                                  - evaluations
+                                  - image
+                                  - file
+                              required:
+                              - name
+                              - type
+                              additionalProperties: false
+                        required:
+                        - records
+                        - columnTypes
+                        additionalProperties: false
+                    additionalProperties: false
+                  promptingTechnique:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - few_shot
+                        - in_context
+                        - chain_of_thought
+                      demonstrations:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          inline:
+                            type: object
+                            properties:
+                              records:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items: {}
+                              columnTypes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    name:
+                                      type: string
+                                    type:
+                                      type: string
+                                      enum:
+                                      - string
+                                      - boolean
+                                      - number
+                                      - date
+                                      - list
+                                      - json
+                                      - spans
+                                      - rag_contexts
+                                      - chat_messages
+                                      - annotations
+                                      - evaluations
+                                      - image
+                                      - file
+                                  required:
+                                  - name
+                                  - type
+                                  additionalProperties: false
+                            required:
+                            - records
+                            - columnTypes
+                            additionalProperties: false
+                        additionalProperties: false
+                    required:
+                    - type
+                    additionalProperties: false
+                  responseFormat:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - json_schema
+                      json_schema:
+                        anyOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                            schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - name
+                          - schema
+                          additionalProperties: false
+                        - type: 'null'
+                    required:
+                    - type
+                    - json_schema
+                    additionalProperties: false
+                  tags:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        versionId:
+                          type: string
+                      required:
+                      - name
+                      - versionId
+                      additionalProperties: false
+                  parameters:
+                    default: {}
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      $ref: '#/components/schemas/JsonValue'
+                  platformUrl:
+                    type: string
+                required:
+                - id
+                - handle
+                - scope
+                - name
+                - updatedAt
+                - projectId
+                - organizationId
+                - versionId
+                - version
+                - createdAt
+                - prompt
+                - messages
+                - inputs
+                - outputs
+                - model
+                - tags
+                - parameters
+                - platformUrl
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Prompt not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+      description: Get a specific prompt by slug, with optional shorthand syntax for tags and versions. Pass a bare slug like "pizza-prompt" to get the latest version, "pizza-prompt:production" to resolve a tagged version, or "pizza-prompt:2" to fetch version 2. Alternatively, use the tag or version query parameters with a bare slug.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: version
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: tag
+        schema:
+          type: string
+      tags:
+      - Prompts
+      summary: Get api prompts by id
+      x-summary-source: derived
+    put:
+      operationId: putApiPromptsById
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  handle:
+                    type:
+                    - string
+                    - 'null'
+                  scope:
+                    type: string
+                    enum:
+                    - PROJECT
+                    - ORGANIZATION
+                  name:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  projectId:
+                    type: string
+                  organizationId:
+                    type: string
+                  versionId:
+                    type: string
+                  authorId:
+                    type:
+                    - string
+                    - 'null'
+                  version:
+                    type: number
+                  createdAt:
+                    type: string
+                    format: date-time
+                  commitMessage:
+                    type:
+                    - string
+                    - 'null'
+                  prompt:
+                    type: string
+                  messages:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum:
+                          - user
+                          - assistant
+                          - system
+                        content:
+                          type: string
+                      required:
+                      - role
+                      - content
+                      additionalProperties: false
+                  inputs:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - str
+                          - float
+                          - bool
+                          - image
+                          - file
+                          - list
+                          - list[str]
+                          - list[float]
+                          - list[int]
+                          - list[bool]
+                          - dict
+                          - chat_messages
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  outputs:
+                    minItems: 1
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        identifier:
+                          type: string
+                          minLength: 1
+                        type:
+                          type: string
+                          enum:
+                          - str
+                          - float
+                          - bool
+                          - json_schema
+                        json_schema:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              minLength: 1
+                          required:
+                          - type
+                          additionalProperties: {}
+                      required:
+                      - identifier
+                      - type
+                      additionalProperties: false
+                  model:
+                    type: string
+                    minLength: 1
+                  temperature:
+                    type: number
+                  maxTokens:
+                    type: number
+                  demonstrations:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      inline:
+                        type: object
+                        properties:
+                          records:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: array
+                              items: {}
+                          columnTypes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                                type:
+                                  type: string
+                                  enum:
+                                  - string
+                                  - boolean
+                                  - number
+                                  - date
+                                  - list
+                                  - json
+                                  - spans
+                                  - rag_contexts
+                                  - chat_messages
+                                  - annotations
+                                  - evaluations
+                                  - image
+                                  - file
+                              required:
+                              - name
+                              - type
+                              additionalProperties: false
+                        required:
+                        - records
+                        - columnTypes
+                        additionalProperties: false
+                    additionalProperties: false
+                  promptingTechnique:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - few_shot
+                        - in_context
+                        - chain_of_thought
+                      demonstrations:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          inline:
+                            type: object
+                            properties:
+                              records:
+                                type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties:
+                                  type: array
+                                  items: {}
+                              columnTypes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    name:
+                                      type: string
+                                    type:
+                                      type: string
+                                      enum:
+                                      - string
+                                      - boolean
+                                      - number
+                                      - date
+                                      - list
+                                      - json
+                                      - spans
+                                      - rag_contexts
+                                      - chat_messages
+                                      - annotations
+                                      - evaluations
+                                      - image
+                                      - file
+                                  required:
+                                  - name
+                                  - type
+                                  additionalProperties: false
+                            required:
+                            - records
+                            - columnTypes
+                            additionalProperties: false
+                        additionalProperties: false
+                    required:
+                    - type
+                    additionalProperties: false
+                  responseFormat:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - json_schema
+                      json_schema:
+                        anyOf:
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                            schema:
+                              type: object
+                              properties: {}
+                              additionalProperties: {}
+                          required:
+                          - name
+                          - schema
+                          additionalProperties: false
+                        - type: 'null'
+                    required:
+                    - type
+                    - json_schema
+                    additionalProperties: false
+                  tags:
+                    default: []
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        versionId:
+                          type: string
+                      required:
+                      - name
+                      - versionId
+                      additionalProperties: false
+                  parameters:
+                    default: {}
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      $ref: '#/components/schemas/JsonValue'
+                  platformUrl:
+                    type: string
+                required:
+                - id
+                - handle
+                - scope
+                - name
+                - updatedAt
+                - projectId
+                - organizationId
+                - versionId
+                - version
+                - createdAt
+                - prompt
+                - messages
+                - inputs
+                - outputs
+                - model
+                - tags
+                - parameters
+                - platformUrl
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -1946,15 +3000,23 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: putApiPromptsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Update a prompt
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2003,6 +3065,7 @@ paths:
                         - float
                         - bool
                         - image
+                        - file
                         - list
                         - list[str]
                         - list[float]
@@ -2036,7 +3099,7 @@ paths:
                             minLength: 1
                         required:
                         - type
-                        additionalProperties: true
+                        additionalProperties: {}
                     required:
                     - identifier
                     - type
@@ -2049,11 +3112,18 @@ paths:
                   items:
                     type: string
                     minLength: 1
+                parameters:
+                  default: {}
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    $ref: '#/components/schemas/JsonValue'
                 scope:
                   type: string
                   enum:
-                  - ORGANIZATION
                   - PROJECT
+                  - ORGANIZATION
                 handle:
                   type: string
                   pattern: ^[a-z0-9_-]+(?:\/[a-z0-9_-]+)?$
@@ -2065,6 +3135,7 @@ paths:
       summary: Put api prompts by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiPromptsById
       responses:
         '200':
           description: Success
@@ -2077,6 +3148,7 @@ paths:
                     type: boolean
                 required:
                 - success
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -2142,20 +3214,28 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: deleteApiPromptsById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Delete a prompt
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
       tags:
       - Prompts
       summary: Delete api prompts by id
       x-summary-source: derived
-  /api/prompts/{id}/sync:
+  /api/v1/prompts/{id}/sync:
     post:
+      operationId: postApiPromptsByIdSync
       responses:
         '200':
           description: Sync result
@@ -2183,12 +3263,13 @@ paths:
                       scope:
                         type: string
                         enum:
-                        - ORGANIZATION
                         - PROJECT
+                        - ORGANIZATION
                       name:
                         type: string
                       updatedAt:
                         type: string
+                        format: date-time
                       projectId:
                         type: string
                       organizationId:
@@ -2203,6 +3284,7 @@ paths:
                         type: number
                       createdAt:
                         type: string
+                        format: date-time
                       commitMessage:
                         type:
                         - string
@@ -2210,6 +3292,7 @@ paths:
                       prompt:
                         type: string
                       messages:
+                        default: []
                         type: array
                         items:
                           type: object
@@ -2225,8 +3308,9 @@ paths:
                           required:
                           - role
                           - content
-                        default: []
+                          additionalProperties: false
                       inputs:
+                        default: []
                         type: array
                         items:
                           type: object
@@ -2241,6 +3325,7 @@ paths:
                               - float
                               - bool
                               - image
+                              - file
                               - list
                               - list[str]
                               - list[float]
@@ -2251,8 +3336,9 @@ paths:
                           required:
                           - identifier
                           - type
-                        default: []
+                          additionalProperties: false
                       outputs:
+                        minItems: 1
                         type: array
                         items:
                           type: object
@@ -2275,11 +3361,11 @@ paths:
                                   minLength: 1
                               required:
                               - type
-                              additionalProperties: true
+                              additionalProperties: {}
                           required:
                           - identifier
                           - type
-                        minItems: 1
+                          additionalProperties: false
                       model:
                         type: string
                         minLength: 1
@@ -2299,6 +3385,8 @@ paths:
                             properties:
                               records:
                                 type: object
+                                propertyNames:
+                                  type: string
                                 additionalProperties:
                                   type: array
                                   items: {}
@@ -2312,37 +3400,30 @@ paths:
                                     name:
                                       type: string
                                     type:
-                                      anyOf:
-                                      - type: string
-                                        const: string
-                                      - type: string
-                                        const: boolean
-                                      - type: string
-                                        const: number
-                                      - type: string
-                                        const: date
-                                      - type: string
-                                        const: list
-                                      - type: string
-                                        const: json
-                                      - type: string
-                                        const: spans
-                                      - type: string
-                                        const: rag_contexts
-                                      - type: string
-                                        const: chat_messages
-                                      - type: string
-                                        const: annotations
-                                      - type: string
-                                        const: evaluations
-                                      - type: string
-                                        const: image
+                                      type: string
+                                      enum:
+                                      - string
+                                      - boolean
+                                      - number
+                                      - date
+                                      - list
+                                      - json
+                                      - spans
+                                      - rag_contexts
+                                      - chat_messages
+                                      - annotations
+                                      - evaluations
+                                      - image
+                                      - file
                                   required:
                                   - name
                                   - type
+                                  additionalProperties: false
                             required:
                             - records
                             - columnTypes
+                            additionalProperties: false
+                        additionalProperties: false
                       promptingTechnique:
                         type: object
                         properties:
@@ -2364,6 +3445,8 @@ paths:
                                 properties:
                                   records:
                                     type: object
+                                    propertyNames:
+                                      type: string
                                     additionalProperties:
                                       type: array
                                       items: {}
@@ -2377,39 +3460,33 @@ paths:
                                         name:
                                           type: string
                                         type:
-                                          anyOf:
-                                          - type: string
-                                            const: string
-                                          - type: string
-                                            const: boolean
-                                          - type: string
-                                            const: number
-                                          - type: string
-                                            const: date
-                                          - type: string
-                                            const: list
-                                          - type: string
-                                            const: json
-                                          - type: string
-                                            const: spans
-                                          - type: string
-                                            const: rag_contexts
-                                          - type: string
-                                            const: chat_messages
-                                          - type: string
-                                            const: annotations
-                                          - type: string
-                                            const: evaluations
-                                          - type: string
-                                            const: image
+                                          type: string
+                                          enum:
+                                          - string
+                                          - boolean
+                                          - number
+                                          - date
+                                          - list
+                                          - json
+                                          - spans
+                                          - rag_contexts
+                                          - chat_messages
+                                          - annotations
+                                          - evaluations
+                                          - image
+                                          - file
                                       required:
                                       - name
                                       - type
+                                      additionalProperties: false
                                 required:
                                 - records
                                 - columnTypes
+                                additionalProperties: false
+                            additionalProperties: false
                         required:
                         - type
+                        additionalProperties: false
                       responseFormat:
                         type: object
                         properties:
@@ -2418,22 +3495,26 @@ paths:
                             enum:
                             - json_schema
                           json_schema:
-                            type:
-                            - object
-                            - 'null'
-                            properties:
-                              name:
-                                type: string
-                              schema:
-                                type: object
-                                additionalProperties: true
-                            required:
-                            - name
-                            - schema
+                            anyOf:
+                            - type: object
+                              properties:
+                                name:
+                                  type: string
+                                schema:
+                                  type: object
+                                  properties: {}
+                                  additionalProperties: {}
+                              required:
+                              - name
+                              - schema
+                              additionalProperties: false
+                            - type: 'null'
                         required:
                         - type
                         - json_schema
+                        additionalProperties: false
                       tags:
+                        default: []
                         type: array
                         items:
                           type: object
@@ -2445,7 +3526,14 @@ paths:
                           required:
                           - name
                           - versionId
-                        default: []
+                          additionalProperties: false
+                      parameters:
+                        default: {}
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          $ref: '#/components/schemas/JsonValue'
                     required:
                     - id
                     - handle
@@ -2463,6 +3551,8 @@ paths:
                     - outputs
                     - model
                     - tags
+                    - parameters
+                    additionalProperties: false
                   conflictInfo:
                     type: object
                     properties:
@@ -2480,6 +3570,7 @@ paths:
                           prompt:
                             type: string
                           messages:
+                            default: []
                             type: array
                             items:
                               type: object
@@ -2495,8 +3586,9 @@ paths:
                               required:
                               - role
                               - content
-                            default: []
+                              additionalProperties: false
                           inputs:
+                            default: []
                             type: array
                             items:
                               type: object
@@ -2511,6 +3603,7 @@ paths:
                                   - float
                                   - bool
                                   - image
+                                  - file
                                   - list
                                   - list[str]
                                   - list[float]
@@ -2521,8 +3614,9 @@ paths:
                               required:
                               - identifier
                               - type
-                            default: []
+                              additionalProperties: false
                           outputs:
+                            minItems: 1
                             type: array
                             items:
                               type: object
@@ -2545,11 +3639,11 @@ paths:
                                       minLength: 1
                                   required:
                                   - type
-                                  additionalProperties: true
+                                  additionalProperties: {}
                               required:
                               - identifier
                               - type
-                            minItems: 1
+                              additionalProperties: false
                           model:
                             type: string
                             minLength: 1
@@ -2593,6 +3687,8 @@ paths:
                                 properties:
                                   records:
                                     type: object
+                                    propertyNames:
+                                      type: string
                                     additionalProperties:
                                       type: array
                                       items: {}
@@ -2606,37 +3702,30 @@ paths:
                                         name:
                                           type: string
                                         type:
-                                          anyOf:
-                                          - type: string
-                                            const: string
-                                          - type: string
-                                            const: boolean
-                                          - type: string
-                                            const: number
-                                          - type: string
-                                            const: date
-                                          - type: string
-                                            const: list
-                                          - type: string
-                                            const: json
-                                          - type: string
-                                            const: spans
-                                          - type: string
-                                            const: rag_contexts
-                                          - type: string
-                                            const: chat_messages
-                                          - type: string
-                                            const: annotations
-                                          - type: string
-                                            const: evaluations
-                                          - type: string
-                                            const: image
+                                          type: string
+                                          enum:
+                                          - string
+                                          - boolean
+                                          - number
+                                          - date
+                                          - list
+                                          - json
+                                          - spans
+                                          - rag_contexts
+                                          - chat_messages
+                                          - annotations
+                                          - evaluations
+                                          - image
+                                          - file
                                       required:
                                       - name
                                       - type
+                                      additionalProperties: false
                                 required:
                                 - records
                                 - columnTypes
+                                additionalProperties: false
+                            additionalProperties: false
                           prompting_technique:
                             type: object
                             properties:
@@ -2658,6 +3747,8 @@ paths:
                                     properties:
                                       records:
                                         type: object
+                                        propertyNames:
+                                          type: string
                                         additionalProperties:
                                           type: array
                                           items: {}
@@ -2671,39 +3762,33 @@ paths:
                                             name:
                                               type: string
                                             type:
-                                              anyOf:
-                                              - type: string
-                                                const: string
-                                              - type: string
-                                                const: boolean
-                                              - type: string
-                                                const: number
-                                              - type: string
-                                                const: date
-                                              - type: string
-                                                const: list
-                                              - type: string
-                                                const: json
-                                              - type: string
-                                                const: spans
-                                              - type: string
-                                                const: rag_contexts
-                                              - type: string
-                                                const: chat_messages
-                                              - type: string
-                                                const: annotations
-                                              - type: string
-                                                const: evaluations
-                                              - type: string
-                                                const: image
+                                              type: string
+                                              enum:
+                                              - string
+                                              - boolean
+                                              - number
+                                              - date
+                                              - list
+                                              - json
+                                              - spans
+                                              - rag_contexts
+                                              - chat_messages
+                                              - annotations
+                                              - evaluations
+                                              - image
+                                              - file
                                           required:
                                           - name
                                           - type
+                                          additionalProperties: false
                                     required:
                                     - records
                                     - columnTypes
+                                    additionalProperties: false
+                                additionalProperties: false
                             required:
                             - type
+                            additionalProperties: false
                           response_format:
                             type: object
                             properties:
@@ -2712,34 +3797,45 @@ paths:
                                 enum:
                                 - json_schema
                               json_schema:
-                                type:
-                                - object
-                                - 'null'
-                                properties:
-                                  name:
-                                    type: string
-                                  schema:
-                                    type: object
-                                    additionalProperties: true
-                                required:
-                                - name
-                                - schema
+                                anyOf:
+                                - type: object
+                                  properties:
+                                    name:
+                                      type: string
+                                    schema:
+                                      type: object
+                                      properties: {}
+                                      additionalProperties: {}
+                                  required:
+                                  - name
+                                  - schema
+                                  additionalProperties: false
+                                - type: 'null'
                             required:
                             - type
                             - json_schema
+                            additionalProperties: false
                         required:
                         - prompt
                         - messages
                         - inputs
                         - outputs
                         - model
+                        additionalProperties: false
+                      remoteParameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
                     required:
                     - localVersion
                     - remoteVersion
                     - differences
                     - remoteConfigData
+                    additionalProperties: false
                 required:
                 - action
+                additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -2792,15 +3888,23 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiPromptsByIdSync
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
       description: Sync/upsert a prompt with local content
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - prompts:manage
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -2812,6 +3916,7 @@ paths:
                     prompt:
                       type: string
                     messages:
+                      default: []
                       type: array
                       items:
                         type: object
@@ -2827,8 +3932,8 @@ paths:
                         required:
                         - role
                         - content
-                      default: []
                     inputs:
+                      default: []
                       type: array
                       items:
                         type: object
@@ -2843,6 +3948,7 @@ paths:
                             - float
                             - bool
                             - image
+                            - file
                             - list
                             - list[str]
                             - list[float]
@@ -2853,8 +3959,8 @@ paths:
                         required:
                         - identifier
                         - type
-                      default: []
                     outputs:
+                      minItems: 1
                       type: array
                       items:
                         type: object
@@ -2877,11 +3983,10 @@ paths:
                                 minLength: 1
                             required:
                             - type
-                            additionalProperties: true
+                            additionalProperties: {}
                         required:
                         - identifier
                         - type
-                      minItems: 1
                     model:
                       type: string
                       minLength: 1
@@ -2925,6 +4030,8 @@ paths:
                           properties:
                             records:
                               type: object
+                              propertyNames:
+                                type: string
                               additionalProperties:
                                 type: array
                                 items: {}
@@ -2938,31 +4045,21 @@ paths:
                                   name:
                                     type: string
                                   type:
-                                    anyOf:
-                                    - type: string
-                                      const: string
-                                    - type: string
-                                      const: boolean
-                                    - type: string
-                                      const: number
-                                    - type: string
-                                      const: date
-                                    - type: string
-                                      const: list
-                                    - type: string
-                                      const: json
-                                    - type: string
-                                      const: spans
-                                    - type: string
-                                      const: rag_contexts
-                                    - type: string
-                                      const: chat_messages
-                                    - type: string
-                                      const: annotations
-                                    - type: string
-                                      const: evaluations
-                                    - type: string
-                                      const: image
+                                    type: string
+                                    enum:
+                                    - string
+                                    - boolean
+                                    - number
+                                    - date
+                                    - list
+                                    - json
+                                    - spans
+                                    - rag_contexts
+                                    - chat_messages
+                                    - annotations
+                                    - evaluations
+                                    - image
+                                    - file
                                 required:
                                 - name
                                 - type
@@ -2990,6 +4087,8 @@ paths:
                               properties:
                                 records:
                                   type: object
+                                  propertyNames:
+                                    type: string
                                   additionalProperties:
                                     type: array
                                     items: {}
@@ -3003,31 +4102,21 @@ paths:
                                       name:
                                         type: string
                                       type:
-                                        anyOf:
-                                        - type: string
-                                          const: string
-                                        - type: string
-                                          const: boolean
-                                        - type: string
-                                          const: number
-                                        - type: string
-                                          const: date
-                                        - type: string
-                                          const: list
-                                        - type: string
-                                          const: json
-                                        - type: string
-                                          const: spans
-                                        - type: string
-                                          const: rag_contexts
-                                        - type: string
-                                          const: chat_messages
-                                        - type: string
-                                          const: annotations
-                                        - type: string
-                                          const: evaluations
-                                        - type: string
-                                          const: image
+                                        type: string
+                                        enum:
+                                        - string
+                                        - boolean
+                                        - number
+                                        - date
+                                        - list
+                                        - json
+                                        - spans
+                                        - rag_contexts
+                                        - chat_messages
+                                        - annotations
+                                        - evaluations
+                                        - image
+                                        - file
                                     required:
                                     - name
                                     - type
@@ -3044,18 +4133,19 @@ paths:
                           enum:
                           - json_schema
                         json_schema:
-                          type:
-                          - object
-                          - 'null'
-                          properties:
-                            name:
-                              type: string
-                            schema:
-                              type: object
-                              additionalProperties: true
-                          required:
-                          - name
-                          - schema
+                          anyOf:
+                          - type: object
+                            properties:
+                              name:
+                                type: string
+                              schema:
+                                type: object
+                                properties: {}
+                                additionalProperties: {}
+                            required:
+                            - name
+                            - schema
+                          - type: 'null'
                       required:
                       - type
                       - json_schema
@@ -3063,6 +4153,11 @@ paths:
                   - prompt
                   - outputs
                   - model
+                parameters:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties: {}
                 localVersion:
                   type: number
                   minimum: 0
@@ -3074,882 +4169,22 @@ paths:
       - Prompts
       summary: Post api prompts by id sync
       x-summary-source: derived
-  /api/prompts/{id}/tags/{tag}:
-    put:
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  configId:
-                    type: string
-                  versionId:
-                    type: string
-                  tag:
-                    type: string
-                  updatedAt:
-                    type: string
-                required:
-                - configId
-                - versionId
-                - tag
-                - updatedAt
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Prompt not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Invalid tag or version
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: putApiPromptsByIdTagsByTag
-      parameters:
-      - name: tag
-        in: path
-        description: The tag to assign (e.g., "production", "staging", or a custom tag)
-        required: true
-        schema:
-          type: string
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Assign a tag (e.g. "production", "staging") to a specific prompt version
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                versionId:
-                  type: string
-              required:
-              - versionId
-      tags:
-      - Prompts
-      summary: Put api prompts by id tags by tag
-      x-summary-source: derived
-  /api/prompts/{id}/versions:
-    get:
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    handle:
-                      type:
-                      - string
-                      - 'null'
-                    scope:
-                      type: string
-                      enum:
-                      - ORGANIZATION
-                      - PROJECT
-                    name:
-                      type: string
-                    updatedAt:
-                      type: string
-                    projectId:
-                      type: string
-                    organizationId:
-                      type: string
-                    versionId:
-                      type: string
-                    authorId:
-                      type:
-                      - string
-                      - 'null'
-                    version:
-                      type: number
-                    createdAt:
-                      type: string
-                    commitMessage:
-                      type:
-                      - string
-                      - 'null'
-                    prompt:
-                      type: string
-                    messages:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          role:
-                            type: string
-                            enum:
-                            - user
-                            - assistant
-                            - system
-                          content:
-                            type: string
-                        required:
-                        - role
-                        - content
-                      default: []
-                    inputs:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          identifier:
-                            type: string
-                            minLength: 1
-                          type:
-                            type: string
-                            enum:
-                            - str
-                            - float
-                            - bool
-                            - image
-                            - list
-                            - list[str]
-                            - list[float]
-                            - list[int]
-                            - list[bool]
-                            - dict
-                            - chat_messages
-                        required:
-                        - identifier
-                        - type
-                      default: []
-                    outputs:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          identifier:
-                            type: string
-                            minLength: 1
-                          type:
-                            type: string
-                            enum:
-                            - str
-                            - float
-                            - bool
-                            - json_schema
-                          json_schema:
-                            type: object
-                            properties:
-                              type:
-                                type: string
-                                minLength: 1
-                            required:
-                            - type
-                            additionalProperties: true
-                        required:
-                        - identifier
-                        - type
-                      minItems: 1
-                    model:
-                      type: string
-                      minLength: 1
-                    temperature:
-                      type: number
-                    maxTokens:
-                      type: number
-                    demonstrations:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        name:
-                          type: string
-                        inline:
-                          type: object
-                          properties:
-                            records:
-                              type: object
-                              additionalProperties:
-                                type: array
-                                items: {}
-                            columnTypes:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  id:
-                                    type: string
-                                  name:
-                                    type: string
-                                  type:
-                                    anyOf:
-                                    - type: string
-                                      const: string
-                                    - type: string
-                                      const: boolean
-                                    - type: string
-                                      const: number
-                                    - type: string
-                                      const: date
-                                    - type: string
-                                      const: list
-                                    - type: string
-                                      const: json
-                                    - type: string
-                                      const: spans
-                                    - type: string
-                                      const: rag_contexts
-                                    - type: string
-                                      const: chat_messages
-                                    - type: string
-                                      const: annotations
-                                    - type: string
-                                      const: evaluations
-                                    - type: string
-                                      const: image
-                                required:
-                                - name
-                                - type
-                          required:
-                          - records
-                          - columnTypes
-                    promptingTechnique:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                          - few_shot
-                          - in_context
-                          - chain_of_thought
-                        demonstrations:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            name:
-                              type: string
-                            inline:
-                              type: object
-                              properties:
-                                records:
-                                  type: object
-                                  additionalProperties:
-                                    type: array
-                                    items: {}
-                                columnTypes:
-                                  type: array
-                                  items:
-                                    type: object
-                                    properties:
-                                      id:
-                                        type: string
-                                      name:
-                                        type: string
-                                      type:
-                                        anyOf:
-                                        - type: string
-                                          const: string
-                                        - type: string
-                                          const: boolean
-                                        - type: string
-                                          const: number
-                                        - type: string
-                                          const: date
-                                        - type: string
-                                          const: list
-                                        - type: string
-                                          const: json
-                                        - type: string
-                                          const: spans
-                                        - type: string
-                                          const: rag_contexts
-                                        - type: string
-                                          const: chat_messages
-                                        - type: string
-                                          const: annotations
-                                        - type: string
-                                          const: evaluations
-                                        - type: string
-                                          const: image
-                                    required:
-                                    - name
-                                    - type
-                              required:
-                              - records
-                              - columnTypes
-                      required:
-                      - type
-                    responseFormat:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                          - json_schema
-                        json_schema:
-                          type:
-                          - object
-                          - 'null'
-                          properties:
-                            name:
-                              type: string
-                            schema:
-                              type: object
-                              additionalProperties: true
-                          required:
-                          - name
-                          - schema
-                      required:
-                      - type
-                      - json_schema
-                    tags:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                          versionId:
-                            type: string
-                        required:
-                        - name
-                        - versionId
-                      default: []
-                  required:
-                  - id
-                  - handle
-                  - scope
-                  - name
-                  - updatedAt
-                  - projectId
-                  - organizationId
-                  - versionId
-                  - version
-                  - createdAt
-                  - prompt
-                  - messages
-                  - inputs
-                  - outputs
-                  - model
-                  - tags
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Prompt not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiPromptsByIdVersions
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Get all versions for a prompt. Does not include base prompt data, only versioned data.
-      tags:
-      - Prompts
-      summary: Get api prompts by id versions
-      x-summary-source: derived
-  /api/prompts/{id}/versions/{versionId}/restore:
-    post:
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  handle:
-                    type:
-                    - string
-                    - 'null'
-                  scope:
-                    type: string
-                    enum:
-                    - ORGANIZATION
-                    - PROJECT
-                  name:
-                    type: string
-                  updatedAt:
-                    type: string
-                  projectId:
-                    type: string
-                  organizationId:
-                    type: string
-                  versionId:
-                    type: string
-                  authorId:
-                    type:
-                    - string
-                    - 'null'
-                  version:
-                    type: number
-                  createdAt:
-                    type: string
-                  commitMessage:
-                    type:
-                    - string
-                    - 'null'
-                  prompt:
-                    type: string
-                  messages:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        role:
-                          type: string
-                          enum:
-                          - user
-                          - assistant
-                          - system
-                        content:
-                          type: string
-                      required:
-                      - role
-                      - content
-                    default: []
-                  inputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                          minLength: 1
-                        type:
-                          type: string
-                          enum:
-                          - str
-                          - float
-                          - bool
-                          - image
-                          - list
-                          - list[str]
-                          - list[float]
-                          - list[int]
-                          - list[bool]
-                          - dict
-                          - chat_messages
-                      required:
-                      - identifier
-                      - type
-                    default: []
-                  outputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        identifier:
-                          type: string
-                          minLength: 1
-                        type:
-                          type: string
-                          enum:
-                          - str
-                          - float
-                          - bool
-                          - json_schema
-                        json_schema:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              minLength: 1
-                          required:
-                          - type
-                          additionalProperties: true
-                      required:
-                      - identifier
-                      - type
-                    minItems: 1
-                  model:
-                    type: string
-                    minLength: 1
-                  temperature:
-                    type: number
-                  maxTokens:
-                    type: number
-                  demonstrations:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      inline:
-                        type: object
-                        properties:
-                          records:
-                            type: object
-                            additionalProperties:
-                              type: array
-                              items: {}
-                          columnTypes:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                name:
-                                  type: string
-                                type:
-                                  anyOf:
-                                  - type: string
-                                    const: string
-                                  - type: string
-                                    const: boolean
-                                  - type: string
-                                    const: number
-                                  - type: string
-                                    const: date
-                                  - type: string
-                                    const: list
-                                  - type: string
-                                    const: json
-                                  - type: string
-                                    const: spans
-                                  - type: string
-                                    const: rag_contexts
-                                  - type: string
-                                    const: chat_messages
-                                  - type: string
-                                    const: annotations
-                                  - type: string
-                                    const: evaluations
-                                  - type: string
-                                    const: image
-                              required:
-                              - name
-                              - type
-                        required:
-                        - records
-                        - columnTypes
-                  promptingTechnique:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                        - few_shot
-                        - in_context
-                        - chain_of_thought
-                      demonstrations:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                          name:
-                            type: string
-                          inline:
-                            type: object
-                            properties:
-                              records:
-                                type: object
-                                additionalProperties:
-                                  type: array
-                                  items: {}
-                              columnTypes:
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                    name:
-                                      type: string
-                                    type:
-                                      anyOf:
-                                      - type: string
-                                        const: string
-                                      - type: string
-                                        const: boolean
-                                      - type: string
-                                        const: number
-                                      - type: string
-                                        const: date
-                                      - type: string
-                                        const: list
-                                      - type: string
-                                        const: json
-                                      - type: string
-                                        const: spans
-                                      - type: string
-                                        const: rag_contexts
-                                      - type: string
-                                        const: chat_messages
-                                      - type: string
-                                        const: annotations
-                                      - type: string
-                                        const: evaluations
-                                      - type: string
-                                        const: image
-                                  required:
-                                  - name
-                                  - type
-                            required:
-                            - records
-                            - columnTypes
-                    required:
-                    - type
-                  responseFormat:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                        - json_schema
-                      json_schema:
-                        type:
-                        - object
-                        - 'null'
-                        properties:
-                          name:
-                            type: string
-                          schema:
-                            type: object
-                            additionalProperties: true
-                        required:
-                        - name
-                        - schema
-                    required:
-                    - type
-                    - json_schema
-                  tags:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        versionId:
-                          type: string
-                      required:
-                      - name
-                      - versionId
-                    default: []
-                required:
-                - id
-                - handle
-                - scope
-                - name
-                - updatedAt
-                - projectId
-                - organizationId
-                - versionId
-                - version
-                - createdAt
-                - prompt
-                - messages
-                - inputs
-                - outputs
-                - model
-                - tags
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '404':
-          description: Prompt or version not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiPromptsByIdVersionsByVersionIdRestore
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      - schema:
-          type: string
-        in: path
-        name: versionId
-        required: true
-      description: Restore a prompt to a previous version. Creates a new version with the same config data as the specified version.
-      tags:
-      - Prompts
-      summary: Post api prompts by id versions by version id restore
-      x-summary-source: derived
 components:
+  schemas:
+    JsonValue:
+      anyOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: 'null'
+      - type: array
+        items:
+          $ref: '#/components/schemas/JsonValue'
+      - type: object
+        propertyNames:
+          type: string
+        additionalProperties:
+          $ref: '#/components/schemas/JsonValue'
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -3960,3 +4195,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

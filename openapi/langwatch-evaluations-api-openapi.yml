@@ -1,0 +1,1132 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Evaluations API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Evaluations
+paths:
+  /api/v1/evaluations/list:
+    get:
+      operationId: getApiEvaluationsList
+      responses:
+        '200':
+          description: The evaluator catalogue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  evaluators:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Display name of the evaluator
+                        description:
+                          type: string
+                        category:
+                          type: string
+                        docsUrl:
+                          type: string
+                        isGuardrail:
+                          type: boolean
+                          description: Whether this evaluator can gate a request as a guardrail
+                        requiredFields:
+                          type: array
+                          items:
+                            type: string
+                          description: '`data` keys the evaluate call must supply'
+                        optionalFields:
+                          type: array
+                          items:
+                            type: string
+                        settings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                          description: Each setting's default and description
+                        settings_json_schema:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                          description: JSON Schema for this evaluator's settings object
+                        envVars:
+                          type: array
+                          items:
+                            type: string
+                          description: Server-side variables the evaluator needs configured
+                        result:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                          description: What its score, passed and label mean
+                      required:
+                      - name
+                      - description
+                      - category
+                      - isGuardrail
+                      - requiredFields
+                      - optionalFields
+                      - settings
+                      - settings_json_schema
+                      - envVars
+                      - result
+                    description: Keyed by evaluator id, the value you put in the evaluate path
+                required:
+                - evaluators
+      description: List every evaluator this server ships with, along with the `data` fields each one needs and the settings it accepts. The keys of `evaluators` are the ids you put in the evaluate path. The list is the same for every caller and needs no credential.
+      summary: List the built-in evaluators
+      tags:
+      - Evaluations
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+  /api/v1/evaluations/{evaluator}/evaluate:
+    post:
+      operationId: postApiEvaluationsByEvaluatorEvaluate
+      responses:
+        '200':
+          description: The evaluator ran, declined, or failed. Branch on `status`; in guardrail mode `passed` is set on all three.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: processed
+                    score:
+                      type: number
+                    passed:
+                      type: boolean
+                    label:
+                      type: string
+                    details:
+                      type: string
+                    cost:
+                      description: What running the evaluator cost
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    raw_response:
+                      description: The evaluator's own output, unprocessed
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: skipped
+                    details:
+                      description: Why the evaluator declined to score this input
+                      type: string
+                    cost:
+                      description: What the attempt cost, when the evaluator spent money before declining to score
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    passed:
+                      description: Always true in guardrail mode, so a skip does not block
+                      type: boolean
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: error
+                    error_type:
+                      type: string
+                      const: EVALUATOR_ERROR
+                      description: 'Constant: the evaluator''s own type is not exposed'
+                    details:
+                      type: string
+                    passed:
+                      description: Always true in guardrail mode, so a failure does not block
+                      type: boolean
+                  required:
+                  - status
+                  - error_type
+                  - details
+        '400':
+          description: The body was not valid JSON, failed validation, or omitted a field this evaluator requires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '403':
+          description: The API key lacks evaluations:manage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '404':
+          description: No evaluator answers to that id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+      description: Run one evaluator over a single input and get its score back. Built-in evaluators whose id has two segments, such as `ragas/faithfulness`, are addressed with the two-segment form of this path. Bodies up to 30MB are accepted.
+      summary: Run an evaluator
+      tags:
+      - Evaluations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trace_id:
+                  description: Attaches the result to a trace you already sent
+                  type:
+                  - string
+                  - 'null'
+                evaluation_id:
+                  description: Supply your own id to make the call idempotent
+                  type:
+                  - string
+                  - 'null'
+                evaluator_id:
+                  type:
+                  - string
+                  - 'null'
+                name:
+                  description: Overrides the name the result is recorded under
+                  type:
+                  - string
+                  - 'null'
+                data:
+                  type: object
+                  properties: {}
+                  additionalProperties: {}
+                  description: What the evaluator scores. Which fields are required depends on the evaluator; its own entry under Built-in Evaluators lists them.
+                settings:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: {}
+                  - type: 'null'
+                  description: Per-call overrides of the evaluator's settings. Anything omitted falls back to the saved evaluator or monitor, then to the evaluator's own defaults.
+                as_guardrail:
+                  default: false
+                  description: 'Evaluate as a guardrail: a skipped or failed evaluation answers `passed` rather than an error, so a caller can gate on one field. The /api/guardrails path sets this for you.'
+                  type:
+                  - boolean
+                  - 'null'
+              required:
+              - data
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+      parameters:
+      - in: path
+        name: evaluator
+        schema:
+          type: string
+        required: true
+        description: Which evaluator to run. Either a built-in id (`ragas/faithfulness`), the slug of a monitor configured in this project, or `evaluators/{slug|id}` for a saved evaluator. `GET /api/evaluations/list` returns the built-in ids.
+  /api/v1/evaluations/{evaluator}/{subpath}/evaluate:
+    post:
+      operationId: postApiEvaluationsByEvaluatorBySubpathEvaluate
+      responses:
+        '200':
+          description: The evaluator ran, declined, or failed. Branch on `status`; in guardrail mode `passed` is set on all three.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: processed
+                    score:
+                      type: number
+                    passed:
+                      type: boolean
+                    label:
+                      type: string
+                    details:
+                      type: string
+                    cost:
+                      description: What running the evaluator cost
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    raw_response:
+                      description: The evaluator's own output, unprocessed
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: skipped
+                    details:
+                      description: Why the evaluator declined to score this input
+                      type: string
+                    cost:
+                      description: What the attempt cost, when the evaluator spent money before declining to score
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    passed:
+                      description: Always true in guardrail mode, so a skip does not block
+                      type: boolean
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: error
+                    error_type:
+                      type: string
+                      const: EVALUATOR_ERROR
+                      description: 'Constant: the evaluator''s own type is not exposed'
+                    details:
+                      type: string
+                    passed:
+                      description: Always true in guardrail mode, so a failure does not block
+                      type: boolean
+                  required:
+                  - status
+                  - error_type
+                  - details
+        '400':
+          description: The body was not valid JSON, failed validation, or omitted a field this evaluator requires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '403':
+          description: The API key lacks evaluations:manage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '404':
+          description: No evaluator answers to that id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+      description: Run one evaluator whose id has two segments, such as `ragas/faithfulness` or `langevals/valid_format`. Identical to the single-segment form in every other respect; the id is simply split across two path segments.
+      summary: Run a namespaced evaluator
+      tags:
+      - Evaluations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trace_id:
+                  description: Attaches the result to a trace you already sent
+                  type:
+                  - string
+                  - 'null'
+                evaluation_id:
+                  description: Supply your own id to make the call idempotent
+                  type:
+                  - string
+                  - 'null'
+                evaluator_id:
+                  type:
+                  - string
+                  - 'null'
+                name:
+                  description: Overrides the name the result is recorded under
+                  type:
+                  - string
+                  - 'null'
+                data:
+                  type: object
+                  properties: {}
+                  additionalProperties: {}
+                  description: What the evaluator scores. Which fields are required depends on the evaluator; its own entry under Built-in Evaluators lists them.
+                settings:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: {}
+                  - type: 'null'
+                  description: Per-call overrides of the evaluator's settings. Anything omitted falls back to the saved evaluator or monitor, then to the evaluator's own defaults.
+                as_guardrail:
+                  default: false
+                  description: 'Evaluate as a guardrail: a skipped or failed evaluation answers `passed` rather than an error, so a caller can gate on one field. The /api/guardrails path sets this for you.'
+                  type:
+                  - boolean
+                  - 'null'
+              required:
+              - data
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+      parameters:
+      - in: path
+        name: evaluator
+        schema:
+          type: string
+        required: true
+        description: First segment of the evaluator id, such as `ragas`
+      - in: path
+        name: subpath
+        schema:
+          type: string
+        required: true
+        description: Second segment of the evaluator id, such as `faithfulness`
+  /api/v1/guardrails/{evaluator}/evaluate:
+    post:
+      operationId: postApiGuardrailsByEvaluatorEvaluate
+      responses:
+        '200':
+          description: The evaluator ran, declined, or failed. Branch on `status`; in guardrail mode `passed` is set on all three.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: processed
+                    score:
+                      type: number
+                    passed:
+                      type: boolean
+                    label:
+                      type: string
+                    details:
+                      type: string
+                    cost:
+                      description: What running the evaluator cost
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    raw_response:
+                      description: The evaluator's own output, unprocessed
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: skipped
+                    details:
+                      description: Why the evaluator declined to score this input
+                      type: string
+                    cost:
+                      description: What the attempt cost, when the evaluator spent money before declining to score
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    passed:
+                      description: Always true in guardrail mode, so a skip does not block
+                      type: boolean
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: error
+                    error_type:
+                      type: string
+                      const: EVALUATOR_ERROR
+                      description: 'Constant: the evaluator''s own type is not exposed'
+                    details:
+                      type: string
+                    passed:
+                      description: Always true in guardrail mode, so a failure does not block
+                      type: boolean
+                  required:
+                  - status
+                  - error_type
+                  - details
+        '400':
+          description: The body was not valid JSON, failed validation, or omitted a field this evaluator requires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '403':
+          description: The API key lacks evaluations:manage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '404':
+          description: No evaluator answers to that id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+      description: 'Run an evaluator inline and gate on one boolean. Same call as the evaluate path with `as_guardrail` set: every outcome carries `passed`, so an evaluator that skips or fails does not block the request it was guarding. Check `passed` and let the request through when it is true.'
+      summary: Run an evaluator as a guardrail
+      tags:
+      - Evaluations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trace_id:
+                  description: Attaches the result to a trace you already sent
+                  type:
+                  - string
+                  - 'null'
+                evaluation_id:
+                  description: Supply your own id to make the call idempotent
+                  type:
+                  - string
+                  - 'null'
+                evaluator_id:
+                  type:
+                  - string
+                  - 'null'
+                name:
+                  description: Overrides the name the result is recorded under
+                  type:
+                  - string
+                  - 'null'
+                data:
+                  type: object
+                  properties: {}
+                  additionalProperties: {}
+                  description: What the evaluator scores. Which fields are required depends on the evaluator; its own entry under Built-in Evaluators lists them.
+                settings:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: {}
+                  - type: 'null'
+                  description: Per-call overrides of the evaluator's settings. Anything omitted falls back to the saved evaluator or monitor, then to the evaluator's own defaults.
+                as_guardrail:
+                  default: false
+                  description: 'Evaluate as a guardrail: a skipped or failed evaluation answers `passed` rather than an error, so a caller can gate on one field. The /api/guardrails path sets this for you.'
+                  type:
+                  - boolean
+                  - 'null'
+              required:
+              - data
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+      parameters:
+      - in: path
+        name: evaluator
+        schema:
+          type: string
+        required: true
+        description: Which evaluator to run. Either a built-in id (`ragas/faithfulness`), the slug of a monitor configured in this project, or `evaluators/{slug|id}` for a saved evaluator. `GET /api/evaluations/list` returns the built-in ids.
+  /api/v1/evaluations/batch/log_results:
+    post:
+      operationId: postApiEvaluationsBatchLogResults
+      responses:
+        '200':
+          description: The rows were recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable confirmation
+                required:
+                - message
+        '400':
+          description: The request was not sent as application/json, failed validation, named neither experiment_id nor experiment_slug, or carried timestamps in seconds rather than milliseconds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Set when the request was rejected before validation
+                    type: string
+                  error:
+                    description: Set when the body parsed and then failed validation
+                    type: string
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '403':
+          description: The API key lacks evaluations:manage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '413':
+          description: The body is larger than the organization accepts in one request; `error.code` is `evaluation_log_results_too_large` and `error.meta.maxBytes` is the limit
+          content: {}
+      description: 'Report the rows of a batch evaluation against an experiment, so its scores and progress show up in the app. This is the second half of an SDK batch evaluation: create the experiment with `POST /api/experiment/init`, then post rows here as they finish. Identify the experiment by either `experiment_id` or `experiment_slug`. Bodies up to 267 MB are accepted, sized for one dataset row with ten 20 MB images inline. A larger body is refused with `evaluation_log_results_too_large`.'
+      summary: Report batch evaluation results
+      tags:
+      - Evaluations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                run_id:
+                  type: string
+                workflow_version_id:
+                  type:
+                  - string
+                  - 'null'
+                progress:
+                  type:
+                  - number
+                  - 'null'
+                total:
+                  type:
+                  - number
+                  - 'null'
+                dataset:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      index:
+                        type: number
+                      target_id:
+                        type:
+                        - string
+                        - 'null'
+                      entry:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      predicted:
+                        anyOf:
+                        - type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        - type: 'null'
+                      cost:
+                        type:
+                        - number
+                        - 'null'
+                      duration:
+                        type:
+                        - number
+                        - 'null'
+                      error:
+                        type:
+                        - string
+                        - 'null'
+                      trace_id:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - index
+                    - entry
+                evaluations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      evaluator:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      target_id:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        anyOf:
+                        - type: string
+                          const: processed
+                        - type: string
+                          const: skipped
+                        - type: string
+                          const: error
+                      index:
+                        type: number
+                      duration:
+                        type:
+                        - number
+                        - 'null'
+                      inputs:
+                        anyOf:
+                        - type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        - type: 'null'
+                      score:
+                        type:
+                        - number
+                        - 'null'
+                      label:
+                        type:
+                        - string
+                        - 'null'
+                      passed:
+                        type:
+                        - boolean
+                        - 'null'
+                      details:
+                        type:
+                        - string
+                        - 'null'
+                      cost:
+                        type:
+                        - number
+                        - 'null'
+                    required:
+                    - evaluator
+                    - status
+                    - index
+                experiment_id:
+                  type:
+                  - string
+                  - 'null'
+                experiment_slug:
+                  type:
+                  - string
+                  - 'null'
+                workflow_id:
+                  type:
+                  - string
+                  - 'null'
+                name:
+                  type:
+                  - string
+                  - 'null'
+                targets:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        prompt_id:
+                          type:
+                          - string
+                          - 'null'
+                        prompt_version:
+                          type:
+                          - number
+                          - 'null'
+                        agent_id:
+                          type:
+                          - string
+                          - 'null'
+                        evaluator_id:
+                          type:
+                          - string
+                          - 'null'
+                        model:
+                          type:
+                          - string
+                          - 'null'
+                        metadata:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type:
+                              - string
+                              - number
+                              - boolean
+                          - type: 'null'
+                        type:
+                          anyOf:
+                          - type: string
+                            const: prompt
+                          - type: string
+                            const: agent
+                          - type: string
+                            const: evaluator
+                          - type: string
+                            const: workflow
+                          - type: string
+                            const: custom
+                      required:
+                      - id
+                      - name
+                  - type: 'null'
+                timestamps:
+                  type: object
+                  properties:
+                    created_at:
+                      type:
+                      - number
+                      - 'null'
+                    finished_at:
+                      type:
+                      - number
+                      - 'null'
+                    stopped_at:
+                      type:
+                      - number
+                      - 'null'
+                expected:
+                  anyOf:
+                  - type: object
+                    properties:
+                      dataset:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      evaluations:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                    required:
+                    - dataset
+                    - evaluations
+                  - type: 'null'
+              required:
+              - run_id
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

@@ -1,0 +1,565 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Members API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Members
+paths:
+  /api/v1/organization/members:
+    get:
+      operationId: listOrganizationMembers
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - EXTERNAL
+                          - DEVELOPER
+                        disabled:
+                          type: boolean
+                        disabledAt:
+                          anyOf:
+                          - type: string
+                            format: date-time
+                          - type: 'null'
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                            email:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - name
+                          - email
+                          additionalProperties: false
+                      required:
+                      - userId
+                      - role
+                      - disabled
+                      - disabledAt
+                      - createdAt
+                      - updatedAt
+                      - user
+                      additionalProperties: false
+                  totalCount:
+                    type: number
+                required:
+                - members
+                - totalCount
+                additionalProperties: false
+      description: List the organization's members with their organization role and disabled status. Disabled members are included only when includeDisabled=true.
+      tags:
+      - Members
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:view
+      parameters:
+      - in: query
+        name: includeDisabled
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+      summary: List organization members
+      x-summary-source: derived
+  /api/v1/organization/members/{userId}:
+    get:
+      operationId: getOrganizationMember
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  role:
+                    type: string
+                    enum:
+                    - ADMIN
+                    - MEMBER
+                    - EXTERNAL
+                    - DEVELOPER
+                  disabled:
+                    type: boolean
+                  disabledAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      email:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - name
+                    - email
+                    additionalProperties: false
+                  teams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        teamId:
+                          type: string
+                        teamName:
+                          type: string
+                        role:
+                          type: string
+                          enum:
+                          - ADMIN
+                          - MEMBER
+                          - VIEWER
+                          - CUSTOM
+                        customRoleId:
+                          type:
+                          - string
+                          - 'null'
+                        customRoleName:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - teamId
+                      - teamName
+                      - role
+                      - customRoleId
+                      - customRoleName
+                      additionalProperties: false
+                required:
+                - userId
+                - role
+                - disabled
+                - disabledAt
+                - createdAt
+                - updatedAt
+                - user
+                - teams
+                additionalProperties: false
+      description: 'Read one member, including the teams they reach through team-scoped role bindings. Personal workspaces are not listed: they are not access an administrator manages.'
+      tags:
+      - Members
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:view
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get organization member
+      x-summary-source: derived
+    patch:
+      operationId: updateOrganizationMember
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  role:
+                    type: string
+                    enum:
+                    - ADMIN
+                    - MEMBER
+                    - EXTERNAL
+                    - DEVELOPER
+                  disabled:
+                    type: boolean
+                  disabledAt:
+                    anyOf:
+                    - type: string
+                      format: date-time
+                    - type: 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      email:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - name
+                    - email
+                    additionalProperties: false
+                  teamsLeftWithoutAdmin:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      additionalProperties: false
+                required:
+                - userId
+                - role
+                - disabled
+                - disabledAt
+                - createdAt
+                - updatedAt
+                - user
+                additionalProperties: false
+      description: Change a member's organization role, or disable / re-enable their membership. Send exactly one of role or disabled. Re-enabling consumes a seat, so it is checked against the plan.
+      tags:
+      - Members
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                  - ADMIN
+                  - MEMBER
+                  - EXTERNAL
+                  - DEVELOPER
+                disabled:
+                  type: boolean
+      summary: Update organization member
+      x-summary-source: derived
+    delete:
+      operationId: removeOrganizationMember
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                required:
+                - success
+                additionalProperties: false
+      description: Remove a member from the organization and every team in it. The member the credential acts as cannot remove themselves.
+      tags:
+      - Members
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Remove organization member
+      x-summary-source: derived
+  /api/v1/organization/members/{userId}/access:
+    get:
+      operationId: getOrganizationMemberAccess
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      email:
+                        type:
+                        - string
+                        - 'null'
+                      orgRole:
+                        type: string
+                      orgRolePermissions:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - id
+                    - name
+                    - email
+                    - orgRole
+                    - orgRolePermissions
+                    additionalProperties: false
+                  groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        scimSource:
+                          type:
+                          - string
+                          - 'null'
+                        bindings:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              role:
+                                type: string
+                              customRoleName:
+                                type:
+                                - string
+                                - 'null'
+                              scopeType:
+                                type: string
+                                enum:
+                                - PROJECT
+                                - TEAM
+                                - ORGANIZATION
+                              scopeId:
+                                type: string
+                              scopeName:
+                                type:
+                                - string
+                                - 'null'
+                              permissions:
+                                type: array
+                                items:
+                                  type: string
+                              cappedBySeat:
+                                type: boolean
+                            required:
+                            - id
+                            - role
+                            - customRoleName
+                            - scopeType
+                            - scopeId
+                            - scopeName
+                            - permissions
+                            - cappedBySeat
+                            additionalProperties: false
+                      required:
+                      - id
+                      - name
+                      - slug
+                      - scimSource
+                      - bindings
+                      additionalProperties: false
+                  directBindings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        role:
+                          type: string
+                        customRoleName:
+                          type:
+                          - string
+                          - 'null'
+                        scopeType:
+                          type: string
+                          enum:
+                          - PROJECT
+                          - TEAM
+                          - ORGANIZATION
+                        scopeId:
+                          type: string
+                        scopeName:
+                          type:
+                          - string
+                          - 'null'
+                        permissions:
+                          type: array
+                          items:
+                            type: string
+                        cappedBySeat:
+                          type: boolean
+                      required:
+                      - id
+                      - role
+                      - customRoleName
+                      - scopeType
+                      - scopeId
+                      - scopeName
+                      - permissions
+                      - cappedBySeat
+                      additionalProperties: false
+                required:
+                - user
+                - groups
+                - directBindings
+                additionalProperties: false
+      description: 'The member''s full access breakdown: organization role, group memberships with their bindings, and direct bindings, each with the permissions it grants and the scope it grants them on.'
+      tags:
+      - Members
+      security:
+      - admin_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - organization_api_key
+        permissions:
+        - organization:manage
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      summary: Get organization member access
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

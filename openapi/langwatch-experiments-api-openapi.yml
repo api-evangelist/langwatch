@@ -1,0 +1,1713 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Experiments API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Experiments
+paths:
+  /api/v1/experiments/{slug}/run:
+    post:
+      operationId: postApiExperimentsBySlugRun
+      responses:
+        '200':
+          description: Run started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: string
+                    description: Identifier to poll this run with
+                  status:
+                    type: string
+                    const: running
+                  total:
+                    type: number
+                    description: Number of cells this run will execute
+                  runUrl:
+                    description: Link to the run in the LangWatch app
+                    type: string
+                required:
+                - runId
+                - status
+                - total
+                additionalProperties: false
+            text/event-stream:
+              schema:
+                type: string
+                description: Progress events, ending with a done event carrying the summary
+        '400':
+          description: The body was not valid JSON, failed input validation, or the experiment has no dataset configured
+          content: {}
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment or run in this project
+          content: {}
+      description: 'Start a run of a saved experiment, addressed by slug. Returns a runId to poll straight away. Send `Accept: text/event-stream` instead to stream progress events until the run finishes.'
+      summary: Run an experiment
+      tags:
+      - Experiments
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  maxItems: 4000
+                  type: array
+                  items:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                dataset_id:
+                  type: string
+                parameters:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type:
+                    - string
+                    - number
+                    - boolean
+                row_indices:
+                  type: array
+                  items:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:create
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The experiment's slug, or its id
+  /api/v1/experiments/runs:
+    get:
+      operationId: getApiExperimentsRuns
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  experimentId:
+                    type: string
+                  experimentSlug:
+                    type: string
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        experimentId:
+                          type: string
+                        runId:
+                          type: string
+                        workflowVersion:
+                          anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              version:
+                                type: string
+                              commitMessage:
+                                type: string
+                              author:
+                                anyOf:
+                                - type: object
+                                  properties:
+                                    name:
+                                      type:
+                                      - string
+                                      - 'null'
+                                    image:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  required:
+                                  - name
+                                  - image
+                                  additionalProperties: false
+                                - type: 'null'
+                            required:
+                            - id
+                            - version
+                            - commitMessage
+                            - author
+                            additionalProperties: false
+                          - type: 'null'
+                        timestamps:
+                          type: object
+                          properties:
+                            createdAt:
+                              type: number
+                            updatedAt:
+                              type: number
+                            finishedAt:
+                              type:
+                              - number
+                              - 'null'
+                            stoppedAt:
+                              type:
+                              - number
+                              - 'null'
+                          required:
+                          - createdAt
+                          - updatedAt
+                          additionalProperties: false
+                        progress:
+                          type:
+                          - number
+                          - 'null'
+                        total:
+                          type:
+                          - number
+                          - 'null'
+                        summary:
+                          type: object
+                          properties:
+                            datasetCost:
+                              type: number
+                            evaluationsCost:
+                              type: number
+                            datasetAverageCost:
+                              type: number
+                            datasetAverageDuration:
+                              type: number
+                            evaluationsAverageCost:
+                              type: number
+                            evaluationsAverageDuration:
+                              type: number
+                            evaluations:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  averageScore:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  averagePassed:
+                                    type: number
+                                required:
+                                - name
+                                - averageScore
+                                additionalProperties: false
+                          required:
+                          - evaluations
+                          additionalProperties: false
+                      required:
+                      - experimentId
+                      - runId
+                      - workflowVersion
+                      - timestamps
+                      - summary
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                      pageSize:
+                        type: number
+                      totalHits:
+                        type: number
+                      hasMore:
+                        type: boolean
+                    required:
+                    - page
+                    - pageSize
+                    - totalHits
+                    - hasMore
+                    additionalProperties: false
+                required:
+                - experimentId
+                - experimentSlug
+                - runs
+                - pagination
+                additionalProperties: false
+        '400':
+          description: experimentSlug was not supplied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: What was wrong with the request, as a sentence
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment in this project
+          content: {}
+      description: Runs recorded for one experiment, newest first. Page through them with `page` and `pageSize`.
+      summary: List runs of an experiment
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
+      parameters:
+      - in: query
+        name: experimentSlug
+        schema:
+          type: string
+        description: Slug of the experiment whose runs you want
+      - in: query
+        name: page
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: 1-based page number
+      - in: query
+        name: pageSize
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Runs per page, capped at 200
+  /api/v1/experiments/runs/{runId}:
+    get:
+      operationId: getApiExperimentsRunsByRunId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - pending
+                    - running
+                    - completed
+                    - failed
+                    - stopped
+                  progress:
+                    type: number
+                    description: Cells finished so far
+                  total:
+                    type: number
+                    description: Cells in the run
+                  startedAt:
+                    description: Unix milliseconds
+                    type: number
+                  finishedAt:
+                    description: Unix milliseconds; set once the run is no longer running
+                    type: number
+                  summary:
+                    description: Present when completed
+                    type: object
+                    properties:
+                      runId:
+                        type: string
+                      totalCells:
+                        type: number
+                        description: Cells the run set out to execute
+                      completedCells:
+                        type: number
+                      failedCells:
+                        type: number
+                      duration:
+                        type: number
+                        description: Wall-clock milliseconds
+                      chDispatchFailures:
+                        description: Non-zero means some rows may be missing from the stored results
+                        type: number
+                      timestamps:
+                        type: object
+                        properties:
+                          startedAt:
+                            type: number
+                          finishedAt:
+                            type: number
+                          stoppedAt:
+                            type: number
+                        required:
+                        - startedAt
+                        additionalProperties: false
+                      targets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            targetId:
+                              type: string
+                            name:
+                              type: string
+                            passed:
+                              type: number
+                            failed:
+                              type: number
+                            avgLatency:
+                              type: number
+                            totalCost:
+                              type: number
+                          required:
+                          - targetId
+                          - name
+                          - passed
+                          - failed
+                          - avgLatency
+                          - totalCost
+                          additionalProperties: false
+                      evaluators:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            evaluatorId:
+                              type: string
+                            name:
+                              type: string
+                            passed:
+                              type: number
+                            failed:
+                              type: number
+                            passRate:
+                              type: number
+                            avgScore:
+                              type: number
+                          required:
+                          - evaluatorId
+                          - name
+                          - passed
+                          - failed
+                          - passRate
+                          additionalProperties: false
+                      totalPassed:
+                        type: number
+                      totalFailed:
+                        type: number
+                      passRate:
+                        type: number
+                      totalCost:
+                        type: number
+                      runUrl:
+                        description: Link to the run in the LangWatch app
+                        type: string
+                    required:
+                    - runId
+                    - totalCells
+                    - completedCells
+                    - failedCells
+                    - duration
+                    - timestamps
+                    additionalProperties: false
+                  error:
+                    description: 'Stable failure code, present when failed. Not display copy: render your own wording keyed on it.'
+                    type: string
+                  domainError:
+                    description: The full failure envelope, when the failure carried one
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        description: Stable failure code; branch on this
+                      kind:
+                        type: string
+                        description: Deprecated alias of code, for older clients
+                      message:
+                        type: string
+                      meta:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      httpStatus:
+                        type: number
+                      fault:
+                        description: 'Who the failure is attributable to: customer, platform, presumed_platform, provider'
+                        type: string
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      retryable:
+                        type: boolean
+                      tips:
+                        readOnly: true
+                        type: array
+                        items:
+                          type: string
+                      docsUrl:
+                        type: string
+                      reasons:
+                        type: array
+                        items: {}
+                    required:
+                    - code
+                    - kind
+                    additionalProperties: false
+                  traceId:
+                    description: Trace id for failures that carry no code, to quote in support
+                    type: string
+                required:
+                - runId
+                - status
+                - progress
+                - total
+                additionalProperties: false
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such run in this project
+          content: {}
+      description: Current state of one run. Returns progress while it is going and a summary once it finishes, so a CI job can poll this until `status` leaves `running`.
+      summary: Poll a run
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
+      parameters:
+      - in: path
+        name: runId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/experiments/runs/{runId}/results:
+    get:
+      operationId: getApiExperimentsRunsByRunIdResults
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  experimentId:
+                    type: string
+                  runId:
+                    type: string
+                  projectId:
+                    type: string
+                  workflowVersionId:
+                    type:
+                    - string
+                    - 'null'
+                  progress:
+                    type:
+                    - number
+                    - 'null'
+                  total:
+                    type:
+                    - number
+                    - 'null'
+                  targets:
+                    description: Resolves the targetId each dataset row and evaluation carries
+                    anyOf:
+                    - type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          type:
+                            type: string
+                          promptId:
+                            type:
+                            - string
+                            - 'null'
+                          promptVersion:
+                            type:
+                            - number
+                            - 'null'
+                          agentId:
+                            type:
+                            - string
+                            - 'null'
+                          evaluatorId:
+                            type:
+                            - string
+                            - 'null'
+                          model:
+                            type:
+                            - string
+                            - 'null'
+                          metadata:
+                            anyOf:
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                type:
+                                - string
+                                - number
+                                - boolean
+                            - type: 'null'
+                        required:
+                        - id
+                        - name
+                        - type
+                        additionalProperties: false
+                    - type: 'null'
+                  dataset:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: number
+                        targetId:
+                          type:
+                          - string
+                          - 'null'
+                        entry:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        predicted:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        cost:
+                          type:
+                          - number
+                          - 'null'
+                        duration:
+                          type:
+                          - number
+                          - 'null'
+                        error:
+                          description: The engine's own string. Prefer domainError.code to branch on
+                          type:
+                          - string
+                          - 'null'
+                        domainError:
+                          description: Set on rows written since failures started carrying codes
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              description: Stable failure code; branch on this
+                            kind:
+                              type: string
+                              description: Deprecated alias of code, for older clients
+                            message:
+                              type: string
+                            meta:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            httpStatus:
+                              type: number
+                            fault:
+                              description: 'Who the failure is attributable to: customer, platform, presumed_platform, provider'
+                              type: string
+                            traceId:
+                              type: string
+                            spanId:
+                              type: string
+                            traceUrl:
+                              type: string
+                            retryable:
+                              type: boolean
+                            tips:
+                              readOnly: true
+                              type: array
+                              items:
+                                type: string
+                            docsUrl:
+                              type: string
+                            reasons:
+                              type: array
+                              items: {}
+                          required:
+                          - code
+                          - kind
+                          additionalProperties: false
+                        traceId:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - index
+                      - entry
+                      additionalProperties: false
+                    description: One row per dataset entry, with what the target predicted
+                  evaluations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        evaluator:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        targetId:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                          enum:
+                          - processed
+                          - skipped
+                          - error
+                        index:
+                          type: number
+                        score:
+                          type:
+                          - number
+                          - 'null'
+                        label:
+                          type:
+                          - string
+                          - 'null'
+                        passed:
+                          type:
+                          - boolean
+                          - 'null'
+                        details:
+                          type:
+                          - string
+                          - 'null'
+                        cost:
+                          type:
+                          - number
+                          - 'null'
+                        duration:
+                          type:
+                          - number
+                          - 'null'
+                        inputs:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          - type: 'null'
+                      required:
+                      - evaluator
+                      - status
+                      - index
+                      additionalProperties: false
+                    description: One row per evaluator per dataset entry
+                  timestamps:
+                    type: object
+                    properties:
+                      createdAt:
+                        type: number
+                      updatedAt:
+                        type: number
+                      finishedAt:
+                        type:
+                        - number
+                        - 'null'
+                      stoppedAt:
+                        type:
+                        - number
+                        - 'null'
+                    required:
+                    - createdAt
+                    - updatedAt
+                    additionalProperties: false
+                  completeness:
+                    type: object
+                    properties:
+                      complete:
+                        type: boolean
+                      dataset:
+                        type: object
+                        properties:
+                          received:
+                            type: integer
+                            minimum: 0
+                            maximum: 9007199254740991
+                          expected:
+                            anyOf:
+                            - type: integer
+                              minimum: 0
+                              maximum: 9007199254740991
+                            - type: 'null'
+                        required:
+                        - received
+                        - expected
+                        additionalProperties: false
+                      evaluations:
+                        type: object
+                        properties:
+                          received:
+                            type: integer
+                            minimum: 0
+                            maximum: 9007199254740991
+                          expected:
+                            anyOf:
+                            - type: integer
+                              minimum: 0
+                              maximum: 9007199254740991
+                            - type: 'null'
+                        required:
+                        - received
+                        - expected
+                        additionalProperties: false
+                    required:
+                    - complete
+                    - dataset
+                    - evaluations
+                    additionalProperties: false
+                    description: 'What is stored against what the run reported. Results are stored after they are reported, so a read can hold part of a run: `complete` is false until the run has ended and every reported row and evaluation is stored. `expected` is null when the run reported no counts'
+                required:
+                - experimentId
+                - runId
+                - projectId
+                - dataset
+                - evaluations
+                - timestamps
+                - completeness
+                additionalProperties: false
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such run in this project
+          content: {}
+      description: Every dataset row of a run with what the target predicted, plus one entry per evaluator per row. Runs older than the status cache need `experimentSlug` as well, since a run id is only unique within its experiment.
+      summary: Read run results
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:view
+      parameters:
+      - in: path
+        name: runId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: experimentSlug
+        schema:
+          type: string
+        description: Owning experiment. Required once the run has aged out of the status cache.
+  /api/v1/experiments/{slug}/workbench-state:
+    get:
+      operationId: getApiExperimentsBySlugWorkbenchState
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  slug:
+                    type: string
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  state:
+                    anyOf:
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                      description: 'The experiment setup: datasets, targets and evaluators. Read it, change it, send it back whole.'
+                    - type: 'null'
+                  version:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: Send this back as expectedVersion to save safely
+                  updatedAt:
+                    type: string
+                    description: ISO 8601 timestamp of the last save
+                required:
+                - id
+                - slug
+                - version
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: The experiment is not an evaluations workbench (experiment_type_mismatch)
+          content: {}
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment in this project
+          content: {}
+      description: The experiment's datasets, targets and evaluators, with the version to send back when you save. Ask for `fields=version` to check for changes without transferring the setup.
+      summary: Read an experiment's setup
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:view
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The experiment's slug, or its id
+      - in: query
+        name: fields
+        schema:
+          type: string
+        description: Set to `version` to answer with the version and timestamp only
+    put:
+      operationId: putApiExperimentsBySlugWorkbenchState
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                    description: The version the save produced
+                required:
+                - version
+                additionalProperties: false
+        '400':
+          description: The setup did not match the schema (experiment_invalid_workbench_state), points at something that no longer exists (experiment_workbench_missing_reference), or the experiment is not an evaluations workbench (experiment_type_mismatch)
+          content: {}
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment in this project
+          content: {}
+        '409':
+          description: Someone else saved since you read this state (experiment_stale_workbench_state). `currentVersion` carries the version to read again.
+          content: {}
+      description: Replace the experiment's setup. Send `expectedVersion` with the version you read and the save is refused with a 409 when someone else wrote first, instead of overwriting their work.
+      summary: Save an experiment's setup
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The experiment's slug, or its id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties: {}
+                  description: The full setup to save
+                expectedVersion:
+                  description: The version you read. Sending it refuses the save when someone else already wrote on top of it.
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                commitMessage:
+                  description: Names this version in the history list
+                  type: string
+              required:
+              - state
+  /api/v1/experiments/{slug}/versions:
+    get:
+      operationId: getApiExperimentsBySlugVersions
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                          description: Restore this version by this number. Named versions run 1, 2, 3 with no gaps. The autosave row also has a number, but it changes with every save, so read it as a handle and not as a place in the history.
+                        counterVersion:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                          description: The setup version this row was written at. It says how recent the row is, and it equals the experiment's current version on the row holding the live setup.
+                        autoSaved:
+                          type: boolean
+                          description: True for the single autosave row, which every ordinary save rewrites in place
+                        commitMessage:
+                          type:
+                          - string
+                          - 'null'
+                        authorLabel:
+                          type: string
+                          description: 'Who wrote it: user, langy or api'
+                          example: user
+                        authorId:
+                          description: User id, when a person wrote it
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                          description: ISO 8601 timestamp of the first write
+                        updatedAt:
+                          type: string
+                          description: ISO 8601 timestamp of the last write. The autosave row is rewritten in place, so this is what says how old its content is.
+                      required:
+                      - version
+                      - counterVersion
+                      - autoSaved
+                      - commitMessage
+                      - authorLabel
+                      - authorId
+                      - createdAt
+                      - updatedAt
+                      additionalProperties: false
+                    description: Newest first, by `counterVersion`
+                  nextCursor:
+                    anyOf:
+                    - type: integer
+                      minimum: -9007199254740991
+                      maximum: 9007199254740991
+                    - type: 'null'
+                    description: Pass as `cursor` to read the next page, null on the last one
+                required:
+                - versions
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: The experiment is not an evaluations workbench (experiment_type_mismatch)
+          content: {}
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment in this project
+          content: {}
+      description: Every saved version of the experiment's setup, newest first. A commit, an agent write and a restore each add a numbered version. Ordinary typing rewrites one autosave row, which is the entry with `autoSaved` true. Page through them with `limit` and `cursor`.
+      summary: List an experiment's versions
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:view
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The experiment's slug, or its id
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Versions per page, capped at 100
+      - in: query
+        name: cursor
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: The `nextCursor` of the previous page
+  /api/v1/experiments/{slug}/versions/{version}/restore:
+    post:
+      operationId: postApiExperimentsBySlugVersionsByVersionRestore
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: number
+                    description: The new version the restore wrote. History is never rewritten, so the restored version is still in the list.
+                required:
+                - version
+                additionalProperties: false
+        '401':
+          description: Missing or invalid API key, or the key lacks the permission
+          content: {}
+        '404':
+          description: No such experiment or version in this project
+          content: {}
+        '409':
+          description: Someone else saved since you read this state (experiment_stale_workbench_state).
+          content: {}
+      description: 'Bring an old setup back by writing it forward as a new save. History is never rewritten: the version you restored from stays in the list, and the restore is one more entry after it.'
+      summary: Restore an experiment version
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: version
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        required: true
+        description: The version to restore, as listed by `GET /api/experiments/{slug}/versions`
+  /api/v1/experiments:
+    get:
+      operationId: getApiExperiments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  experiments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        slug:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                        workflowId:
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        runsCount:
+                          type: number
+                        lastRunAt:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - slug
+                      - name
+                      - type
+                      - workflowId
+                      - createdAt
+                      - updatedAt
+                      - runsCount
+                      - lastRunAt
+                      additionalProperties: false
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                      pageSize:
+                        type: number
+                      totalHits:
+                        type: number
+                      hasMore:
+                        type: boolean
+                    required:
+                    - page
+                    - pageSize
+                    - totalHits
+                    - hasMore
+                    additionalProperties: false
+                required:
+                - experiments
+                - pagination
+                additionalProperties: false
+      description: List experiments for the project. Includes a runs count and last-run timestamp per experiment.
+      summary: List experiments for the project
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:view
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: 1-based page number
+      - in: query
+        name: pageSize
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        description: Experiments per page, capped at 200
+    post:
+      operationId: postApiExperiments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Identifier of the created experiment
+                  slug:
+                    type: string
+                    description: Slug to address the experiment by
+                  version:
+                    type: number
+                    description: Version of the saved setup, starting at 1
+                required:
+                - id
+                - slug
+                - version
+                additionalProperties: false
+        '400':
+          description: The setup did not match the schema (experiment_invalid_workbench_state) or points at something that no longer exists (experiment_workbench_missing_reference)
+          content: {}
+      description: Create an evaluations experiment. Send a setup to start from, or send none and get a blank workbench with one inline dataset. The slug it answers with is what every other experiment endpoint takes.
+      summary: Create an experiment and its setup
+      tags:
+      - Experiments
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Name for the experiment. A draft name is picked when omitted.
+                  type: string
+                  minLength: 1
+                state:
+                  description: Setup to start from. Omit for a blank workbench with one inline dataset.
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties: {}
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:create
+  /api/v1/experiments/{slug}:
+    get:
+      operationId: getApiExperimentsBySlug
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  slug:
+                    type: string
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    type: string
+                  workflowId:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  runsCount:
+                    type: number
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - id
+                - slug
+                - name
+                - type
+                - workflowId
+                - createdAt
+                - updatedAt
+                - runsCount
+                - lastRunAt
+                additionalProperties: false
+        '404':
+          description: No experiment with that slug or id in this project
+          content: {}
+      description: Read a single experiment by its slug, in the same shape the list returns. Accepts the experiment id as well, so either identifier the list hands back can be used.
+      summary: Read one experiment
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:view
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The experiment's slug, or its id
+  /api/v1/experiment/init:
+    post:
+      operationId: postApiExperimentInit
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slug:
+                    type: string
+                    description: Slug of the experiment, created or existing
+                  path:
+                    type: string
+                    description: Path to the experiment in the LangWatch app
+                required:
+                - slug
+                - path
+                additionalProperties: false
+        '400':
+          description: The body was not valid JSON
+          content: {}
+        '401':
+          description: Missing or invalid API key
+          content: {}
+        '403':
+          description: The API key lacks experiments:manage, or the plan's experiment limit is already reached
+          content: {}
+        '413':
+          description: The body is larger than the deployment accepts
+          content: {}
+        '422':
+          description: The body failed validation, or neither experiment_slug nor experiment_id was supplied
+          content: {}
+      description: 'Create an experiment, or return the existing one when the slug is already taken. This is the first call in an experiment run: take the slug back, report results against it, and every run under that slug groups together in the app. The SDKs call this endpoint for you. The body carries `experiment_type` and at least one of `experiment_slug` (the stable slug you choose, which is what makes repeated runs land together) or `experiment_id`; `experiment_name` names it on creation and `workflowId` ties it to an Optimization Studio workflow.'
+      summary: Create an experiment
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                experiment_id:
+                  type:
+                  - string
+                  - 'null'
+                experiment_slug:
+                  type:
+                  - string
+                  - 'null'
+                experiment_type:
+                  type: string
+                  enum:
+                  - DSPY
+                  - BATCH_EVALUATION
+                  - BATCH_EVALUATION_V2
+                experiment_name:
+                  type: string
+                workflowId:
+                  type: string
+              required:
+              - experiment_type
+  /api/v1/dspy/log_steps:
+    post:
+      operationId: postApiDspyLogSteps
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable confirmation
+                required:
+                - message
+                additionalProperties: false
+        '400':
+          description: The body was not valid JSON
+          content: {}
+        '401':
+          description: Missing or invalid API key
+          content: {}
+        '403':
+          description: The API key lacks experiments:manage
+          content: {}
+        '413':
+          description: The body is larger than 20MB
+          content: {}
+        '422':
+          description: The body failed validation, or carried timestamps in seconds rather than milliseconds
+          content: {}
+        '500':
+          description: A step could not be stored. The cause is on our side and is logged with the run and step ids; retrying the batch is safe.
+          content: {}
+      description: Report the steps of a DSPy optimizer run against an experiment, so the run's progress and scores show up in the app. Send the steps as an array; the optimizer typically posts each batch as it finishes. Bodies up to 20MB are accepted.
+      summary: Report DSPy optimizer steps
+      tags:
+      - Experiments
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - experiments:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                  workflow_version_id:
+                    type:
+                    - string
+                    - 'null'
+                  index:
+                    type: string
+                  score:
+                    type: number
+                  label:
+                    type: string
+                  optimizer:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      parameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - name
+                    - parameters
+                  predictors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        predictor:
+                          allOf:
+                          - type: object
+                            properties:
+                              __class__:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                      required:
+                      - name
+                      - predictor
+                  experiment_id:
+                    type:
+                    - string
+                    - 'null'
+                  experiment_slug:
+                    type:
+                    - string
+                    - 'null'
+                  timestamps:
+                    type: object
+                    properties:
+                      created_at:
+                        type: number
+                    required:
+                    - created_at
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        example:
+                          allOf:
+                          - type: object
+                            properties:
+                              __class__:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                        pred:
+                          allOf:
+                          - type: object
+                            properties:
+                              __class__:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                        score:
+                          type: number
+                        trace:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              properties:
+                                input:
+                                  allOf:
+                                  - type: object
+                                    properties:
+                                      __class__:
+                                        type: string
+                                  - type: object
+                                    propertyNames:
+                                      type: string
+                                    additionalProperties: {}
+                                pred:
+                                  allOf:
+                                  - type: object
+                                    properties:
+                                      __class__:
+                                        type: string
+                                  - type: object
+                                    propertyNames:
+                                      type: string
+                                    additionalProperties: {}
+                              required:
+                              - input
+                              - pred
+                          - type: 'null'
+                      required:
+                      - example
+                      - pred
+                      - score
+                  llm_calls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        __class__:
+                          type: string
+                        response:
+                          allOf:
+                          - type: object
+                            properties:
+                              __class__:
+                                type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                        model:
+                          type:
+                          - string
+                          - 'null'
+                        prompt_tokens:
+                          type:
+                          - number
+                          - 'null'
+                        completion_tokens:
+                          type:
+                          - number
+                          - 'null'
+                        cost:
+                          type:
+                          - number
+                          - 'null'
+                      required:
+                      - __class__
+                      - response
+                required:
+                - run_id
+                - index
+                - score
+                - label
+                - optimizer
+                - predictors
+                - timestamps
+                - examples
+                - llm_calls
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

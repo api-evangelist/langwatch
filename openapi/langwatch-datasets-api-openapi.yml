@@ -1,0 +1,238 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Datasets API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Datasets
+paths:
+  /api/v1/dataset/evaluate:
+    post:
+      operationId: postApiDatasetEvaluate
+      responses:
+        '200':
+          description: The evaluator ran; branch on `status`
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: processed
+                    score:
+                      type: number
+                    passed:
+                      type: boolean
+                    label:
+                      type: string
+                    details:
+                      type: string
+                    cost:
+                      description: What running the evaluator cost
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    raw_response:
+                      description: The evaluator's own output, unprocessed
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: skipped
+                    details:
+                      description: Why the evaluator declined to score this input
+                      type: string
+                    cost:
+                      description: What the attempt cost, when the evaluator spent money before declining to score
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        amount:
+                          type: number
+                      required:
+                      - currency
+                      - amount
+                    passed:
+                      description: Always true in guardrail mode, so a skip does not block
+                      type: boolean
+                  required:
+                  - status
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      const: error
+                    error_type:
+                      type: string
+                      const: EVALUATOR_ERROR
+                      description: 'Constant: the evaluator''s own type is not exposed'
+                    details:
+                      type: string
+                    passed:
+                      description: Always true in guardrail mode, so a failure does not block
+                      type: boolean
+                  required:
+                  - status
+                  - error_type
+                  - details
+        '400':
+          description: The body was not valid JSON, failed validation, or named an evaluator that does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Set when the request was rejected before validation
+                    type: string
+                  error:
+                    description: Set when the body parsed and then failed validation
+                    type: string
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Set when the request was rejected before validation
+                    type: string
+                  error:
+                    description: Set when the body parsed and then failed validation
+                    type: string
+        '403':
+          description: The API key lacks evaluations:manage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '404':
+          description: No dataset with that slug
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The failure, as a sentence
+                  kind:
+                    description: Stable failure code, on the failures that carry one
+                    type: string
+                  meta:
+                    description: What the code needs to be acted on, such as the missing field
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                required:
+                - error
+        '413':
+          description: The body is larger than 30MB; refused before it is read with the `payload_too_large` HandledError
+          content: {}
+      description: Run one evaluator across a saved dataset and record the result against an experiment. Name the dataset by slug and the evaluator the same way the evaluate endpoints do; results are grouped under `experimentSlug`, or under a generated batch id when you omit it. Bodies up to 30MB are accepted.
+      summary: Evaluate a dataset
+      tags:
+      - Datasets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evaluation:
+                  type: string
+                  description: Which evaluator to run, addressed the same way the evaluate endpoints address it
+                experimentSlug:
+                  description: Groups the results under an experiment. Omit it and a batch id is generated instead.
+                  type: string
+                batchId:
+                  description: Older name for experimentSlug, used when that is absent
+                  type: string
+                datasetSlug:
+                  type: string
+                  description: The saved dataset to evaluate
+                data:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: {}
+                  - type: 'null'
+                  description: Extra fields merged into every row before evaluating
+                settings:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: {}
+                  - type: 'null'
+                  description: Per-call overrides of the evaluator's settings
+              required:
+              - evaluation
+              - datasetSlug
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - evaluations:manage
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

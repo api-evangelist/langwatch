@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Model Providers API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Model Providers
 paths:
-  /api/model-providers:
+  /api/v1/model-providers:
     get:
+      operationId: getApiModelProviders
       responses:
         '200':
           description: Success
@@ -19,6 +20,7 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
                 additionalProperties:
                   type: object
                   properties:
@@ -29,146 +31,155 @@ paths:
                     enabled:
                       type: boolean
                     customKeys:
-                      type:
-                      - object
-                      - 'null'
-                      additionalProperties: {}
+                      anyOf:
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      - type: 'null'
                     deploymentMapping:
-                      type: 'null'
+                      anyOf:
+                      - {}
+                      - type: 'null'
                     models:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: string
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: 'null'
                     embeddingsModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: string
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: 'null'
                     customModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          modelId:
-                            type: string
-                            minLength: 1
-                          displayName:
-                            type: string
-                            minLength: 1
-                          mode:
-                            type: string
-                            enum:
-                            - chat
-                            - embedding
-                          maxTokens:
-                            type:
-                            - number
-                            - 'null'
-                            exclusiveMinimum: 0
-                          supportedParameters:
-                            type: array
-                            items:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            modelId:
+                              type: string
+                              minLength: 1
+                            displayName:
+                              type: string
+                              minLength: 1
+                            mode:
                               type: string
                               enum:
-                              - temperature
-                              - max_tokens
-                              - top_p
-                              - frequency_penalty
-                              - presence_penalty
-                              - top_k
-                              - min_p
-                              - repetition_penalty
-                              - seed
-                              - reasoning
-                              - verbosity
-                          multimodalInputs:
-                            type: array
-                            items:
-                              type: string
-                              enum:
-                              - image
-                              - file
-                              - audio
-                        required:
-                        - modelId
-                        - displayName
-                        - mode
+                              - chat
+                              - embedding
+                            maxTokens:
+                              anyOf:
+                              - type: number
+                                exclusiveMinimum: 0
+                              - type: 'null'
+                            supportedParameters:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - temperature
+                                - max_tokens
+                                - top_p
+                                - frequency_penalty
+                                - presence_penalty
+                                - top_k
+                                - min_p
+                                - repetition_penalty
+                                - seed
+                                - reasoning
+                                - verbosity
+                            multimodalInputs:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - image
+                                - file
+                                - audio
+                          required:
+                          - modelId
+                          - displayName
+                          - mode
+                          additionalProperties: false
+                      - type: 'null'
                     customEmbeddingsModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          modelId:
-                            type: string
-                            minLength: 1
-                          displayName:
-                            type: string
-                            minLength: 1
-                          mode:
-                            type: string
-                            enum:
-                            - chat
-                            - embedding
-                          maxTokens:
-                            type:
-                            - number
-                            - 'null'
-                            exclusiveMinimum: 0
-                          supportedParameters:
-                            type: array
-                            items:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            modelId:
+                              type: string
+                              minLength: 1
+                            displayName:
+                              type: string
+                              minLength: 1
+                            mode:
                               type: string
                               enum:
-                              - temperature
-                              - max_tokens
-                              - top_p
-                              - frequency_penalty
-                              - presence_penalty
-                              - top_k
-                              - min_p
-                              - repetition_penalty
-                              - seed
-                              - reasoning
-                              - verbosity
-                          multimodalInputs:
-                            type: array
-                            items:
-                              type: string
-                              enum:
-                              - image
-                              - file
-                              - audio
-                        required:
-                        - modelId
-                        - displayName
-                        - mode
+                              - chat
+                              - embedding
+                            maxTokens:
+                              anyOf:
+                              - type: number
+                                exclusiveMinimum: 0
+                              - type: 'null'
+                            supportedParameters:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - temperature
+                                - max_tokens
+                                - top_p
+                                - frequency_penalty
+                                - presence_penalty
+                                - top_k
+                                - min_p
+                                - repetition_penalty
+                                - seed
+                                - reasoning
+                                - verbosity
+                            multimodalInputs:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - image
+                                - file
+                                - audio
+                          required:
+                          - modelId
+                          - displayName
+                          - mode
+                          additionalProperties: false
+                      - type: 'null'
                     disabledByDefault:
                       type: boolean
                     extraHeaders:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          value:
-                            type: string
-                        required:
-                        - key
-                        - value
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - key
+                          - value
+                          additionalProperties: false
+                      - type: 'null'
                   required:
                   - provider
                   - enabled
                   - customKeys
+                  - deploymentMapping
+                  additionalProperties: false
         '400':
           description: Bad Request
           content:
@@ -221,15 +232,22 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: getApiModel-providers
-      parameters: []
       description: List all model providers for a project with masked API keys
       tags:
       - Model Providers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:view
       summary: Get api model providers
       x-summary-source: derived
-  /api/model-providers/{provider}:
+  /api/v1/model-providers/{provider}:
     put:
+      operationId: putApiModelProvidersByProvider
       responses:
         '200':
           description: Success
@@ -237,6 +255,7 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
                 additionalProperties:
                   type: object
                   properties:
@@ -247,154 +266,165 @@ paths:
                     enabled:
                       type: boolean
                     customKeys:
-                      type:
-                      - object
-                      - 'null'
-                      additionalProperties: {}
+                      anyOf:
+                      - type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      - type: 'null'
                     deploymentMapping:
-                      type: 'null'
+                      anyOf:
+                      - {}
+                      - type: 'null'
                     models:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: string
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: 'null'
                     embeddingsModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: string
+                      anyOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: 'null'
                     customModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          modelId:
-                            type: string
-                            minLength: 1
-                          displayName:
-                            type: string
-                            minLength: 1
-                          mode:
-                            type: string
-                            enum:
-                            - chat
-                            - embedding
-                          maxTokens:
-                            type:
-                            - number
-                            - 'null'
-                            exclusiveMinimum: 0
-                          supportedParameters:
-                            type: array
-                            items:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            modelId:
+                              type: string
+                              minLength: 1
+                            displayName:
+                              type: string
+                              minLength: 1
+                            mode:
                               type: string
                               enum:
-                              - temperature
-                              - max_tokens
-                              - top_p
-                              - frequency_penalty
-                              - presence_penalty
-                              - top_k
-                              - min_p
-                              - repetition_penalty
-                              - seed
-                              - reasoning
-                              - verbosity
-                          multimodalInputs:
-                            type: array
-                            items:
-                              type: string
-                              enum:
-                              - image
-                              - file
-                              - audio
-                        required:
-                        - modelId
-                        - displayName
-                        - mode
+                              - chat
+                              - embedding
+                            maxTokens:
+                              anyOf:
+                              - type: number
+                                exclusiveMinimum: 0
+                              - type: 'null'
+                            supportedParameters:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - temperature
+                                - max_tokens
+                                - top_p
+                                - frequency_penalty
+                                - presence_penalty
+                                - top_k
+                                - min_p
+                                - repetition_penalty
+                                - seed
+                                - reasoning
+                                - verbosity
+                            multimodalInputs:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - image
+                                - file
+                                - audio
+                          required:
+                          - modelId
+                          - displayName
+                          - mode
+                          additionalProperties: false
+                      - type: 'null'
                     customEmbeddingsModels:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          modelId:
-                            type: string
-                            minLength: 1
-                          displayName:
-                            type: string
-                            minLength: 1
-                          mode:
-                            type: string
-                            enum:
-                            - chat
-                            - embedding
-                          maxTokens:
-                            type:
-                            - number
-                            - 'null'
-                            exclusiveMinimum: 0
-                          supportedParameters:
-                            type: array
-                            items:
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            modelId:
+                              type: string
+                              minLength: 1
+                            displayName:
+                              type: string
+                              minLength: 1
+                            mode:
                               type: string
                               enum:
-                              - temperature
-                              - max_tokens
-                              - top_p
-                              - frequency_penalty
-                              - presence_penalty
-                              - top_k
-                              - min_p
-                              - repetition_penalty
-                              - seed
-                              - reasoning
-                              - verbosity
-                          multimodalInputs:
-                            type: array
-                            items:
-                              type: string
-                              enum:
-                              - image
-                              - file
-                              - audio
-                        required:
-                        - modelId
-                        - displayName
-                        - mode
+                              - chat
+                              - embedding
+                            maxTokens:
+                              anyOf:
+                              - type: number
+                                exclusiveMinimum: 0
+                              - type: 'null'
+                            supportedParameters:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - temperature
+                                - max_tokens
+                                - top_p
+                                - frequency_penalty
+                                - presence_penalty
+                                - top_k
+                                - min_p
+                                - repetition_penalty
+                                - seed
+                                - reasoning
+                                - verbosity
+                            multimodalInputs:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                - image
+                                - file
+                                - audio
+                          required:
+                          - modelId
+                          - displayName
+                          - mode
+                          additionalProperties: false
+                      - type: 'null'
                     disabledByDefault:
                       type: boolean
                     extraHeaders:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          value:
-                            type: string
-                        required:
-                        - key
-                        - value
+                      anyOf:
+                      - type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          required:
+                          - key
+                          - value
+                          additionalProperties: false
+                      - type: 'null'
                   required:
                   - provider
                   - enabled
                   - customKeys
+                  - deploymentMapping
+                  additionalProperties: false
         '400':
-          description: Bad request
+          description: Bad Request
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   error:
+                    type: string
+                  message:
                     type: string
                 required:
                 - error
@@ -411,6 +441,20 @@ paths:
                     type: string
                 required:
                 - error
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                - message
         '422':
           description: Unprocessable Entity
           content:
@@ -437,15 +481,26 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: putApiModel-providersByProvider
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: provider
-        required: true
       description: Create or update a model provider
+      tags:
+      - Model Providers
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - project:update
+      parameters:
+      - in: path
+        name: provider
+        schema:
+          type: string
+          minLength: 1
+        required: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -455,6 +510,8 @@ paths:
                   type: boolean
                 customKeys:
                   type: object
+                  propertyNames:
+                    type: string
                   additionalProperties: {}
                 customModels:
                   anyOf:
@@ -474,10 +531,10 @@ paths:
                           - chat
                           - embedding
                         maxTokens:
-                          type:
-                          - number
-                          - 'null'
-                          exclusiveMinimum: 0
+                          anyOf:
+                          - type: number
+                            exclusiveMinimum: 0
+                          - type: 'null'
                         supportedParameters:
                           type: array
                           items:
@@ -506,6 +563,7 @@ paths:
                       - modelId
                       - displayName
                       - mode
+                      additionalProperties: false
                   - type: array
                     items:
                       type: string
@@ -527,10 +585,10 @@ paths:
                           - chat
                           - embedding
                         maxTokens:
-                          type:
-                          - number
-                          - 'null'
-                          exclusiveMinimum: 0
+                          anyOf:
+                          - type: number
+                            exclusiveMinimum: 0
+                          - type: 'null'
                         supportedParameters:
                           type: array
                           items:
@@ -559,6 +617,7 @@ paths:
                       - modelId
                       - displayName
                       - mode
+                      additionalProperties: false
                   - type: array
                     items:
                       type: string
@@ -578,8 +637,6 @@ paths:
                   type: string
               required:
               - enabled
-      tags:
-      - Model Providers
       summary: Put api model providers by provider
       x-summary-source: derived
 components:
@@ -593,3 +650,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

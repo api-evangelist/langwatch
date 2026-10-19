@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Traces API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,10 +10,1104 @@ security:
 tags:
 - name: Traces
 paths:
+  /api/trace/{id}:
+    get:
+      operationId: getApiTraceId
+      responses:
+        '200':
+          description: Trace details with spans and evaluations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace_id:
+                    type: string
+                  project_id:
+                    type: string
+                  metadata:
+                    $ref: '#/components/schemas/Metadata'
+                  privacy:
+                    type: object
+                    properties:
+                      droppedCategories:
+                        type: array
+                        items:
+                          type: string
+                  timestamps:
+                    $ref: '#/components/schemas/Timestamps'
+                  input:
+                    $ref: '#/components/schemas/Input'
+                  output:
+                    $ref: '#/components/schemas/Output'
+                  contexts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        document_id:
+                          type:
+                          - string
+                          - 'null'
+                        chunk_id:
+                          type:
+                          - string
+                          - 'null'
+                        content:
+                          anyOf:
+                          - type: string
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties: {}
+                          - type: array
+                            items: {}
+                      required:
+                      - content
+                  expected_output:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                    required:
+                    - value
+                  metrics:
+                    $ref: '#/components/schemas/Metrics'
+                  error:
+                    anyOf:
+                    - type: object
+                      properties:
+                        has_error:
+                          type: boolean
+                          const: true
+                        message:
+                          type: string
+                        stacktrace:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - has_error
+                      - message
+                      - stacktrace
+                    - type: 'null'
+                  indexing_md5s:
+                    type: array
+                    items:
+                      type: string
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_id:
+                          type: string
+                        event_type:
+                          type: string
+                        project_id:
+                          type: string
+                        metrics:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: number
+                        event_details:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            type: string
+                        trace_id:
+                          type: string
+                        timestamps:
+                          type: object
+                          properties:
+                            started_at:
+                              type: number
+                            inserted_at:
+                              type: number
+                            updated_at:
+                              type: number
+                          required:
+                          - started_at
+                          - inserted_at
+                          - updated_at
+                      required:
+                      - event_id
+                      - event_type
+                      - project_id
+                      - metrics
+                      - event_details
+                      - trace_id
+                      - timestamps
+                  evaluations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Evaluation'
+                  spans:
+                    type: array
+                    items:
+                      anyOf:
+                      - type: object
+                        properties:
+                          span_id:
+                            type: string
+                          parent_id:
+                            type:
+                            - string
+                            - 'null'
+                          trace_id:
+                            type: string
+                          type:
+                            type: string
+                            const: llm
+                          name:
+                            type:
+                            - string
+                            - 'null'
+                          input:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          output:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          error:
+                            anyOf:
+                            - type: object
+                              properties:
+                                has_error:
+                                  type: boolean
+                                  const: true
+                                message:
+                                  type: string
+                                stacktrace:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - has_error
+                              - message
+                              - stacktrace
+                            - type: 'null'
+                          timestamps:
+                            type: object
+                            properties:
+                              ignore_timestamps_on_write:
+                                type:
+                                - boolean
+                                - 'null'
+                              started_at:
+                                type: number
+                              first_token_at:
+                                type:
+                                - number
+                                - 'null'
+                              finished_at:
+                                type: number
+                            required:
+                            - started_at
+                            - finished_at
+                          metrics:
+                            anyOf:
+                            - type: object
+                              properties:
+                                prompt_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                completion_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                reasoning_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_read_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_creation_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                tokens_estimated:
+                                  type:
+                                  - boolean
+                                  - 'null'
+                                cost:
+                                  type:
+                                  - number
+                                  - 'null'
+                            - type: 'null'
+                          params:
+                            anyOf:
+                            - allOf:
+                              - type: object
+                                properties:
+                                  frequency_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  logit_bias:
+                                    anyOf:
+                                    - type: object
+                                      propertyNames:
+                                        type: string
+                                      additionalProperties:
+                                        type: number
+                                    - type: 'null'
+                                  logprobs:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  top_logprobs:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  max_tokens:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  n:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  presence_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  seed:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  stop:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                    - type: 'null'
+                                  stream:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  temperature:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  top_p:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  tools:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  tool_choice:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: string
+                                    - type: 'null'
+                                  parallel_tool_calls:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  functions:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  user:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  reasoning_effort:
+                                    type:
+                                    - string
+                                    - 'null'
+                              - type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                            - type: 'null'
+                          vendor:
+                            type:
+                            - string
+                            - 'null'
+                          model:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - span_id
+                        - trace_id
+                        - type
+                        - timestamps
+                      - type: object
+                        properties:
+                          span_id:
+                            type: string
+                          parent_id:
+                            type:
+                            - string
+                            - 'null'
+                          trace_id:
+                            type: string
+                          type:
+                            type: string
+                            const: rag
+                          name:
+                            type:
+                            - string
+                            - 'null'
+                          input:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          output:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          error:
+                            anyOf:
+                            - type: object
+                              properties:
+                                has_error:
+                                  type: boolean
+                                  const: true
+                                message:
+                                  type: string
+                                stacktrace:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - has_error
+                              - message
+                              - stacktrace
+                            - type: 'null'
+                          timestamps:
+                            type: object
+                            properties:
+                              ignore_timestamps_on_write:
+                                type:
+                                - boolean
+                                - 'null'
+                              started_at:
+                                type: number
+                              first_token_at:
+                                type:
+                                - number
+                                - 'null'
+                              finished_at:
+                                type: number
+                            required:
+                            - started_at
+                            - finished_at
+                          metrics:
+                            anyOf:
+                            - type: object
+                              properties:
+                                prompt_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                completion_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                reasoning_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_read_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_creation_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                tokens_estimated:
+                                  type:
+                                  - boolean
+                                  - 'null'
+                                cost:
+                                  type:
+                                  - number
+                                  - 'null'
+                            - type: 'null'
+                          params:
+                            anyOf:
+                            - allOf:
+                              - type: object
+                                properties:
+                                  frequency_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  logit_bias:
+                                    anyOf:
+                                    - type: object
+                                      propertyNames:
+                                        type: string
+                                      additionalProperties:
+                                        type: number
+                                    - type: 'null'
+                                  logprobs:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  top_logprobs:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  max_tokens:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  n:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  presence_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  seed:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  stop:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                    - type: 'null'
+                                  stream:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  temperature:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  top_p:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  tools:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  tool_choice:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: string
+                                    - type: 'null'
+                                  parallel_tool_calls:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  functions:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  user:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  reasoning_effort:
+                                    type:
+                                    - string
+                                    - 'null'
+                              - type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                            - type: 'null'
+                          contexts:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                document_id:
+                                  type:
+                                  - string
+                                  - 'null'
+                                chunk_id:
+                                  type:
+                                  - string
+                                  - 'null'
+                                content:
+                                  anyOf:
+                                  - type: string
+                                  - type: object
+                                    propertyNames:
+                                      type: string
+                                    additionalProperties: {}
+                                  - type: array
+                                    items: {}
+                              required:
+                              - content
+                        required:
+                        - span_id
+                        - trace_id
+                        - type
+                        - timestamps
+                        - contexts
+                      - type: object
+                        properties:
+                          span_id:
+                            type: string
+                          parent_id:
+                            type:
+                            - string
+                            - 'null'
+                          trace_id:
+                            type: string
+                          type:
+                            anyOf:
+                            - type: string
+                              const: span
+                            - type: string
+                              const: llm
+                            - type: string
+                              const: chain
+                            - type: string
+                              const: tool
+                            - type: string
+                              const: agent
+                            - type: string
+                              const: rag
+                            - type: string
+                              const: guardrail
+                            - type: string
+                              const: evaluation
+                            - type: string
+                              const: workflow
+                            - type: string
+                              const: component
+                            - type: string
+                              const: module
+                            - type: string
+                              const: server
+                            - type: string
+                              const: client
+                            - type: string
+                              const: producer
+                            - type: string
+                              const: consumer
+                            - type: string
+                              const: task
+                            - type: string
+                              const: unknown
+                          name:
+                            type:
+                            - string
+                            - 'null'
+                          input:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          output:
+                            anyOf:
+                            - anyOf:
+                              - $ref: '#/components/schemas/SpanInputOutput'
+                              - type: object
+                                properties:
+                                  type:
+                                    anyOf:
+                                    - type: string
+                                      const: evaluation_result
+                                    - type: string
+                                      const: guardrail_result
+                                  value:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: number
+                                      - type: boolean
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: array
+                                        items: {}
+                                    - type: 'null'
+                                required:
+                                - type
+                                - value
+                            - type: 'null'
+                          error:
+                            anyOf:
+                            - type: object
+                              properties:
+                                has_error:
+                                  type: boolean
+                                  const: true
+                                message:
+                                  type: string
+                                stacktrace:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - has_error
+                              - message
+                              - stacktrace
+                            - type: 'null'
+                          timestamps:
+                            type: object
+                            properties:
+                              ignore_timestamps_on_write:
+                                type:
+                                - boolean
+                                - 'null'
+                              started_at:
+                                type: number
+                              first_token_at:
+                                type:
+                                - number
+                                - 'null'
+                              finished_at:
+                                type: number
+                            required:
+                            - started_at
+                            - finished_at
+                          metrics:
+                            anyOf:
+                            - type: object
+                              properties:
+                                prompt_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                completion_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                reasoning_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_read_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                cache_creation_input_tokens:
+                                  type:
+                                  - number
+                                  - 'null'
+                                tokens_estimated:
+                                  type:
+                                  - boolean
+                                  - 'null'
+                                cost:
+                                  type:
+                                  - number
+                                  - 'null'
+                            - type: 'null'
+                          params:
+                            anyOf:
+                            - allOf:
+                              - type: object
+                                properties:
+                                  frequency_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  logit_bias:
+                                    anyOf:
+                                    - type: object
+                                      propertyNames:
+                                        type: string
+                                      additionalProperties:
+                                        type: number
+                                    - type: 'null'
+                                  logprobs:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  top_logprobs:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  max_tokens:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  n:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  presence_penalty:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  seed:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  stop:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: string
+                                      - type: array
+                                        items:
+                                          type: string
+                                    - type: 'null'
+                                  stream:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  temperature:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  top_p:
+                                    type:
+                                    - number
+                                    - 'null'
+                                  tools:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  tool_choice:
+                                    anyOf:
+                                    - anyOf:
+                                      - type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                      - type: string
+                                    - type: 'null'
+                                  parallel_tool_calls:
+                                    type:
+                                    - boolean
+                                    - 'null'
+                                  functions:
+                                    anyOf:
+                                    - type: array
+                                      items:
+                                        type: object
+                                        propertyNames:
+                                          type: string
+                                        additionalProperties: {}
+                                    - type: 'null'
+                                  user:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  reasoning_effort:
+                                    type:
+                                    - string
+                                    - 'null'
+                              - type: object
+                                propertyNames:
+                                  type: string
+                                additionalProperties: {}
+                            - type: 'null'
+                        required:
+                        - span_id
+                        - trace_id
+                        - type
+                        - timestamps
+                  redacted_by_visibility_window:
+                    type: boolean
+                  ascii_tree:
+                    type: string
+                required:
+                - trace_id
+                - project_id
+                - metadata
+                - timestamps
+                - spans
+                - ascii_tree
+      description: Returns single trace details based on the ID supplied
+      tags:
+      - Traces
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The trace ID.
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Output format: ''digest'' (AI-readable) or ''json'' (full raw data, default)'
+      - in: query
+        name: llmMode
+        schema:
+          type: string
+        description: 'Deprecated: use format=digest instead'
+      summary: Get api trace id
+      x-summary-source: derived
+  /api/trace/{id}/share:
+    post:
+      operationId: postApiTraceIdShare
+      responses:
+        '200':
+          description: Public path created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  path:
+                    type: string
+                required:
+                - status
+                - path
+      description: Returns a public path for a trace
+      tags:
+      - Traces
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:share
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The trace ID.
+      summary: Post api trace id share
+      x-summary-source: derived
+  /api/trace/{id}/unshare:
+    post:
+      operationId: postApiTraceIdUnshare
+      responses:
+        '200':
+          description: Public path deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    const: success
+                required:
+                - status
+      description: Deletes a public path for a trace
+      tags:
+      - Traces
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:share
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The trace ID.
+      summary: Post api trace id unshare
+      x-summary-source: derived
   /api/trace/search:
     post:
-      summary: Search traces
+      operationId: postApiTraceSearch
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
       description: Search for traces based on given criteria
+      summary: Search traces
       tags:
       - Traces
       requestBody:
@@ -22,17 +1116,17 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SearchRequest'
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchResponse'
-      operationId: postApiTraceSearch
-      x-operation-id-source: derived
-  /api/traces/search:
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
+  /api/v1/traces/search:
     post:
+      operationId: postApiTracesSearch
       responses:
         '200':
           description: Matching traces with pagination
@@ -51,8 +1145,38 @@ paths:
                         type: number
                       scrollId:
                         type: string
+                      skipped:
+                        description: Number of traces dropped from this page because they failed to serialize. Present only when non-zero, so a caller can tell that traces.length is below the page size for a reason other than reaching the end of the result set.
+                        type: number
+                      updatedThrough:
+                        description: 'Only when dateField is ''updated''. Epoch milliseconds: the upper bound this scroll actually covered, which is at or before the endDate you asked for. The scroll reads every trace as of the moment it started, so anything written after that instant belongs to the next pull. Start your next incremental pull from this value — resuming from the endDate you requested would step over the difference and lose those traces. The bound is inclusive on both sides, so a trace last written at exactly this millisecond arrives in this pull and again in the next one: pulls are at-least-once, and applying them idempotently is what keeps that from becoming a duplicate.'
+                        type: number
                     required:
                     - totalHits
+                  schema:
+                    description: Present only when 'select' is provided. Describes the resolved columns — the dotted path, its value type, and whether it belongs to a nested child collection — so callers can pre-allocate a typed reader.
+                    type: object
+                    properties:
+                      from:
+                        type: string
+                      columns:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            path:
+                              type: string
+                            type:
+                              type: string
+                            collection:
+                              type: boolean
+                          required:
+                          - path
+                          - type
+                          - collection
+                    required:
+                    - from
+                    - columns
                 required:
                 - traces
                 - pagination
@@ -69,6 +1193,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -82,6 +1207,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '422':
           description: Unprocessable Entity
           content:
@@ -95,6 +1221,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '500':
           description: Internal Server Error
           content:
@@ -108,10 +1235,18 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: postApiTracesSearch
-      parameters: []
+                additionalProperties: false
       description: Search traces for a project
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -120,7 +1255,62 @@ paths:
                 query:
                   type: string
                 filters:
+                  default: {}
                   type: object
+                  propertyNames:
+                    type: string
+                    enum:
+                    - topics.topics
+                    - topics.subtopics
+                    - metadata.user_id
+                    - metadata.thread_id
+                    - metadata.customer_id
+                    - metadata.labels
+                    - metadata.key
+                    - metadata.value
+                    - metadata.prompt_ids
+                    - traces.origin
+                    - traces.error
+                    - traces.name
+                    - spans.type
+                    - spans.model
+                    - evaluations.evaluator_id
+                    - evaluations.evaluator_id.guardrails_only
+                    - evaluations.evaluator_id.has_passed
+                    - evaluations.evaluator_id.has_score
+                    - evaluations.evaluator_id.has_label
+                    - evaluations.passed
+                    - evaluations.score
+                    - evaluations.state
+                    - evaluations.label
+                    - events.event_type
+                    - events.metrics.key
+                    - events.metrics.value
+                    - events.event_details.key
+                    - annotations.hasAnnotation
+                  additionalProperties:
+                    anyOf:
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
                   properties:
                     topics.topics:
                       anyOf:
@@ -128,13 +1318,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -145,13 +1341,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -162,13 +1364,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -179,13 +1387,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -196,13 +1410,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -213,13 +1433,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -230,13 +1456,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -247,13 +1479,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -264,13 +1502,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -281,13 +1525,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -298,13 +1548,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -315,13 +1571,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -332,13 +1594,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -349,13 +1617,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -366,13 +1640,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -383,13 +1663,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -400,13 +1686,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -417,13 +1709,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -434,13 +1732,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -451,13 +1755,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -468,13 +1778,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -485,13 +1801,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -502,13 +1824,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -519,13 +1847,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -536,13 +1870,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -553,13 +1893,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -570,13 +1916,19 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
@@ -587,29 +1939,40 @@ paths:
                         items:
                           type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: array
                           items:
                             type: string
                       - type: object
+                        propertyNames:
+                          type: string
                         additionalProperties:
                           type: object
+                          propertyNames:
+                            type: string
                           additionalProperties:
                             type: array
                             items:
                               type: string
-                  additionalProperties: false
-                  default: {}
                 traceIds:
                   type: array
                   items:
                     type: string
                 negateFilters:
                   type: boolean
+                excludeOrigins:
+                  type: array
+                  items:
+                    type: string
                 pageOffset:
+                  description: Removed. Offset pagination is no longer supported and any value other than 0 is rejected. Page with the scrollId returned by the previous response instead. The field remains on the schema so that sending it produces an explanatory error rather than being silently discarded.
                   type: number
                 pageSize:
-                  type: number
+                  type: integer
+                  exclusiveMinimum: 0
+                  maximum: 9007199254740991
                 groupBy:
                   type: string
                 sortBy:
@@ -623,24 +1986,50 @@ paths:
                   - string
                   - 'null'
                 startDate:
-                  anyOf:
-                  - type: number
-                  - type: string
+                  type:
+                  - number
+                  - string
                 endDate:
-                  anyOf:
-                  - type: number
-                  - type: string
+                  type:
+                  - number
+                  - string
+                filter:
+                  description: A trace filter string in the same language the Trace Explorer's search bar speaks — `status:error AND model:gpt-*`, `trace.attribute.langwatch.user_id:alice`, a quoted phrase for free text. Combined with `filters`/`query`/`traceIds` rather than replacing them, so every condition sent must hold. A malformed filter, or one naming a field the language does not have, is a 422 that names the `filter` field.
+                  type: string
+                  maxLength: 4000
                 format:
+                  description: 'Output format: ''digest'' (AI-readable trace digest) or ''json'' (full raw data)'
                   type: string
                   enum:
                   - digest
                   - json
-                  description: 'Output format: ''digest'' (AI-readable trace digest) or ''json'' (full raw data)'
                 includeSpans:
-                  type: boolean
                   description: When true, fetches full span data for each trace. Useful for bulk export. Default false.
+                  type: boolean
                 llmMode:
                   type: boolean
+                dateField:
+                  default: occurred
+                  description: Which timestamp the startDate/endDate window filters on. 'occurred' (default) selects traces by when they happened. 'updated' selects traces by when they were last modified — use this for incremental ETL ('give me everything changed since my last pull'), since a trace can occur long before it gains a later evaluation or annotation.
+                  type: string
+                  enum:
+                  - occurred
+                  - updated
+                from:
+                  default: traces
+                  description: Entity root to read from. Only 'traces' is supported today; defaults to 'traces' when omitted.
+                  type: string
+                  enum:
+                  - traces
+                select:
+                  description: 'Flat list of dotted-path columns to project, e.g. [''trace_id'',''metadata.user_id'',''events.type'',''evaluations.score'']. Paths group by root in the response: scalar fields stay top-level, ''metadata.*'' nests under a metadata object, and ''events.*''/''annotations.*''/''evaluations.*'' return as nested arrays (one row per trace). When present, the response gains a top-level ''schema'' field describing the resolved columns. When omitted, the response is unchanged from the legacy shape.'
+                  minItems: 1
+                  maxItems: 200
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 256
               required:
               - startDate
               - endDate
@@ -648,16 +2037,245 @@ paths:
       - Traces
       summary: Post api traces search
       x-summary-source: derived
-  /api/traces/{traceId}:
+  /api/v1/traces/facets:
     get:
+      operationId: getApiTracesFacets
       responses:
         '200':
-          description: Trace detail with spans, evaluations, and ASCII tree
+          description: Without `field`, every facet the project has with its top values and whether the payload is still being computed. With `field`, that field's values and counts plus the distinct total and whether more remain.
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                anyOf:
+                - type: object
+                  properties:
+                    facets:
+                      type: array
+                      items:
+                        anyOf:
+                        - type: object
+                          properties:
+                            key:
+                              type: string
+                            kind:
+                              type: string
+                              const: categorical
+                            label:
+                              type: string
+                            group:
+                              type: string
+                              enum:
+                              - trace
+                              - evaluation
+                              - span
+                              - metadata
+                              - prompt
+                            topValues:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  value:
+                                    type: string
+                                  label:
+                                    type: string
+                                  count:
+                                    type: number
+                                  aggregates:
+                                    type: object
+                                    properties:
+                                      passedCount:
+                                        type: number
+                                      failedCount:
+                                        type: number
+                                      erroredCount:
+                                        type: number
+                                      scoreMin:
+                                        type:
+                                        - number
+                                        - 'null'
+                                      scoreMax:
+                                        type:
+                                        - number
+                                        - 'null'
+                                      hasScore:
+                                        type: boolean
+                                      distinctScores:
+                                        type: number
+                                      hasLabel:
+                                        type: boolean
+                                      labelValues:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            value:
+                                              type: string
+                                            count:
+                                              type: number
+                                          required:
+                                          - value
+                                          - count
+                                    required:
+                                    - passedCount
+                                    - failedCount
+                                    - erroredCount
+                                    - scoreMin
+                                    - scoreMax
+                                    - hasScore
+                                    - distinctScores
+                                    - hasLabel
+                                  eventMetrics:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        key:
+                                          type: string
+                                        values:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              value:
+                                                type: string
+                                              count:
+                                                type: number
+                                            required:
+                                            - value
+                                            - count
+                                      required:
+                                      - key
+                                      - values
+                                required:
+                                - value
+                                - count
+                            totalDistinct:
+                              type: number
+                          required:
+                          - key
+                          - kind
+                          - label
+                          - group
+                          - topValues
+                          - totalDistinct
+                        - type: object
+                          properties:
+                            key:
+                              type: string
+                            kind:
+                              type: string
+                              const: range
+                            label:
+                              type: string
+                            group:
+                              type: string
+                              enum:
+                              - trace
+                              - evaluation
+                              - span
+                              - metadata
+                              - prompt
+                            min:
+                              type: number
+                            max:
+                              type: number
+                            discrete:
+                              type: object
+                              properties:
+                                values:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      value:
+                                        type: number
+                                      count:
+                                        type: number
+                                    required:
+                                    - value
+                                    - count
+                                distinctCount:
+                                  type: number
+                              required:
+                              - values
+                              - distinctCount
+                          required:
+                          - key
+                          - kind
+                          - label
+                          - group
+                          - min
+                          - max
+                        - type: object
+                          properties:
+                            key:
+                              type: string
+                            kind:
+                              type: string
+                              const: dynamic_keys
+                            label:
+                              type: string
+                            group:
+                              type: string
+                              enum:
+                              - trace
+                              - evaluation
+                              - span
+                              - metadata
+                              - prompt
+                            topKeys:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  value:
+                                    type: string
+                                  count:
+                                    type: number
+                                required:
+                                - value
+                                - count
+                            totalDistinct:
+                              type: number
+                          required:
+                          - key
+                          - kind
+                          - label
+                          - group
+                          - topKeys
+                          - totalDistinct
+                    pending:
+                      type: boolean
+                      description: True when the payload is still being computed and what you have is the last committed one, possibly empty. Call again shortly.
+                  required:
+                  - facets
+                  - pending
+                - type: object
+                  properties:
+                    values:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                          label:
+                            type: string
+                          count:
+                            type: number
+                        required:
+                        - value
+                        - count
+                    total:
+                      type: number
+                      description: Distinct values the field holds in the window, before paging.
+                    hasMore:
+                      type: boolean
+                  required:
+                  - values
+                  - total
+                  - hasMore
         '400':
           description: Bad Request
           content:
@@ -671,6 +2289,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -684,6 +2303,175 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      description: Discover what the trace filter fields hold in this project. Without `field`, every facet with its top values. With `field`, that field's values, paged.
+      summary: Discover what the trace filter fields hold
+      tags:
+      - Traces
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
+      parameters:
+      - in: query
+        name: field
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 512
+      - in: query
+        name: prefix
+        schema:
+          type: string
+          maxLength: 512
+      - in: query
+        name: limit
+        schema:
+          default: 50
+          type: integer
+          minimum: 1
+          maximum: 1000
+      - in: query
+        name: offset
+        schema:
+          default: 0
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+      - in: query
+        name: startDate
+        schema:
+          type: string
+      - in: query
+        name: endDate
+        schema:
+          type: string
+  /api/v1/traces/{traceId}/transcript:
+    get:
+      operationId: getApiTracesByTraceIdTranscript
+      responses:
+        '200':
+          description: 'The transcript: ordered entries plus per-session totals and sub-agent tool counts'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type: string
+                  sessionId:
+                    type:
+                    - string
+                    - 'null'
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+                      additionalProperties: {}
+                  totals:
+                    type: object
+                    properties:
+                      modelCalls:
+                        type: number
+                      toolCalls:
+                        type: number
+                      tokens:
+                        type: number
+                      costUsd:
+                        type: number
+                    required:
+                    - modelCalls
+                    - toolCalls
+                    - tokens
+                    - costUsd
+                  subAgents:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+                      additionalProperties: {}
+                required:
+                - agent
+                - sessionId
+                - entries
+                - totals
+                - subAgents
+                additionalProperties: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
         '404':
           description: Trace not found
           content:
@@ -724,6 +2512,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '500':
           description: Internal Server Error
           content:
@@ -737,46 +2526,1999 @@ paths:
                     type: string
                 required:
                 - error
-      operationId: getApiTracesByTraceId
+                additionalProperties: false
+      description: 'Derived coding-agent transcript for a trace: what the agent did, in order, with per-call token and cost economics. Empty entries for traces without coding-agent content.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
       parameters:
-      - name: traceId
-        in: path
-        description: The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project.
+      - in: path
+        name: traceId
+        schema:
+          type: string
+          minLength: 1
         required: true
+        description: The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project.
+      tags:
+      - Traces
+      summary: Get api traces by trace id transcript
+      x-summary-source: derived
+  /api/v1/traces/{traceId}/metadata:
+    patch:
+      operationId: patchApiTracesByTraceIdMetadata
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  traceId:
+                    type: string
+                required:
+                - traceId
+                additionalProperties: false
+      description: Update metadata on a trace after creation. Inserts a synthetic span carrying the new attributes through the standard ingestion pipeline. New keys are added, existing keys are updated, missing keys are preserved. Labels replace entirely.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:update
+      parameters:
+      - in: path
+        name: traceId
         schema:
           type: string
-      - name: format
-        in: query
-        description: 'Output format: ''digest'' (default, AI-readable) or ''json'' (full raw data)'
-        required: false
-        schema:
-          type: string
-          enum:
-          - digest
-          - json
-      - name: llmMode
-        in: query
-        description: 'Deprecated: use format=digest instead'
-        required: false
-        schema:
-          type: string
-          enum:
-          - 'true'
-          - 'false'
-          - '1'
-          - '0'
+          minLength: 1
+        required: true
+        description: The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 4096
+                    - type: number
+                    - type: boolean
+                    - type: array
+                      items:
+                        type: string
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+              required:
+              - metadata
+      tags:
+      - Traces
+      summary: Patch api traces by trace id metadata
+      x-summary-source: derived
+  /api/v1/traces/{traceId}:
+    get:
+      operationId: getApiTracesByTraceId
+      responses:
+        '200':
+          description: Trace detail with spans, evaluations, and ASCII tree
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+                additionalProperties: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Trace not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '409':
+          description: Ambiguous trace ID prefix — the prefix matches more than one trace
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  candidateTraceIds:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - message
+                - candidateTraceIds
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
       description: Get a single trace by ID.
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - traces:view
+      parameters:
+      - in: path
+        name: traceId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+        description: The trace ID — either the full 32-char ID or a unique prefix (≥ 8 chars). Prefix lookup is scoped to the authenticated project.
+      - in: query
+        name: format
+        schema:
+          type: string
+        description: 'Output format: ''digest'' (AI-readable) or ''json'' (full raw data, default)'
+      - in: query
+        name: llmMode
+        schema:
+          type: string
+        description: 'Deprecated: use format=digest instead'
       tags:
       - Traces
       summary: Get api traces by trace id
       x-summary-source: derived
 components:
   schemas:
-    Input:
+    SpanInputOutput:
+      anyOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            const: text
+          value:
+            type: string
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: chat_messages
+          value:
+            type: array
+            items:
+              type: object
+              properties:
+                role:
+                  anyOf:
+                  - type: string
+                    const: system
+                  - type: string
+                    const: developer
+                  - type: string
+                    const: user
+                  - type: string
+                    const: assistant
+                  - type: string
+                    const: function
+                  - type: string
+                    const: tool
+                  - type: string
+                    const: unknown
+                content:
+                  anyOf:
+                  - anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        anyOf:
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: text
+                            text:
+                              type: string
+                            content:
+                              type: string
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            text:
+                              type: string
+                          required:
+                          - text
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: image_url
+                            image_url:
+                              type: object
+                              properties:
+                                url:
+                                  type: string
+                                detail:
+                                  anyOf:
+                                  - type: string
+                                    const: auto
+                                  - type: string
+                                    const: low
+                                  - type: string
+                                    const: high
+                              required:
+                              - url
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: tool_call
+                            toolName:
+                              type: string
+                            toolCallId:
+                              type: string
+                            args:
+                              type: string
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: tool_result
+                            toolName:
+                              type: string
+                            toolCallId:
+                              type: string
+                            result: {}
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: tool-call
+                            toolName:
+                              type: string
+                            toolCallId:
+                              type: string
+                            input: {}
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: tool-result
+                            toolName:
+                              type: string
+                            toolCallId:
+                              type: string
+                            output: {}
+                          required:
+                          - type
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: binary
+                            mimeType:
+                              type: string
+                            data:
+                              type: string
+                            url:
+                              type: string
+                            id:
+                              type: string
+                            filename:
+                              type: string
+                          required:
+                          - type
+                          - mimeType
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: input_audio
+                            input_audio:
+                              type: object
+                              properties:
+                                data:
+                                  type: string
+                                format:
+                                  type: string
+                                url:
+                                  type: string
+                                mimeType:
+                                  type: string
+                                id:
+                                  type: string
+                          required:
+                          - type
+                          - input_audio
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: audio
+                            source:
+                              type: object
+                              properties:
+                                type:
+                                  anyOf:
+                                  - type: string
+                                    const: url
+                                  - type: string
+                                    const: data
+                                value:
+                                  type: string
+                                mimeType:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                          required:
+                          - type
+                          - source
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: image
+                            image:
+                              type: string
+                            mediaType:
+                              type: string
+                          required:
+                          - type
+                          - image
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: file
+                            mediaType:
+                              type: string
+                            data:
+                              type: string
+                            url:
+                              type: string
+                            filename:
+                              type: string
+                          required:
+                          - type
+                          - mediaType
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              const: file
+                            file:
+                              type: object
+                              properties:
+                                file_data:
+                                  type: string
+                                file_id:
+                                  type: string
+                                filename:
+                                  type: string
+                          required:
+                          - type
+                          - file
+                  - type: 'null'
+                parts:
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: text
+                        text:
+                          type: string
+                        content:
+                          type: string
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        text:
+                          type: string
+                      required:
+                      - text
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: image_url
+                        image_url:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            detail:
+                              anyOf:
+                              - type: string
+                                const: auto
+                              - type: string
+                                const: low
+                              - type: string
+                                const: high
+                          required:
+                          - url
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: tool_call
+                        toolName:
+                          type: string
+                        toolCallId:
+                          type: string
+                        args:
+                          type: string
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: tool_result
+                        toolName:
+                          type: string
+                        toolCallId:
+                          type: string
+                        result: {}
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: tool-call
+                        toolName:
+                          type: string
+                        toolCallId:
+                          type: string
+                        input: {}
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: tool-result
+                        toolName:
+                          type: string
+                        toolCallId:
+                          type: string
+                        output: {}
+                      required:
+                      - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: binary
+                        mimeType:
+                          type: string
+                        data:
+                          type: string
+                        url:
+                          type: string
+                        id:
+                          type: string
+                        filename:
+                          type: string
+                      required:
+                      - type
+                      - mimeType
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: input_audio
+                        input_audio:
+                          type: object
+                          properties:
+                            data:
+                              type: string
+                            format:
+                              type: string
+                            url:
+                              type: string
+                            mimeType:
+                              type: string
+                            id:
+                              type: string
+                      required:
+                      - type
+                      - input_audio
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: audio
+                        source:
+                          type: object
+                          properties:
+                            type:
+                              anyOf:
+                              - type: string
+                                const: url
+                              - type: string
+                                const: data
+                            value:
+                              type: string
+                            mimeType:
+                              type: string
+                          required:
+                          - type
+                          - value
+                      required:
+                      - type
+                      - source
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: image
+                        image:
+                          type: string
+                        mediaType:
+                          type: string
+                      required:
+                      - type
+                      - image
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: file
+                        mediaType:
+                          type: string
+                        data:
+                          type: string
+                        url:
+                          type: string
+                        filename:
+                          type: string
+                      required:
+                      - type
+                      - mediaType
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          const: file
+                        file:
+                          type: object
+                          properties:
+                            file_data:
+                              type: string
+                            file_id:
+                              type: string
+                            filename:
+                              type: string
+                      required:
+                      - type
+                      - file
+                function_call:
+                  anyOf:
+                  - type: object
+                    properties:
+                      name:
+                        type: string
+                      arguments:
+                        type: string
+                  - type: 'null'
+                tool_calls:
+                  anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        function:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            arguments:
+                              type: string
+                      required:
+                      - id
+                      - type
+                      - function
+                  - type: 'null'
+                tool_call_id:
+                  type:
+                  - string
+                  - 'null'
+                name:
+                  type:
+                  - string
+                  - 'null'
+                reasoning_content:
+                  type:
+                  - string
+                  - 'null'
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: guardrail_result
+          value:
+            type: object
+            properties:
+              status:
+                anyOf:
+                - type: string
+                  const: processed
+                - type: string
+                  const: skipped
+                - type: string
+                  const: error
+              passed:
+                type:
+                - boolean
+                - 'null'
+              score:
+                type:
+                - number
+                - 'null'
+              label:
+                type:
+                - string
+                - 'null'
+              details:
+                type:
+                - string
+                - 'null'
+              cost:
+                anyOf:
+                - type: object
+                  properties:
+                    currency:
+                      type: string
+                    amount:
+                      type: number
+                  required:
+                  - currency
+                  - amount
+                - type: 'null'
+            required:
+            - status
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: evaluation_result
+          value:
+            type: object
+            properties:
+              status:
+                anyOf:
+                - type: string
+                  const: processed
+                - type: string
+                  const: skipped
+                - type: string
+                  const: error
+              passed:
+                type:
+                - boolean
+                - 'null'
+              score:
+                type:
+                - number
+                - 'null'
+              label:
+                type:
+                - string
+                - 'null'
+              details:
+                type:
+                - string
+                - 'null'
+              cost:
+                anyOf:
+                - type: object
+                  properties:
+                    currency:
+                      type: string
+                    amount:
+                      type: number
+                  required:
+                  - currency
+                  - amount
+                - type: 'null'
+            required:
+            - status
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: json
+          value:
+            anyOf:
+            - anyOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties: {}
+              - type: array
+                items: {}
+            - type: 'null'
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: raw
+          value:
+            type: string
+        required:
+        - type
+        - value
+      - type: object
+        properties:
+          type:
+            type: string
+            const: list
+          value:
+            type: array
+            items:
+              $ref: '#/components/schemas/SpanInputOutput'
+        required:
+        - type
+        - value
+    Metadata:
+      allOf:
+      - type: object
+        properties:
+          thread_id:
+            type:
+            - string
+            - 'null'
+          user_id:
+            type:
+            - string
+            - 'null'
+          customer_id:
+            type:
+            - string
+            - 'null'
+          labels:
+            anyOf:
+            - type: array
+              items:
+                type: string
+            - type: 'null'
+          topic_id:
+            type:
+            - string
+            - 'null'
+          subtopic_id:
+            type:
+            - string
+            - 'null'
+          sdk_name:
+            type:
+            - string
+            - 'null'
+          sdk_version:
+            type:
+            - string
+            - 'null'
+          sdk_language:
+            type:
+            - string
+            - 'null'
+          telemetry_sdk_language:
+            type:
+            - string
+            - 'null'
+          telemetry_sdk_name:
+            type:
+            - string
+            - 'null'
+          telemetry_sdk_version:
+            type:
+            - string
+            - 'null'
+          prompt_ids:
+            anyOf:
+            - type: array
+              items:
+                type: string
+            - type: 'null'
+          prompt_version_ids:
+            anyOf:
+            - type: array
+              items:
+                type: string
+            - type: 'null'
+      - type: object
+        propertyNames:
+          type: string
+        additionalProperties:
+          anyOf:
+          - anyOf:
+            - anyOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - {}
+            - type: 'null'
+          - type: array
+            items:
+              anyOf:
+              - anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - {}
+              - type: 'null'
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties:
+              anyOf:
+              - anyOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - {}
+              - type: 'null'
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties:
+              type: object
+              propertyNames:
+                type: string
+              additionalProperties:
+                anyOf:
+                - anyOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - {}
+                - type: 'null'
+    Trace:
+      type: object
+      properties:
+        trace_id:
+          type: string
+        project_id:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        privacy:
+          type: object
+          properties:
+            droppedCategories:
+              type: array
+              items:
+                type: string
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        input:
+          $ref: '#/components/schemas/Input'
+        output:
+          $ref: '#/components/schemas/Output'
+        contexts:
+          type: array
+          items:
+            type: object
+            properties:
+              document_id:
+                type:
+                - string
+                - 'null'
+              chunk_id:
+                type:
+                - string
+                - 'null'
+              content:
+                anyOf:
+                - type: string
+                - type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties: {}
+                - type: array
+                  items: {}
+            required:
+            - content
+        expected_output:
+          type: object
+          properties:
+            value:
+              type: string
+          required:
+          - value
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        error:
+          anyOf:
+          - type: object
+            properties:
+              has_error:
+                type: boolean
+                const: true
+              message:
+                type: string
+              stacktrace:
+                type: array
+                items:
+                  type: string
+            required:
+            - has_error
+            - message
+            - stacktrace
+          - type: 'null'
+        indexing_md5s:
+          type: array
+          items:
+            type: string
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              event_id:
+                type: string
+              event_type:
+                type: string
+              project_id:
+                type: string
+              metrics:
+                type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: number
+              event_details:
+                type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: string
+              trace_id:
+                type: string
+              timestamps:
+                type: object
+                properties:
+                  started_at:
+                    type: number
+                  inserted_at:
+                    type: number
+                  updated_at:
+                    type: number
+                required:
+                - started_at
+                - inserted_at
+                - updated_at
+            required:
+            - event_id
+            - event_type
+            - project_id
+            - metrics
+            - event_details
+            - trace_id
+            - timestamps
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evaluation'
+        spans:
+          type: array
+          items:
+            anyOf:
+            - type: object
+              properties:
+                span_id:
+                  type: string
+                parent_id:
+                  type:
+                  - string
+                  - 'null'
+                trace_id:
+                  type: string
+                type:
+                  type: string
+                  const: llm
+                name:
+                  type:
+                  - string
+                  - 'null'
+                input:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                output:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                error:
+                  anyOf:
+                  - type: object
+                    properties:
+                      has_error:
+                        type: boolean
+                        const: true
+                      message:
+                        type: string
+                      stacktrace:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - has_error
+                    - message
+                    - stacktrace
+                  - type: 'null'
+                timestamps:
+                  type: object
+                  properties:
+                    ignore_timestamps_on_write:
+                      type:
+                      - boolean
+                      - 'null'
+                    started_at:
+                      type: number
+                    first_token_at:
+                      type:
+                      - number
+                      - 'null'
+                    finished_at:
+                      type: number
+                  required:
+                  - started_at
+                  - finished_at
+                metrics:
+                  anyOf:
+                  - type: object
+                    properties:
+                      prompt_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      completion_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      reasoning_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_read_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_creation_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      tokens_estimated:
+                        type:
+                        - boolean
+                        - 'null'
+                      cost:
+                        type:
+                        - number
+                        - 'null'
+                  - type: 'null'
+                params:
+                  anyOf:
+                  - allOf:
+                    - type: object
+                      properties:
+                        frequency_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        logit_bias:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: number
+                          - type: 'null'
+                        logprobs:
+                          type:
+                          - boolean
+                          - 'null'
+                        top_logprobs:
+                          type:
+                          - number
+                          - 'null'
+                        max_tokens:
+                          type:
+                          - number
+                          - 'null'
+                        n:
+                          type:
+                          - number
+                          - 'null'
+                        presence_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        seed:
+                          type:
+                          - number
+                          - 'null'
+                        stop:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: array
+                              items:
+                                type: string
+                          - type: 'null'
+                        stream:
+                          type:
+                          - boolean
+                          - 'null'
+                        temperature:
+                          type:
+                          - number
+                          - 'null'
+                        top_p:
+                          type:
+                          - number
+                          - 'null'
+                        tools:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        tool_choice:
+                          anyOf:
+                          - anyOf:
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: string
+                          - type: 'null'
+                        parallel_tool_calls:
+                          type:
+                          - boolean
+                          - 'null'
+                        functions:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        user:
+                          type:
+                          - string
+                          - 'null'
+                        reasoning_effort:
+                          type:
+                          - string
+                          - 'null'
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                  - type: 'null'
+                vendor:
+                  type:
+                  - string
+                  - 'null'
+                model:
+                  type:
+                  - string
+                  - 'null'
+              required:
+              - span_id
+              - trace_id
+              - type
+              - timestamps
+            - type: object
+              properties:
+                span_id:
+                  type: string
+                parent_id:
+                  type:
+                  - string
+                  - 'null'
+                trace_id:
+                  type: string
+                type:
+                  type: string
+                  const: rag
+                name:
+                  type:
+                  - string
+                  - 'null'
+                input:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                output:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                error:
+                  anyOf:
+                  - type: object
+                    properties:
+                      has_error:
+                        type: boolean
+                        const: true
+                      message:
+                        type: string
+                      stacktrace:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - has_error
+                    - message
+                    - stacktrace
+                  - type: 'null'
+                timestamps:
+                  type: object
+                  properties:
+                    ignore_timestamps_on_write:
+                      type:
+                      - boolean
+                      - 'null'
+                    started_at:
+                      type: number
+                    first_token_at:
+                      type:
+                      - number
+                      - 'null'
+                    finished_at:
+                      type: number
+                  required:
+                  - started_at
+                  - finished_at
+                metrics:
+                  anyOf:
+                  - type: object
+                    properties:
+                      prompt_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      completion_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      reasoning_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_read_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_creation_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      tokens_estimated:
+                        type:
+                        - boolean
+                        - 'null'
+                      cost:
+                        type:
+                        - number
+                        - 'null'
+                  - type: 'null'
+                params:
+                  anyOf:
+                  - allOf:
+                    - type: object
+                      properties:
+                        frequency_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        logit_bias:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: number
+                          - type: 'null'
+                        logprobs:
+                          type:
+                          - boolean
+                          - 'null'
+                        top_logprobs:
+                          type:
+                          - number
+                          - 'null'
+                        max_tokens:
+                          type:
+                          - number
+                          - 'null'
+                        n:
+                          type:
+                          - number
+                          - 'null'
+                        presence_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        seed:
+                          type:
+                          - number
+                          - 'null'
+                        stop:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: array
+                              items:
+                                type: string
+                          - type: 'null'
+                        stream:
+                          type:
+                          - boolean
+                          - 'null'
+                        temperature:
+                          type:
+                          - number
+                          - 'null'
+                        top_p:
+                          type:
+                          - number
+                          - 'null'
+                        tools:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        tool_choice:
+                          anyOf:
+                          - anyOf:
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: string
+                          - type: 'null'
+                        parallel_tool_calls:
+                          type:
+                          - boolean
+                          - 'null'
+                        functions:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        user:
+                          type:
+                          - string
+                          - 'null'
+                        reasoning_effort:
+                          type:
+                          - string
+                          - 'null'
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                  - type: 'null'
+                contexts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      document_id:
+                        type:
+                        - string
+                        - 'null'
+                      chunk_id:
+                        type:
+                        - string
+                        - 'null'
+                      content:
+                        anyOf:
+                        - type: string
+                        - type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties: {}
+                        - type: array
+                          items: {}
+                    required:
+                    - content
+              required:
+              - span_id
+              - trace_id
+              - type
+              - timestamps
+              - contexts
+            - type: object
+              properties:
+                span_id:
+                  type: string
+                parent_id:
+                  type:
+                  - string
+                  - 'null'
+                trace_id:
+                  type: string
+                type:
+                  anyOf:
+                  - type: string
+                    const: span
+                  - type: string
+                    const: llm
+                  - type: string
+                    const: chain
+                  - type: string
+                    const: tool
+                  - type: string
+                    const: agent
+                  - type: string
+                    const: rag
+                  - type: string
+                    const: guardrail
+                  - type: string
+                    const: evaluation
+                  - type: string
+                    const: workflow
+                  - type: string
+                    const: component
+                  - type: string
+                    const: module
+                  - type: string
+                    const: server
+                  - type: string
+                    const: client
+                  - type: string
+                    const: producer
+                  - type: string
+                    const: consumer
+                  - type: string
+                    const: task
+                  - type: string
+                    const: unknown
+                name:
+                  type:
+                  - string
+                  - 'null'
+                input:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                output:
+                  anyOf:
+                  - anyOf:
+                    - $ref: '#/components/schemas/SpanInputOutput'
+                    - type: object
+                      properties:
+                        type:
+                          anyOf:
+                          - type: string
+                            const: evaluation_result
+                          - type: string
+                            const: guardrail_result
+                        value:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: array
+                              items: {}
+                          - type: 'null'
+                      required:
+                      - type
+                      - value
+                  - type: 'null'
+                error:
+                  anyOf:
+                  - type: object
+                    properties:
+                      has_error:
+                        type: boolean
+                        const: true
+                      message:
+                        type: string
+                      stacktrace:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - has_error
+                    - message
+                    - stacktrace
+                  - type: 'null'
+                timestamps:
+                  type: object
+                  properties:
+                    ignore_timestamps_on_write:
+                      type:
+                      - boolean
+                      - 'null'
+                    started_at:
+                      type: number
+                    first_token_at:
+                      type:
+                      - number
+                      - 'null'
+                    finished_at:
+                      type: number
+                  required:
+                  - started_at
+                  - finished_at
+                metrics:
+                  anyOf:
+                  - type: object
+                    properties:
+                      prompt_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      completion_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      reasoning_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_read_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      cache_creation_input_tokens:
+                        type:
+                        - number
+                        - 'null'
+                      tokens_estimated:
+                        type:
+                        - boolean
+                        - 'null'
+                      cost:
+                        type:
+                        - number
+                        - 'null'
+                  - type: 'null'
+                params:
+                  anyOf:
+                  - allOf:
+                    - type: object
+                      properties:
+                        frequency_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        logit_bias:
+                          anyOf:
+                          - type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              type: number
+                          - type: 'null'
+                        logprobs:
+                          type:
+                          - boolean
+                          - 'null'
+                        top_logprobs:
+                          type:
+                          - number
+                          - 'null'
+                        max_tokens:
+                          type:
+                          - number
+                          - 'null'
+                        n:
+                          type:
+                          - number
+                          - 'null'
+                        presence_penalty:
+                          type:
+                          - number
+                          - 'null'
+                        seed:
+                          type:
+                          - number
+                          - 'null'
+                        stop:
+                          anyOf:
+                          - anyOf:
+                            - type: string
+                            - type: array
+                              items:
+                                type: string
+                          - type: 'null'
+                        stream:
+                          type:
+                          - boolean
+                          - 'null'
+                        temperature:
+                          type:
+                          - number
+                          - 'null'
+                        top_p:
+                          type:
+                          - number
+                          - 'null'
+                        tools:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        tool_choice:
+                          anyOf:
+                          - anyOf:
+                            - type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            - type: string
+                          - type: 'null'
+                        parallel_tool_calls:
+                          type:
+                          - boolean
+                          - 'null'
+                        functions:
+                          anyOf:
+                          - type: array
+                            items:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          - type: 'null'
+                        user:
+                          type:
+                          - string
+                          - 'null'
+                        reasoning_effort:
+                          type:
+                          - string
+                          - 'null'
+                    - type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                  - type: 'null'
+              required:
+              - span_id
+              - trace_id
+              - type
+              - timestamps
+        redacted_by_visibility_window:
+          type: boolean
+      required:
+      - trace_id
+      - project_id
+      - metadata
+      - timestamps
+      - spans
+    Metrics:
+      type: object
+      properties:
+        first_token_ms:
+          type:
+          - number
+          - 'null'
+        total_time_ms:
+          type:
+          - number
+          - 'null'
+        prompt_tokens:
+          type:
+          - number
+          - 'null'
+        completion_tokens:
+          type:
+          - number
+          - 'null'
+        reasoning_tokens:
+          type:
+          - number
+          - 'null'
+        cache_read_input_tokens:
+          type:
+          - number
+          - 'null'
+        cache_creation_input_tokens:
+          type:
+          - number
+          - 'null'
+        cache_creation_5m_input_tokens:
+          type:
+          - number
+          - 'null'
+        cache_creation_1h_input_tokens:
+          type:
+          - number
+          - 'null'
+        context_size_tokens:
+          type:
+          - number
+          - 'null'
+        total_cost:
+          type:
+          - number
+          - 'null'
+        tokens_estimated:
+          type:
+          - boolean
+          - 'null'
+    Timestamps:
+      type: object
+      properties:
+        started_at:
+          type: number
+        inserted_at:
+          type: number
+        updated_at:
+          type: number
+      required:
+      - started_at
+      - inserted_at
+      - updated_at
+    Output:
       type: object
       properties:
         value:
           type: string
+      required:
+      - value
     SearchResponse:
       type: object
       properties:
@@ -785,138 +4527,895 @@ components:
           items:
             $ref: '#/components/schemas/Trace'
         pagination:
-          $ref: '#/components/schemas/Pagination'
+          type: object
+          properties:
+            totalHits:
+              type: number
+            scrollId:
+              type:
+              - string
+              - 'null'
+          required:
+          - totalHits
+      required:
+      - traces
+      - pagination
+    Input:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+      - value
     SearchRequest:
       type: object
       properties:
         query:
           type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        pageSize:
-          type: integer
-          example: 1000
-        scrollId:
-          type: string
-          example: '123'
         filters:
+          default: {}
           type: object
+          propertyNames:
+            type: string
+            enum:
+            - topics.topics
+            - topics.subtopics
+            - metadata.user_id
+            - metadata.thread_id
+            - metadata.customer_id
+            - metadata.labels
+            - metadata.key
+            - metadata.value
+            - metadata.prompt_ids
+            - traces.origin
+            - traces.error
+            - traces.name
+            - spans.type
+            - spans.model
+            - evaluations.evaluator_id
+            - evaluations.evaluator_id.guardrails_only
+            - evaluations.evaluator_id.has_passed
+            - evaluations.evaluator_id.has_score
+            - evaluations.evaluator_id.has_label
+            - evaluations.passed
+            - evaluations.score
+            - evaluations.state
+            - evaluations.label
+            - events.event_type
+            - events.metrics.key
+            - events.metrics.value
+            - events.event_details.key
+            - annotations.hasAnnotation
           additionalProperties:
-            type: array
-            items:
-              type: string
-    Trace:
-      type: object
-      properties:
-        trace_id:
-          type: string
-        project_id:
-          type: string
-        timestamps:
-          $ref: '#/components/schemas/Timestamps'
-        input:
-          $ref: '#/components/schemas/Input'
-        output:
-          $ref: '#/components/schemas/Output'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        indexing_md5s:
+            anyOf:
+            - type: array
+              items:
+                type: string
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties:
+                type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+          properties:
+            topics.topics:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            topics.subtopics:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.user_id:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.thread_id:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.customer_id:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.labels:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.key:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.value:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            metadata.prompt_ids:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            traces.origin:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            traces.error:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            traces.name:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            spans.type:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            spans.model:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.evaluator_id:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.evaluator_id.guardrails_only:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.evaluator_id.has_passed:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.evaluator_id.has_score:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.evaluator_id.has_label:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.passed:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.score:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.state:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            evaluations.label:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            events.event_type:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            events.metrics.key:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            events.metrics.value:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            events.event_details.key:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+            annotations.hasAnnotation:
+              anyOf:
+              - type: array
+                items:
+                  type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+              - type: object
+                propertyNames:
+                  type: string
+                additionalProperties:
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+        traceIds:
           type: array
           items:
             type: string
-        error:
-          type: string
-          nullable: true
-        evaluations:
+        negateFilters:
+          type: boolean
+        excludeOrigins:
           type: array
           items:
-            $ref: '#/components/schemas/Evaluation'
-        contexts:
-          type: array
-          items: {}
+            type: string
+        pageOffset:
+          description: Removed. Offset pagination is no longer supported and any value other than 0 is rejected. Page with the scrollId returned by the previous response instead. The field remains on the schema so that sending it produces an explanatory error rather than being silently discarded.
+          type: number
+        pageSize:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        groupBy:
+          type: string
+        sortBy:
+          type: string
+        sortDirection:
+          type: string
+        updatedAt:
+          type: number
+        scrollId:
+          type:
+          - string
+          - 'null'
+        startDate:
+          type:
+          - number
+          - string
+        endDate:
+          type:
+          - number
+          - string
+        format:
+          type: string
+          enum:
+          - digest
+          - json
+        llmMode:
+          default: false
+          type: boolean
+      required:
+      - startDate
+      - endDate
+      additionalProperties: false
+    EvaluationTimestamps:
+      type: object
+      properties:
+        ignore_timestamps_on_write:
+          type:
+          - boolean
+          - 'null'
+        inserted_at:
+          type:
+          - number
+          - 'null'
+        started_at:
+          type:
+          - number
+          - 'null'
+        finished_at:
+          type:
+          - number
+          - 'null'
+        updated_at:
+          type:
+          - number
+          - 'null'
     Evaluation:
       type: object
       properties:
         evaluation_id:
           type: string
-        score:
-          type: number
-        timestamps:
-          $ref: '#/components/schemas/EvaluationTimestamps'
         evaluator_id:
           type: string
+        span_id:
+          type:
+          - string
+          - 'null'
         name:
           type: string
-        details:
-          type: string
-        passed:
-          type: boolean
-        label:
-          type: string
-          nullable: true
         type:
-          type: string
+          type:
+          - string
+          - 'null'
+        is_guardrail:
+          type:
+          - boolean
+          - 'null'
+        evaluation_thread_id:
+          type:
+          - string
+          - 'null'
         status:
-          type: string
-    Pagination:
-      type: object
-      properties:
-        page:
-          type: integer
-        limit:
-          type: integer
-        total:
-          type: integer
-    Output:
-      type: object
-      properties:
-        value:
-          type: string
-    Timestamps:
-      type: object
-      properties:
-        inserted_at:
-          type: integer
-        started_at:
-          type: integer
-        updated_at:
-          type: integer
-    EvaluationTimestamps:
-      type: object
-      properties:
-        finished_at:
-          type: integer
-        updated_at:
-          type: integer
-    Metrics:
-      type: object
-      properties:
-        tokens_estimated:
-          type: boolean
-        completion_tokens:
-          type: integer
-        prompt_tokens:
-          type: integer
-        total_cost:
-          type: number
-        total_time_ms:
-          type: integer
-        first_token_ms:
-          type: integer
-          nullable: true
-    Metadata:
-      type: object
-      properties:
-        sdk_language:
-          type: string
-        sdk_version:
-          type: string
+          anyOf:
+          - type: string
+            const: scheduled
+          - type: string
+            const: in_progress
+          - type: string
+            const: error
+          - type: string
+            const: skipped
+          - type: string
+            const: processed
+        passed:
+          type:
+          - boolean
+          - 'null'
+        score:
+          type:
+          - number
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - string
+          - 'null'
+        inputs:
+          anyOf:
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+          - type: 'null'
+        error:
+          anyOf:
+          - type: object
+            properties:
+              has_error:
+                type: boolean
+                const: true
+              message:
+                type: string
+              stacktrace:
+                type: array
+                items:
+                  type: string
+            required:
+            - has_error
+            - message
+            - stacktrace
+          - type: 'null'
+        retries:
+          type:
+          - number
+          - 'null'
+        timestamps:
+          $ref: '#/components/schemas/EvaluationTimestamps'
+      required:
+      - evaluation_id
+      - evaluator_id
+      - name
+      - status
+      - timestamps
   securitySchemes:
     project_api_key:
       type: apiKey
@@ -927,3 +5426,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

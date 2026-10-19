@@ -1,0 +1,1128 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Agent Cache API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Agent Cache
+paths:
+  /api/v1/agent-cache/{name}:
+    get:
+      operationId: getApiAgentCacheByName
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                required:
+                - name
+                - value
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Read a cache entry by name. An absent or expired entry answers 404. The value is returned only to a caller that can manage the project's agent cache.
+      summary: Read an agent cache entry
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - agentCache:manage
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Z][A-Z0-9_]*$
+        required: true
+      tags:
+      - Agent Cache
+    put:
+      operationId: putApiAgentCacheByName
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  ttl_seconds:
+                    type: number
+                required:
+                - name
+                - ttl_seconds
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Store or replace an encrypted value. It expires after ttl_seconds, which defaults to 900.
+      summary: Store an agent cache entry
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - agentCache:manage
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Z][A-Z0-9_]*$
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  minLength: 1
+                ttl_seconds:
+                  type: integer
+                  minimum: 5
+                  maximum: 86400
+              required:
+              - value
+      tags:
+      - Agent Cache
+    delete:
+      operationId: deleteApiAgentCacheByName
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - name
+                - deleted
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Delete by name. Removing a name the project does not hold still succeeds.
+      summary: Delete an agent cache entry
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - agentCache:manage
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Z][A-Z0-9_]*$
+        required: true
+      tags:
+      - Agent Cache
+  /api/v1/agent-cache/{name}/claim:
+    post:
+      operationId: postApiAgentCacheByNameClaim
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  ttl_seconds:
+                    type: number
+                  claimed:
+                    type: boolean
+                required:
+                - name
+                - ttl_seconds
+                - claimed
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Store the value only while the name is free. The claimed field reports whether this caller took it.
+      summary: Claim an agent cache entry
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - agentCache:manage
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Z][A-Z0-9_]*$
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  minLength: 1
+                ttl_seconds:
+                  type: integer
+                  minimum: 5
+                  maximum: 86400
+              required:
+              - value
+      tags:
+      - Agent Cache
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

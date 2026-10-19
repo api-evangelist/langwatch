@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
   title: LangWatch Suites API
-  version: 1.0.0
   description: LangWatch openapi spec
+  version: 1.0.0
 servers:
 - url: https://app.langwatch.ai
 security:
@@ -10,8 +10,9 @@ security:
 tags:
 - name: Suites
 paths:
-  /api/suites:
+  /api/v1/suites:
     get:
+      operationId: getApiSuites
       responses:
         '200':
           description: Success
@@ -28,6 +29,12 @@ paths:
                       type: string
                     slug:
                       type: string
+                    kind:
+                      description: custom is a hand-assembled run plan; folder is a test suite that groups scenarios filed into it. Absent on servers that predate test suites.
+                      type: string
+                      enum:
+                      - custom
+                      - folder
                     description:
                       type:
                       - string
@@ -36,6 +43,53 @@ paths:
                       type: array
                       items:
                         type: string
+                    scope:
+                      anyOf:
+                      - oneOf:
+                        - type: object
+                          properties:
+                            mode:
+                              type: string
+                              const: all
+                          required:
+                          - mode
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            mode:
+                              type: string
+                              const: folders
+                            folderIds:
+                              type: array
+                              items:
+                                type: string
+                          required:
+                          - mode
+                          - folderIds
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            mode:
+                              type: string
+                              const: labels
+                            labels:
+                              type: array
+                              items:
+                                type: string
+                          required:
+                          - mode
+                          - labels
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            mode:
+                              type: string
+                              const: cases
+                          required:
+                          - mode
+                          additionalProperties: false
+                        description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                      - type: 'null'
                     targets:
                       type: array
                       items:
@@ -48,11 +102,65 @@ paths:
                             - http
                             - code
                             - workflow
+                            - connected
+                            - voice
                           referenceId:
                             type: string
+                            minLength: 1
+                          scenarioMappings:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: source
+                                  sourceId:
+                                    type: string
+                                    minLength: 1
+                                  path:
+                                    type: array
+                                    items:
+                                      type: string
+                                required:
+                                - type
+                                - sourceId
+                                - path
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    const: value
+                                  value:
+                                    type: string
+                                required:
+                                - type
+                                - value
+                                additionalProperties: false
+                          runParameters:
+                            type: object
+                            propertyNames:
+                              type: string
+                            additionalProperties:
+                              anyOf:
+                              - type: string
+                                maxLength: 4096
+                              - type: number
+                              - type: boolean
+                          runSecretParameterNames:
+                            maxItems: 50
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 64
                         required:
                         - type
                         - referenceId
+                        additionalProperties: false
                     repeatCount:
                       type: number
                     labels:
@@ -78,69 +186,36 @@ paths:
                   - createdAt
                   - updatedAt
                   - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiSuites
-      parameters: []
-      description: List all non-archived suites (run plans) for the project
+                  additionalProperties: false
+      description: 'List all non-archived suites for the project. By default only custom run plans are returned; pass kind=folder for test suites. Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      deprecated: true
+      parameters:
+      - in: query
+        name: kind
+        schema:
+          default: custom
+          type: string
+          enum:
+          - custom
+          - folder
+        description: Which kind of suite to list. Defaults to custom, so callers that predate test suites keep seeing exactly the run plans they always did.
       tags:
       - Suites
       summary: Get api suites
       x-summary-source: derived
     post:
+      operationId: postApiSuites
       responses:
         '201':
-          description: Suite created
+          description: Success
           content:
             application/json:
               schema:
@@ -152,6 +227,12 @@ paths:
                     type: string
                   slug:
                     type: string
+                  kind:
+                    description: custom is a hand-assembled run plan; folder is a test suite that groups scenarios filed into it. Absent on servers that predate test suites.
+                    type: string
+                    enum:
+                    - custom
+                    - folder
                   description:
                     type:
                     - string
@@ -160,6 +241,53 @@ paths:
                     type: array
                     items:
                       type: string
+                  scope:
+                    anyOf:
+                    - oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: folders
+                          folderIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - folderIds
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: cases
+                        required:
+                        - mode
+                        additionalProperties: false
+                      description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    - type: 'null'
                   targets:
                     type: array
                     items:
@@ -172,11 +300,65 @@ paths:
                           - http
                           - code
                           - workflow
+                          - connected
+                          - voice
                         referenceId:
                           type: string
+                          minLength: 1
+                        scenarioMappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  minLength: 1
+                                path:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                        runParameters:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        runSecretParameterNames:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 64
                       required:
                       - type
                       - referenceId
+                      additionalProperties: false
                   repeatCount:
                     type: number
                   labels:
@@ -202,62 +384,19 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiSuites
-      parameters: []
-      description: Create a new suite (run plan)
+                additionalProperties: false
+      description: 'Create a new suite (run plan). Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      deprecated: true
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -266,13 +405,61 @@ paths:
                 name:
                   type: string
                   minLength: 1
+                kind:
+                  default: custom
+                  description: custom (the default) is a run plan and needs scenarioIds and targets; folder is a test suite that starts empty and gets scenarios by filing them into it.
+                  type: string
+                  enum:
+                  - custom
+                  - folder
                 description:
                   type: string
                 scenarioIds:
+                  default: []
                   type: array
                   items:
                     type: string
-                  minItems: 1
+                scope:
+                  oneOf:
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: all
+                    required:
+                    - mode
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: folders
+                      folderIds:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mode
+                    - folderIds
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: labels
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mode
+                    - labels
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: cases
+                    required:
+                    - mode
+                  description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
                 targets:
                   type: array
                   items:
@@ -285,32 +472,85 @@ paths:
                         - http
                         - code
                         - workflow
+                        - connected
+                        - voice
                       referenceId:
                         type: string
+                        minLength: 1
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                                minLength: 1
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                            additionalProperties: false
+                      runParameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      runSecretParameterNames:
+                        maxItems: 50
+                        type: array
+                        items:
+                          type: string
+                          maxLength: 64
                     required:
                     - type
                     - referenceId
-                  minItems: 1
+                    additionalProperties: false
                 repeatCount:
+                  default: 1
                   type: integer
                   minimum: 1
                   maximum: 100
-                  default: 1
                 labels:
+                  default: []
                   type: array
                   items:
                     type: string
-                  default: []
               required:
               - name
-              - scenarioIds
-              - targets
+              additionalProperties: false
       tags:
       - Suites
       summary: Post api suites
       x-summary-source: derived
-  /api/suites/{id}:
+  /api/v1/suites/{id}:
     get:
+      operationId: getApiSuitesById
       responses:
         '200':
           description: Success
@@ -325,6 +565,12 @@ paths:
                     type: string
                   slug:
                     type: string
+                  kind:
+                    description: custom is a hand-assembled run plan; folder is a test suite that groups scenarios filed into it. Absent on servers that predate test suites.
+                    type: string
+                    enum:
+                    - custom
+                    - folder
                   description:
                     type:
                     - string
@@ -333,6 +579,53 @@ paths:
                     type: array
                     items:
                       type: string
+                  scope:
+                    anyOf:
+                    - oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: folders
+                          folderIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - folderIds
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: cases
+                        required:
+                        - mode
+                        additionalProperties: false
+                      description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    - type: 'null'
                   targets:
                     type: array
                     items:
@@ -345,11 +638,65 @@ paths:
                           - http
                           - code
                           - workflow
+                          - connected
+                          - voice
                         referenceId:
                           type: string
+                          minLength: 1
+                        scenarioMappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  minLength: 1
+                                path:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                        runParameters:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        runSecretParameterNames:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 64
                       required:
                       - type
                       - referenceId
+                      additionalProperties: false
                   repeatCount:
                     type: number
                   labels:
@@ -375,34 +722,9 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Suite not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -414,48 +736,33 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: getApiSuitesById
+                additionalProperties: false
+      description: 'Get a suite (run plan) by its ID. Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:view
+      deprecated: true
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: id
+        schema:
+          type: string
+          minLength: 1
         required: true
-      description: Get a suite (run plan) by its ID
       tags:
       - Suites
       summary: Get api suites by id
       x-summary-source: derived
     patch:
+      operationId: patchApiSuitesById
       responses:
         '200':
-          description: Suite updated
+          description: Success
           content:
             application/json:
               schema:
@@ -467,6 +774,12 @@ paths:
                     type: string
                   slug:
                     type: string
+                  kind:
+                    description: custom is a hand-assembled run plan; folder is a test suite that groups scenarios filed into it. Absent on servers that predate test suites.
+                    type: string
+                    enum:
+                    - custom
+                    - folder
                   description:
                     type:
                     - string
@@ -475,6 +788,53 @@ paths:
                     type: array
                     items:
                       type: string
+                  scope:
+                    anyOf:
+                    - oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: folders
+                          folderIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - folderIds
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: cases
+                        required:
+                        - mode
+                        additionalProperties: false
+                      description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    - type: 'null'
                   targets:
                     type: array
                     items:
@@ -487,11 +847,65 @@ paths:
                           - http
                           - code
                           - workflow
+                          - connected
+                          - voice
                         referenceId:
                           type: string
+                          minLength: 1
+                        scenarioMappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  minLength: 1
+                                path:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                        runParameters:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        runSecretParameterNames:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 64
                       required:
                       - type
                       - referenceId
+                      additionalProperties: false
                   repeatCount:
                     type: number
                   labels:
@@ -517,34 +931,9 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Suite not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -556,41 +945,10 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: patchApiSuitesById
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Update a suite (run plan)
+                additionalProperties: false
+      description: 'Update a suite (run plan). Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -603,12 +961,54 @@ paths:
                   type:
                   - string
                   - 'null'
+                scope:
+                  oneOf:
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: all
+                    required:
+                    - mode
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: folders
+                      folderIds:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mode
+                    - folderIds
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: labels
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - mode
+                    - labels
+                  - type: object
+                    properties:
+                      mode:
+                        type: string
+                        const: cases
+                    required:
+                    - mode
+                  description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
                 scenarioIds:
+                  minItems: 1
                   type: array
                   items:
                     type: string
-                  minItems: 1
                 targets:
+                  minItems: 1
                   type: array
                   items:
                     type: object
@@ -620,12 +1020,65 @@ paths:
                         - http
                         - code
                         - workflow
+                        - connected
+                        - voice
                       referenceId:
                         type: string
+                        minLength: 1
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                                minLength: 1
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                            additionalProperties: false
+                      runParameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      runSecretParameterNames:
+                        maxItems: 50
+                        type: array
+                        items:
+                          type: string
+                          maxLength: 64
                     required:
                     - type
                     - referenceId
-                  minItems: 1
+                    additionalProperties: false
                 repeatCount:
                   type: integer
                   minimum: 1
@@ -634,14 +1087,31 @@ paths:
                   type: array
                   items:
                     type: string
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:update
+      deprecated: true
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Suites
       summary: Patch api suites by id
       x-summary-source: derived
     delete:
+      operationId: deleteApiSuitesById
       responses:
         '200':
-          description: Suite archived
+          description: Success
           content:
             application/json:
               schema:
@@ -654,34 +1124,9 @@ paths:
                 required:
                 - id
                 - archived
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Suite not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -693,49 +1138,34 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: deleteApiSuitesById
+                additionalProperties: false
+      description: 'Archive (soft-delete) a suite. Archiving a test suite also archives every scenario filed in it, in one transaction. Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:manage
+      deprecated: true
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: id
+        schema:
+          type: string
+          minLength: 1
         required: true
-      description: Archive (soft-delete) a suite (run plan)
       tags:
       - Suites
       summary: Delete api suites by id
       x-summary-source: derived
-  /api/suites/{id}/duplicate:
+  /api/v1/suites/{id}/duplicate:
     post:
+      operationId: postApiSuitesByIdDuplicate
       responses:
         '201':
-          description: Suite duplicated
+          description: Success
           content:
             application/json:
               schema:
@@ -747,6 +1177,12 @@ paths:
                     type: string
                   slug:
                     type: string
+                  kind:
+                    description: custom is a hand-assembled run plan; folder is a test suite that groups scenarios filed into it. Absent on servers that predate test suites.
+                    type: string
+                    enum:
+                    - custom
+                    - folder
                   description:
                     type:
                     - string
@@ -755,6 +1191,53 @@ paths:
                     type: array
                     items:
                       type: string
+                  scope:
+                    anyOf:
+                    - oneOf:
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: all
+                        required:
+                        - mode
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: folders
+                          folderIds:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - folderIds
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: labels
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - mode
+                        - labels
+                        additionalProperties: false
+                      - type: object
+                        properties:
+                          mode:
+                            type: string
+                            const: cases
+                        required:
+                        - mode
+                        additionalProperties: false
+                      description: 'What the run plan covers: all (every active scenario), folders (the scenarios filed in the named test suites), labels (the scenarios carrying any of the labels), or cases (the scenarioIds below). A dynamic scope is resolved again at every run, so a scenario written later runs without editing the plan.'
+                    - type: 'null'
                   targets:
                     type: array
                     items:
@@ -767,11 +1250,65 @@ paths:
                           - http
                           - code
                           - workflow
+                          - connected
+                          - voice
                         referenceId:
                           type: string
+                          minLength: 1
+                        scenarioMappings:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            oneOf:
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: source
+                                sourceId:
+                                  type: string
+                                  minLength: 1
+                                path:
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - type
+                              - sourceId
+                              - path
+                              additionalProperties: false
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  const: value
+                                value:
+                                  type: string
+                              required:
+                              - type
+                              - value
+                              additionalProperties: false
+                        runParameters:
+                          type: object
+                          propertyNames:
+                            type: string
+                          additionalProperties:
+                            anyOf:
+                            - type: string
+                              maxLength: 4096
+                            - type: number
+                            - type: boolean
+                        runSecretParameterNames:
+                          maxItems: 50
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 64
                       required:
                       - type
                       - referenceId
+                      additionalProperties: false
                   repeatCount:
                     type: number
                   labels:
@@ -797,34 +1334,9 @@ paths:
                 - createdAt
                 - updatedAt
                 - platformUrl
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                additionalProperties: false
         '404':
-          description: Suite not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -836,49 +1348,34 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiSuitesByIdDuplicate
+                additionalProperties: false
+      description: 'Duplicate a suite (run plan). Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      deprecated: true
       parameters:
-      - schema:
-          type: string
-        in: path
+      - in: path
         name: id
+        schema:
+          type: string
+          minLength: 1
         required: true
-      description: Duplicate a suite (run plan)
       tags:
       - Suites
       summary: Post api suites by id duplicate
       x-summary-source: derived
-  /api/suites/{id}/run:
+  /api/v1/suites/{id}/run:
     post:
+      operationId: postApiSuitesByIdRun
       responses:
         '200':
-          description: Suite run scheduled
+          description: Success
           content:
             application/json:
               schema:
@@ -906,6 +1403,7 @@ paths:
                     required:
                     - scenarios
                     - targets
+                    additionalProperties: false
                   items:
                     type: array
                     items:
@@ -925,11 +1423,65 @@ paths:
                               - http
                               - code
                               - workflow
+                              - connected
+                              - voice
                             referenceId:
                               type: string
+                              minLength: 1
+                            scenarioMappings:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                oneOf:
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: source
+                                    sourceId:
+                                      type: string
+                                      minLength: 1
+                                    path:
+                                      type: array
+                                      items:
+                                        type: string
+                                  required:
+                                  - type
+                                  - sourceId
+                                  - path
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      const: value
+                                    value:
+                                      type: string
+                                  required:
+                                  - type
+                                  - value
+                                  additionalProperties: false
+                            runParameters:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties:
+                                anyOf:
+                                - type: string
+                                  maxLength: 4096
+                                - type: number
+                                - type: boolean
+                            runSecretParameterNames:
+                              maxItems: 50
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 64
                           required:
                           - type
                           - referenceId
+                          additionalProperties: false
                         name:
                           type:
                           - string
@@ -939,6 +1491,13 @@ paths:
                       - scenarioId
                       - target
                       - name
+                      additionalProperties: false
+                  planName:
+                    type: string
+                  created:
+                    type: boolean
+                  planSlug:
+                    type: string
                 required:
                 - scheduled
                 - batchRunId
@@ -946,34 +1505,10 @@ paths:
                 - jobCount
                 - skippedArchived
                 - items
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
+                - planSlug
+                additionalProperties: false
         '404':
-          description: Suite not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -985,41 +1520,10 @@ paths:
                     type: string
                 required:
                 - error
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  message:
-                    type: string
-                required:
-                - error
-      operationId: postApiSuitesByIdRun
-      parameters:
-      - schema:
-          type: string
-        in: path
-        name: id
-        required: true
-      description: Trigger a suite run. Schedules scenario executions for all active scenarios × targets × repeatCount.
+                additionalProperties: false
+      description: 'Trigger a suite run. Schedules scenario executions for all active scenarios x targets x repeatCount. When the id names a test suite, the targets, the repeat count and the models are read from the body. Deprecated: use /api/v1/run-plans and /api/v1/test-suites.'
       requestBody:
+        required: false
         content:
           application/json:
             schema:
@@ -1027,6 +1531,129 @@ paths:
               properties:
                 idempotencyKey:
                   type: string
+                name:
+                  description: The run plan this run joins or creates. Used only when the id names a test suite; derived from the suite name and the targets when absent.
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                targets:
+                  description: The prompts, agents or workflows the run goes against. Read only when the id names a test suite, which stores no target of its own; a run plan already holds its own and refuses these.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - prompt
+                        - http
+                        - code
+                        - workflow
+                        - connected
+                        - voice
+                      referenceId:
+                        type: string
+                        minLength: 1
+                      scenarioMappings:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          oneOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: source
+                              sourceId:
+                                type: string
+                                minLength: 1
+                              path:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - type
+                            - sourceId
+                            - path
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                const: value
+                              value:
+                                type: string
+                            required:
+                            - type
+                            - value
+                            additionalProperties: false
+                      runParameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties:
+                          anyOf:
+                          - type: string
+                            maxLength: 4096
+                          - type: number
+                          - type: boolean
+                      runSecretParameterNames:
+                        maxItems: 50
+                        type: array
+                        items:
+                          type: string
+                          maxLength: 64
+                    required:
+                    - type
+                    - referenceId
+                    additionalProperties: false
+                repeatCount:
+                  description: How many times each scenario and target pairing runs, between 1 and 5. Used only when the id names a test suite.
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                simulatorModel:
+                  description: The model that plays the user for every scenario in the run. Used only when the id names a test suite.
+                  type:
+                  - string
+                  - 'null'
+                judgeModel:
+                  description: The model that judges every scenario in the run. Used only when the id names a test suite.
+                  type:
+                  - string
+                  - 'null'
+                parameters:
+                  description: Constant values applied to every scenario in the run, e.g. a fixture id or a tenant. A value supplied here overrides the scenario's own default for that name.
+                  type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                      maxLength: 4096
+                    - type: number
+                    - type: boolean
+                note:
+                  description: One short line describing why this batch was run, e.g. a commit hash or what you changed. It is stored on every run of the batch and shown beside the run in the platform. Up to 200 characters.
+                  type: string
+                  maxLength: 200
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - scenarios:create
+      deprecated: true
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          minLength: 1
+        required: true
       tags:
       - Suites
       summary: Post api suites by id run
@@ -1042,3 +1669,19 @@ components:
       type: http
       scheme: bearer
       description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

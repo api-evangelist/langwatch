@@ -282,104 +282,6 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-budgets-api
-  name: LangWatch Budgets API
-  description: The Budgets API from LangWatch — 2 operation(s) for budgets.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - Budgets
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-budgets-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-cache-rules-api
-  name: LangWatch Cache Rules API
-  description: The Cache Rules API from LangWatch — 2 operation(s) for cache rules.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - Cache Rules
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-cache-rules-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
 - aid: langwatch:langwatch-dashboards-api
   name: LangWatch Dashboards API
   description: The Dashboards API from LangWatch — 3 operation(s) for dashboards.
@@ -480,55 +382,6 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-evaluations-v3-api
-  name: LangWatch Evaluations V3 API
-  description: The Evaluations V3 API from LangWatch — 2 operation(s) for evaluations v3.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - Evaluations V3
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-evaluations-v3-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
 - aid: langwatch:langwatch-evaluators-api
   name: LangWatch Evaluators API
   description: The Evaluators API from LangWatch — 3 operation(s) for evaluators.
@@ -587,55 +440,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/langwatch-graphs-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-langwatch-api-api
-  name: LangWatch API
-  description: The LangWatch API API from LangWatch — 1 operation(s) for langwatch api.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - LangWatch API
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-langwatch-api-api-openapi.yml
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/traces
   - type: Documentation
@@ -923,55 +727,6 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-providers-api
-  name: LangWatch Providers API
-  description: The Providers API from LangWatch — 2 operation(s) for providers.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - Providers
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-providers-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
 - aid: langwatch:langwatch-scenario-events-api
   name: LangWatch Scenario Events API
   description: The Scenario Events API from LangWatch — 1 operation(s) for scenario events.
@@ -1217,55 +972,6 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-trace-api
-  name: LangWatch Trace API
-  description: The Trace API from LangWatch — 3 operation(s) for trace.
-  humanURL: https://langwatch.ai/docs/api-reference/traces
-  tags:
-  - Trace
-  properties:
-  - type: OpenAPI
-    url: openapi/langwatch-trace-api-openapi.yml
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/traces
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/evaluators
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/monitors
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/datasets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/prompts
-  - type: Documentation
-    url: https://github.com/langwatch/scenario
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/simulation-runs
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/suites
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/experiments
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/annotations
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/analytics
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/dashboards
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/projects
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/api-keys
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/secrets
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/model-providers
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/gateway
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/workflows
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/agents
-  - type: Documentation
-    url: https://langwatch.ai/docs/api-reference/triggers
 - aid: langwatch:langwatch-traces-api
   name: LangWatch Traces API
   description: The Traces API from LangWatch — 3 operation(s) for traces.
@@ -1364,15 +1070,15 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-virtual-keys-api
-  name: LangWatch Virtual Keys API
-  description: The Virtual Keys API from LangWatch — 4 operation(s) for virtual keys.
+- aid: langwatch:langwatch-workflows-api
+  name: LangWatch Workflows API
+  description: The Workflows API from LangWatch — 2 operation(s) for workflows.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
-  - Virtual Keys
+  - Workflows
   properties:
   - type: OpenAPI
-    url: openapi/langwatch-virtual-keys-api-openapi.yml
+    url: openapi/langwatch-workflows-api-openapi.yml
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/traces
   - type: Documentation
@@ -1413,15 +1119,1979 @@ apis:
     url: https://langwatch.ai/docs/api-reference/agents
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/triggers
-- aid: langwatch:langwatch-workflows-api
-  name: LangWatch Workflows API
-  description: The Workflows API from LangWatch — 2 operation(s) for workflows.
+- aid: langwatch:langwatch-admin-api
+  name: LangWatch Admin API
+  description: The Admin API from LangWatch — 2 operation(s) for admin.
   humanURL: https://langwatch.ai/docs/api-reference/traces
   tags:
-  - Workflows
+  - Admin
   properties:
   - type: OpenAPI
-    url: openapi/langwatch-workflows-api-openapi.yml
+    url: openapi/langwatch-admin-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-agent-cache-api
+  name: LangWatch Agent Cache API
+  description: The Agent Cache API from LangWatch — 2 operation(s) for agent cache.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Agent Cache
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-agent-cache-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-analytics-langwatchql-api
+  name: LangWatch Analytics / LangWatchQL API
+  description: >-
+    The Analytics / LangWatchQL API from LangWatch — 8 operation(s) for analytics / langwatchql.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Analytics / LangWatchQL
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-analytics-langwatchql-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-auth-api
+  name: LangWatch Auth API
+  description: The Auth API from LangWatch — 25 operation(s) for auth.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Auth
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-auth-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-browser-telemetry-api
+  name: LangWatch Browser telemetry API
+  description: The Browser telemetry API from LangWatch — 1 operation(s) for browser telemetry.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Browser telemetry
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-browser-telemetry-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-bug-reports-api
+  name: LangWatch Bug Reports API
+  description: The Bug Reports API from LangWatch — 1 operation(s) for bug reports.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Bug Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-bug-reports-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-checkup-api
+  name: LangWatch Checkup API
+  description: The Checkup API from LangWatch — 2 operation(s) for checkup.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Checkup
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-checkup-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-coding-agent-api
+  name: LangWatch Coding Agent API
+  description: The Coding Agent API from LangWatch — 3 operation(s) for coding agent.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Coding Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-coding-agent-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-datasets-api
+  name: LangWatch Datasets API
+  description: The Datasets API from LangWatch — 1 operation(s) for datasets.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Datasets
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-datasets-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-elevenlabs-api
+  name: LangWatch Elevenlabs API
+  description: The Elevenlabs API from LangWatch — 1 operation(s) for elevenlabs.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Elevenlabs
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-elevenlabs-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-evaluations-api
+  name: LangWatch Evaluations API
+  description: The Evaluations API from LangWatch — 5 operation(s) for evaluations.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Evaluations
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-evaluations-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-events-api
+  name: LangWatch Events API
+  description: The Events API from LangWatch — 2 operation(s) for events.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-events-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-experiments-api
+  name: LangWatch Experiments API
+  description: The Experiments API from LangWatch — 11 operation(s) for experiments.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Experiments
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-experiments-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-files-api
+  name: LangWatch Files API
+  description: The Files API from LangWatch — 3 operation(s) for files.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-files-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-gateway-api
+  name: LangWatch Gateway API
+  description: The Gateway API from LangWatch — 14 operation(s) for gateway.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Gateway
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-gateway-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-gateway-spend-api
+  name: LangWatch Gateway Spend API
+  description: The Gateway Spend API from LangWatch — 4 operation(s) for gateway spend.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Gateway Spend
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-gateway-spend-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-governance-ingestion-templates-api
+  name: LangWatch Governance / Ingestion Templates API
+  description: >-
+    The Governance / Ingestion Templates API from LangWatch — 5 operation(s) for governance / ingestion
+    templates.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Governance / Ingestion Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-governance-ingestion-templates-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-grants-api
+  name: LangWatch Grants API
+  description: The Grants API from LangWatch — 2 operation(s) for grants.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Grants
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-grants-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-groups-api
+  name: LangWatch Groups API
+  description: The Groups API from LangWatch — 6 operation(s) for groups.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-groups-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-instant-evals-api
+  name: LangWatch Instant Evals API
+  description: The Instant Evals API from LangWatch — 6 operation(s) for instant evals.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Instant Evals
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-instant-evals-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-internal-api
+  name: LangWatch Internal API
+  description: The Internal API from LangWatch — 3 operation(s) for internal.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-internal-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-invites-api
+  name: LangWatch Invites API
+  description: The Invites API from LangWatch — 2 operation(s) for invites.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Invites
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-invites-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-langy-api
+  name: LangWatch Langy API
+  description: The Langy API from LangWatch — 16 operation(s) for langy.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Langy
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-langy-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-me-api
+  name: LangWatch Me API
+  description: The Me API from LangWatch — 2 operation(s) for me.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Me
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-me-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-members-api
+  name: LangWatch Members API
+  description: The Members API from LangWatch — 3 operation(s) for members.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Members
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-members-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-ops-api
+  name: LangWatch Ops API
+  description: The Ops API from LangWatch — 1 operation(s) for ops.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Ops
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-ops-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-organization-api
+  name: LangWatch Organization API
+  description: The Organization API from LangWatch — 1 operation(s) for organization.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Organization
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-organization-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-organizations-self-hosted-api
+  name: LangWatch Organizations (Self-Hosted) API
+  description: >-
+    The Organizations (Self-Hosted) API from LangWatch — 2 operation(s) for organizations (self-hosted).
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Organizations (Self-Hosted)
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-organizations-self-hosted-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-platform-health-api
+  name: LangWatch Platform Health API
+  description: The Platform Health API from LangWatch — 2 operation(s) for platform health.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Platform Health
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-platform-health-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-query-api
+  name: LangWatch Query API
+  description: The Query API from LangWatch — 3 operation(s) for query.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Query
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-query-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-role-bindings-api
+  name: LangWatch Role Bindings API
+  description: The Role Bindings API from LangWatch — 2 operation(s) for role bindings.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Role Bindings
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-role-bindings-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-roles-api
+  name: LangWatch Roles API
+  description: The Roles API from LangWatch — 3 operation(s) for roles.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-roles-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-run-plans-api
+  name: LangWatch Run Plans API
+  description: The Run Plans API from LangWatch — 4 operation(s) for run plans.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Run Plans
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-run-plans-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-scim-api
+  name: LangWatch SCIM API
+  description: The SCIM API from LangWatch — 8 operation(s) for scim.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - SCIM
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-scim-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-scim-tokens-api
+  name: LangWatch SCIM Tokens API
+  description: The SCIM Tokens API from LangWatch — 2 operation(s) for scim tokens.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - SCIM Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-scim-tokens-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-slack-connections-api
+  name: LangWatch Slack connections API
+  description: The Slack connections API from LangWatch — 1 operation(s) for slack connections.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Slack connections
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-slack-connections-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-stored-objects-api
+  name: LangWatch Stored Objects API
+  description: The Stored Objects API from LangWatch — 3 operation(s) for stored objects.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Stored Objects
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-stored-objects-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-teams-api
+  name: LangWatch Teams API
+  description: The Teams API from LangWatch — 5 operation(s) for teams.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-teams-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-test-suites-api
+  name: LangWatch Test Suites API
+  description: The Test Suites API from LangWatch — 3 operation(s) for test suites.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Test Suites
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-test-suites-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-user-avatar-api
+  name: LangWatch User Avatar API
+  description: The User Avatar API from LangWatch — 1 operation(s) for user avatar.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - User Avatar
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-user-avatar-api-openapi.yml
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/traces
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/evaluators
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/monitors
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/datasets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/prompts
+  - type: Documentation
+    url: https://github.com/langwatch/scenario
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/simulation-runs
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/suites
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/experiments
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/annotations
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/analytics
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/dashboards
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/projects
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/api-keys
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/secrets
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/model-providers
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/gateway
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/workflows
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/agents
+  - type: Documentation
+    url: https://langwatch.ai/docs/api-reference/triggers
+- aid: langwatch:langwatch-webhooks-api
+  name: LangWatch Webhooks API
+  description: The Webhooks API from LangWatch — 10 operation(s) for webhooks.
+  humanURL: https://langwatch.ai/docs/api-reference/traces
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/langwatch-webhooks-api-openapi.yml
   - type: Documentation
     url: https://langwatch.ai/docs/api-reference/traces
   - type: Documentation

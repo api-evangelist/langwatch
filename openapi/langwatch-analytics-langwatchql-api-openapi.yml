@@ -1,0 +1,5859 @@
+openapi: 3.2.0
+info:
+  title: Analytics / LangWatchQL API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Analytics / LangWatchQL
+paths:
+  /api/v1/projects/{projectId}/analytics/dashboard-widgets:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsDashboardWidgets
+      responses:
+        '200':
+          description: The project's dashboard widgets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        definition:
+                          type: object
+                          properties:
+                            version:
+                              type: number
+                            code:
+                              type: string
+                            queries:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 64
+                                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                  sql:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 50000
+                                  parameters:
+                                    maxItems: 32
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        name:
+                                          type: string
+                                          minLength: 1
+                                          maxLength: 64
+                                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                        type:
+                                          type: string
+                                          enum:
+                                          - string
+                                          - number
+                                          - boolean
+                                        default:
+                                          anyOf:
+                                          - type: string
+                                            maxLength: 4000
+                                          - type: number
+                                          - type: boolean
+                                      required:
+                                      - name
+                                      - type
+                                      additionalProperties: false
+                                required:
+                                - name
+                                - sql
+                                additionalProperties: false
+                            description:
+                              type: string
+                            prompt:
+                              type: string
+                            source:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  kind:
+                                    type: string
+                                    const: catalogue
+                                  catalogueId:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 200
+                                required:
+                                - kind
+                                - catalogueId
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  kind:
+                                    type: string
+                                    const: langy
+                                required:
+                                - kind
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  kind:
+                                    type: string
+                                    const: code
+                                required:
+                                - kind
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  kind:
+                                    type: string
+                                    const: api
+                                required:
+                                - kind
+                                additionalProperties: false
+                          required:
+                          - version
+                          - code
+                          - queries
+                          additionalProperties: false
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        platformUrl:
+                          type: string
+                        dashboardId:
+                          type:
+                          - string
+                          - 'null'
+                        gridColumn:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        gridRow:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        colSpan:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        rowSpan:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                      required:
+                      - id
+                      - name
+                      - definition
+                      - createdAt
+                      - updatedAt
+                      - platformUrl
+                      - dashboardId
+                      - gridColumn
+                      - gridRow
+                      - colSpan
+                      - rowSpan
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Lists every dashboard widget in this project, each with the React source file it renders and the named LangWatchQL queries it may run. Saved workbench charts and builder charts are different kinds and are not listed here.
+      summary: List dashboard widgets
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    post:
+      operationId: postApiV1ProjectsByProjectIdAnalyticsDashboardWidgets
+      responses:
+        '201':
+          description: The widget was saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      code:
+                        type: string
+                      queries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            sql:
+                              type: string
+                              minLength: 1
+                              maxLength: 50000
+                            parameters:
+                              maxItems: 32
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 64
+                                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                  type:
+                                    type: string
+                                    enum:
+                                    - string
+                                    - number
+                                    - boolean
+                                  default:
+                                    anyOf:
+                                    - type: string
+                                      maxLength: 4000
+                                    - type: number
+                                    - type: boolean
+                                required:
+                                - name
+                                - type
+                                additionalProperties: false
+                          required:
+                          - name
+                          - sql
+                          additionalProperties: false
+                      description:
+                        type: string
+                      prompt:
+                        type: string
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: catalogue
+                            catalogueId:
+                              type: string
+                              minLength: 1
+                              maxLength: 200
+                          required:
+                          - kind
+                          - catalogueId
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: langy
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: code
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: api
+                          required:
+                          - kind
+                          additionalProperties: false
+                    required:
+                    - version
+                    - code
+                    - queries
+                    additionalProperties: false
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Saves a React source file and the named LangWatchQL queries it runs as one dashboard widget, with an optional description the card shows behind its info icon and an optional prompt Langy is drafted with when asked about it. `source` records where the widget came from; without it, the widget is recorded as made through the API. The queries' shape is validated against the widget schema; their SQL is governed at run time by LW.query inside the sandbox, not at save.
+      summary: Create a dashboard widget
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:create
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                code:
+                  type: string
+                  minLength: 1
+                  maxLength: 200000
+                queries:
+                  maxItems: 8
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      sql:
+                        type: string
+                        minLength: 1
+                        maxLength: 50000
+                      parameters:
+                        maxItems: 32
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            type:
+                              type: string
+                              enum:
+                              - string
+                              - number
+                              - boolean
+                            default:
+                              anyOf:
+                              - type: string
+                                maxLength: 4000
+                              - type: number
+                              - type: boolean
+                          required:
+                          - name
+                          - type
+                    required:
+                    - name
+                    - sql
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                source:
+                  oneOf:
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: catalogue
+                      catalogueId:
+                        type: string
+                        minLength: 1
+                        maxLength: 200
+                    required:
+                    - kind
+                    - catalogueId
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: langy
+                    required:
+                    - kind
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: code
+                    required:
+                    - kind
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: api
+                    required:
+                    - kind
+              required:
+              - name
+              - code
+              - queries
+  /api/v1/projects/{projectId}/analytics/dashboard-widgets/{widgetId}:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsDashboardWidgetsByWidgetId
+      responses:
+        '200':
+          description: The dashboard widget
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      code:
+                        type: string
+                      queries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            sql:
+                              type: string
+                              minLength: 1
+                              maxLength: 50000
+                            parameters:
+                              maxItems: 32
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 64
+                                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                  type:
+                                    type: string
+                                    enum:
+                                    - string
+                                    - number
+                                    - boolean
+                                  default:
+                                    anyOf:
+                                    - type: string
+                                      maxLength: 4000
+                                    - type: number
+                                    - type: boolean
+                                required:
+                                - name
+                                - type
+                                additionalProperties: false
+                          required:
+                          - name
+                          - sql
+                          additionalProperties: false
+                      description:
+                        type: string
+                      prompt:
+                        type: string
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: catalogue
+                            catalogueId:
+                              type: string
+                              minLength: 1
+                              maxLength: 200
+                          required:
+                          - kind
+                          - catalogueId
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: langy
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: code
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: api
+                          required:
+                          - kind
+                          additionalProperties: false
+                    required:
+                    - version
+                    - code
+                    - queries
+                    additionalProperties: false
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No dashboard widget with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Returns one dashboard widget with its React source and named queries. A widget saved in another project is reported as not found.
+      summary: Get a dashboard widget
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: widgetId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    patch:
+      operationId: patchApiV1ProjectsByProjectIdAnalyticsDashboardWidgetsByWidgetId
+      responses:
+        '200':
+          description: The updated widget
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      code:
+                        type: string
+                      queries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            sql:
+                              type: string
+                              minLength: 1
+                              maxLength: 50000
+                            parameters:
+                              maxItems: 32
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 64
+                                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                  type:
+                                    type: string
+                                    enum:
+                                    - string
+                                    - number
+                                    - boolean
+                                  default:
+                                    anyOf:
+                                    - type: string
+                                      maxLength: 4000
+                                    - type: number
+                                    - type: boolean
+                                required:
+                                - name
+                                - type
+                                additionalProperties: false
+                          required:
+                          - name
+                          - sql
+                          additionalProperties: false
+                      description:
+                        type: string
+                      prompt:
+                        type: string
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: catalogue
+                            catalogueId:
+                              type: string
+                              minLength: 1
+                              maxLength: 200
+                          required:
+                          - kind
+                          - catalogueId
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: langy
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: code
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: api
+                          required:
+                          - kind
+                          additionalProperties: false
+                    required:
+                    - version
+                    - code
+                    - queries
+                    additionalProperties: false
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No dashboard widget with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Changes a dashboard widget's name, code, queries, description or source. A field the body leaves out keeps its stored value, so code alone keeps the queries and the source is kept unless the body names one. A body with none of these fields is refused.
+      summary: Update a dashboard widget
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: widgetId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                code:
+                  type: string
+                  minLength: 1
+                  maxLength: 200000
+                queries:
+                  maxItems: 8
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 64
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      sql:
+                        type: string
+                        minLength: 1
+                        maxLength: 50000
+                      parameters:
+                        maxItems: 32
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            type:
+                              type: string
+                              enum:
+                              - string
+                              - number
+                              - boolean
+                            default:
+                              anyOf:
+                              - type: string
+                                maxLength: 4000
+                              - type: number
+                              - type: boolean
+                          required:
+                          - name
+                          - type
+                    required:
+                    - name
+                    - sql
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                source:
+                  oneOf:
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: catalogue
+                      catalogueId:
+                        type: string
+                        minLength: 1
+                        maxLength: 200
+                    required:
+                    - kind
+                    - catalogueId
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: langy
+                    required:
+                    - kind
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: code
+                    required:
+                    - kind
+                  - type: object
+                    properties:
+                      kind:
+                        type: string
+                        const: api
+                    required:
+                    - kind
+              minProperties: 1
+    delete:
+      operationId: deleteApiV1ProjectsByProjectIdAnalyticsDashboardWidgetsByWidgetId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: {}
+        '204':
+          description: The widget was deleted
+          content: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No dashboard widget with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Deletes one dashboard widget. Answers 204 with no body; deleting a widget that is not in this project is reported as not found.
+      summary: Delete a dashboard widget
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:delete
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: widgetId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/projects/{projectId}/analytics/dashboard-widgets/{widgetId}/dashboard:
+    post:
+      operationId: postApiV1ProjectsByProjectIdAnalyticsDashboardWidgetsByWidgetIdDashboard
+      responses:
+        '200':
+          description: The widget was added to the dashboard
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      code:
+                        type: string
+                      queries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              minLength: 1
+                              maxLength: 64
+                              pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                            sql:
+                              type: string
+                              minLength: 1
+                              maxLength: 50000
+                            parameters:
+                              maxItems: 32
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 64
+                                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                                  type:
+                                    type: string
+                                    enum:
+                                    - string
+                                    - number
+                                    - boolean
+                                  default:
+                                    anyOf:
+                                    - type: string
+                                      maxLength: 4000
+                                    - type: number
+                                    - type: boolean
+                                required:
+                                - name
+                                - type
+                                additionalProperties: false
+                          required:
+                          - name
+                          - sql
+                          additionalProperties: false
+                      description:
+                        type: string
+                      prompt:
+                        type: string
+                      source:
+                        oneOf:
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: catalogue
+                            catalogueId:
+                              type: string
+                              minLength: 1
+                              maxLength: 200
+                          required:
+                          - kind
+                          - catalogueId
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: langy
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: code
+                          required:
+                          - kind
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            kind:
+                              type: string
+                              const: api
+                          required:
+                          - kind
+                          additionalProperties: false
+                    required:
+                    - version
+                    - code
+                    - queries
+                    additionalProperties: false
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No dashboard widget with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Assigns a dashboard widget to a dashboard. The widget is repositioned to the next free row on that dashboard; its size (colSpan/rowSpan) is preserved.
+      summary: Add a dashboard widget to a dashboard
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: widgetId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dashboardId:
+                  type: string
+                  minLength: 1
+              required:
+              - dashboardId
+  /api/v1/projects/{projectId}/analytics/boards:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsBoards
+      responses:
+        '200':
+          description: The project's Dashboards boards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        scope:
+                          type: string
+                          enum:
+                          - PRIVATE
+                          - PROJECT
+                          - ORGANIZATION
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        platformUrl:
+                          type: string
+                        widgetCount:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                      required:
+                      - id
+                      - name
+                      - description
+                      - scope
+                      - createdAt
+                      - updatedAt
+                      - platformUrl
+                      - widgetCount
+                      additionalProperties: false
+                required:
+                - data
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Lists this project's boards in the Dashboards area, each with how many widgets it holds. Pass a board's id to the dashboard widget's add-to-dashboard endpoint to place a widget on it. Analytics Reports boards are listed by /api/v1/dashboards instead.
+      summary: List Dashboards boards
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/projects/{projectId}/analytics/boards/{boardId}:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsBoardsByBoardId
+      responses:
+        '200':
+          description: The Dashboards board
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  scope:
+                    type: string
+                    enum:
+                    - PRIVATE
+                    - PROJECT
+                    - ORGANIZATION
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                required:
+                - id
+                - name
+                - description
+                - scope
+                - createdAt
+                - updatedAt
+                - platformUrl
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No Dashboards board with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Returns one board of the Dashboards area. A board saved in another project, or one only Analytics Reports holds, is reported as not found.
+      summary: Get a Dashboards board
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: boardId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/projects/{projectId}/analytics/charts:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsCharts
+      responses:
+        '200':
+          description: The project's saved workbench charts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        definition:
+                          type: object
+                          properties:
+                            version:
+                              type: number
+                            sql:
+                              type: string
+                            parameters:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                            vegaLiteSpec:
+                              type: object
+                              propertyNames:
+                                type: string
+                              additionalProperties: {}
+                          required:
+                          - version
+                          - sql
+                          - parameters
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                        platformUrl:
+                          type: string
+                        dashboardId:
+                          type:
+                          - string
+                          - 'null'
+                        gridColumn:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        gridRow:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        colSpan:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                        rowSpan:
+                          type: integer
+                          minimum: -9007199254740991
+                          maximum: 9007199254740991
+                      required:
+                      - id
+                      - name
+                      - definition
+                      - createdAt
+                      - updatedAt
+                      - platformUrl
+                      - dashboardId
+                      - gridColumn
+                      - gridRow
+                      - colSpan
+                      - rowSpan
+                required:
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Lists every saved LangWatchQL chart in this project, each with the statement it runs, the parameter values it was saved with and the Vega-Lite specification that draws it. Charts built with the chart builder are a different kind and are not listed here.
+      summary: List saved workbench charts
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    post:
+      operationId: postApiV1ProjectsByProjectIdAnalyticsCharts
+      responses:
+        '201':
+          description: The chart was saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      sql:
+                        type: string
+                      parameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      vegaLiteSpec:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - version
+                    - sql
+                    - parameters
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Saves a LangWatchQL statement, its bound parameter values and an optional Vega-Lite specification as one chart. The statement is validated by the LangWatchQL analytics SQL validator against this key's own permissions, and the specification by the visualization policy, before anything is written — a chart that could not be run or drawn is refused rather than stored.
+      summary: Save a workbench chart
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:create
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                definition: {}
+              required:
+              - name
+  /api/v1/projects/{projectId}/analytics/charts/{chartId}:
+    get:
+      operationId: getApiV1ProjectsByProjectIdAnalyticsChartsByChartId
+      responses:
+        '200':
+          description: The saved chart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      sql:
+                        type: string
+                      parameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      vegaLiteSpec:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - version
+                    - sql
+                    - parameters
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No chart with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Returns one saved LangWatchQL chart with its statement, parameter values and specification. A chart saved in another project is reported as not found.
+      summary: Get a saved workbench chart
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:view
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: chartId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    patch:
+      operationId: patchApiV1ProjectsByProjectIdAnalyticsChartsByChartId
+      responses:
+        '200':
+          description: The updated chart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      sql:
+                        type: string
+                      parameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      vegaLiteSpec:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - version
+                    - sql
+                    - parameters
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No chart with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Replaces a saved chart's name, its definition, or both. A definition offered here passes exactly the validators a save passes, resolved against this key's current permissions — so a chart cannot be edited into naming a column the caller may no longer read. A request carrying neither field is refused.
+      summary: Update a saved workbench chart
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: chartId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                definition: {}
+              minProperties: 1
+    delete:
+      operationId: deleteApiV1ProjectsByProjectIdAnalyticsChartsByChartId
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: {}
+        '204':
+          description: The chart was deleted
+          content: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No chart with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Deletes one saved LangWatchQL chart. Answers 204 with no body; deleting a chart that is not in this project is reported as not found.
+      summary: Delete a saved workbench chart
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:delete
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: chartId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+  /api/v1/projects/{projectId}/analytics/charts/{chartId}/placement:
+    put:
+      operationId: putApiV1ProjectsByProjectIdAnalyticsChartsByChartIdPlacement
+      responses:
+        '200':
+          description: The chart, now placed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  definition:
+                    type: object
+                    properties:
+                      version:
+                        type: number
+                      sql:
+                        type: string
+                      parameters:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                      vegaLiteSpec:
+                        type: object
+                        propertyNames:
+                          type: string
+                        additionalProperties: {}
+                    required:
+                    - version
+                    - sql
+                    - parameters
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  platformUrl:
+                    type: string
+                  dashboardId:
+                    type:
+                    - string
+                    - 'null'
+                  gridColumn:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  gridRow:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  colSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  rowSpan:
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                - id
+                - name
+                - definition
+                - createdAt
+                - updatedAt
+                - platformUrl
+                - dashboardId
+                - gridColumn
+                - gridRow
+                - colSpan
+                - rowSpan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No chart with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: Places one saved LangWatchQL chart on a dashboard in the same project, at the grid position supplied — or, when no grid row is given, at the next row free on that dashboard, counting charts of every kind. A dashboard that is not in this project is reported as not found, exactly like a chart that is not, and nothing is written.
+      summary: Place a saved workbench chart on a dashboard
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: chartId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dashboardId:
+                  type: string
+                  minLength: 1
+                gridColumn:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                gridRow:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                colSpan:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                rowSpan:
+                  type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+              required:
+              - dashboardId
+    delete:
+      operationId: deleteApiV1ProjectsByProjectIdAnalyticsChartsByChartIdPlacement
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: {}
+        '204':
+          description: The chart is no longer on any dashboard
+          content: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '404':
+          description: No chart with this id in this project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  retryable:
+                    type: boolean
+                  meta:
+                    type: object
+                    propertyNames:
+                      type: string
+                    additionalProperties: {}
+                  trace_id:
+                    type: string
+                  span_id:
+                    type: string
+                  trace:
+                    type: object
+                    properties:
+                      traceId:
+                        type: string
+                      spanId:
+                        type: string
+                      traceUrl:
+                        type: string
+                      logsUrl:
+                        type: string
+                  tips:
+                    type: array
+                    items:
+                      type: string
+                  docs_url:
+                    type: string
+                  fault:
+                    type: string
+                    enum:
+                    - customer
+                    - platform
+                    - provider
+                    - presumed_platform
+                  reasons:
+                    type: array
+                    items: {}
+                required:
+                - type
+                - code
+                - message
+                - retryable
+      description: 'Removes one saved LangWatchQL chart from whatever dashboard it is on, clearing its grid position along with the dashboard id. Idempotent: unplacing a chart that is not placed answers 204 all the same. The chart itself — its statement, parameter values and specification — is untouched.'
+      summary: Remove a saved workbench chart from its dashboard
+      tags:
+      - Analytics / LangWatchQL
+      security:
+      - project_api_key: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - project_api_key
+        permissions:
+        - analytics:update
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: path
+        name: chartId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

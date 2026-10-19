@@ -1,0 +1,212 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Admin API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Admin
+paths:
+  /api/v1/admin/impersonate:
+    post:
+      operationId: startAdminImpersonation
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    const: Impersonation started
+                required:
+                - message
+                additionalProperties: false
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - session
+        permissions:
+        - ops:manage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userIdToImpersonate:
+                  type: string
+                  minLength: 1
+                reason:
+                  type: string
+                  minLength: 1
+              required:
+              - userIdToImpersonate
+              - reason
+      tags:
+      - Admin
+      summary: Start admin impersonation
+      x-summary-source: derived
+    delete:
+      operationId: stopAdminImpersonation
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    const: Impersonation ended
+                required:
+                - message
+                additionalProperties: false
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - session
+        permissions:
+        - ops:view
+      tags:
+      - Admin
+      summary: Stop admin impersonation
+      x-summary-source: derived
+  /api/v1/admin/{resource}:
+    post:
+      operationId: runAdminOperation
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: {}
+                  total:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                required:
+                - data
+                additionalProperties: false
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - session
+        permissions:
+        - ops:view
+      parameters:
+      - in: path
+        name: resource
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method:
+                  type: string
+                  enum:
+                  - getList
+                  - getOne
+                  - getMany
+                  - getManyReference
+                  - create
+                  - update
+                  - updateMany
+                  - delete
+                  - deleteMany
+                params:
+                  default: {}
+                  type: object
+                  properties:
+                    pagination:
+                      type: object
+                      properties:
+                        page:
+                          type: integer
+                          minimum: 1
+                          maximum: 9007199254740991
+                        perPage:
+                          type: integer
+                          minimum: 1
+                          maximum: 200
+                    sort:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          minLength: 1
+                          maxLength: 100
+                        order:
+                          type: string
+                          enum:
+                          - ASC
+                          - DESC
+                    filter:
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    id:
+                      type:
+                      - string
+                      - number
+                    data:
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                    previousData:
+                      type: object
+                      propertyNames:
+                        type: string
+                      additionalProperties: {}
+                  additionalProperties: {}
+              required:
+              - method
+      tags:
+      - Admin
+      summary: Run admin operation
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.

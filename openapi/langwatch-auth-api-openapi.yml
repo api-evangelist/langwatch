@@ -1,0 +1,3173 @@
+openapi: 3.2.0
+info:
+  title: LangWatch Auth API
+  description: LangWatch openapi spec
+  version: 1.0.0
+servers:
+- url: https://app.langwatch.ai
+security:
+- project_api_key: []
+tags:
+- name: Auth
+paths:
+  /api/v1/auth/cli/device-code:
+    post:
+      operationId: startCliDeviceCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Start cli device code
+      x-summary-source: derived
+  /api/v1/auth/cli/exchange:
+    post:
+      operationId: exchangeCliDeviceCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Exchange cli device code
+      x-summary-source: derived
+  /api/v1/auth/cli/refresh:
+    post:
+      operationId: refreshCliDeviceSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Refresh cli device session
+      x-summary-source: derived
+  /api/v1/auth/cli/lookup:
+    get:
+      operationId: lookupCliDeviceCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      parameters:
+      - in: query
+        name: user_code
+        schema:
+          type: string
+      tags:
+      - Auth
+      summary: Lookup cli device code
+      x-summary-source: derived
+  /api/v1/auth/cli/approve:
+    post:
+      operationId: approveCliDeviceCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Approve cli device code
+      x-summary-source: derived
+  /api/v1/auth/cli/deny:
+    post:
+      operationId: denyCliDeviceCode
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Deny cli device code
+      x-summary-source: derived
+  /api/v1/auth/cli/logout:
+    post:
+      operationId: endCliDeviceSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: End cli device session
+      x-summary-source: derived
+  /api/v1/auth/cli/device-approval:
+    get:
+      operationId: watchCliDeviceApproval
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      parameters:
+      - in: query
+        name: device_code
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Auth
+      summary: Watch cli device approval
+      x-summary-source: derived
+  /api/auth/validate:
+    post:
+      operationId: validateProjectAuthToken
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectSlug:
+                    type: string
+                required:
+                - projectSlug
+                additionalProperties: false
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Validate project auth token
+      x-summary-source: derived
+  /api/auth/session:
+    get:
+      operationId: readBrowserAuthSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: Read browser auth session
+      x-summary-source: derived
+  /api/auth/logout:
+    get:
+      operationId: endBrowserSessionAndRedirect
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+            text/html: {}
+            '*/*': {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: End browser session and redirect
+      x-summary-source: derived
+    post:
+      operationId: endBrowserSession
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json: {}
+      security: []
+      x-access-policy:
+        kind: public
+        credential:
+        - none
+      tags:
+      - Auth
+      summary: End browser session
+      x-summary-source: derived
+  /api/v1/auth/cli/budget/status:
+    get:
+      operationId: readCliBudgetStatus
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    const: true
+                required:
+                - ok
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        const: budget_exceeded
+                      scope:
+                        type: string
+                      limit_usd:
+                        type: string
+                      spent_usd:
+                        type: string
+                      period:
+                        type: string
+                      request_increase_url:
+                        type: string
+                      admin_email:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - type
+                    - scope
+                    - limit_usd
+                    - spent_usd
+                    - period
+                    - request_increase_url
+                    - admin_email
+                    additionalProperties: false
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli budget status
+      x-summary-source: derived
+  /api/v1/auth/cli/bootstrap:
+    get:
+      operationId: readCliBootstrap
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tools:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                          minLength: 1
+                        displayName:
+                          type: string
+                          minLength: 1
+                      required:
+                      - slug
+                      - displayName
+                      additionalProperties: false
+                  providers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          minLength: 1
+                        displayName:
+                          type: string
+                          minLength: 1
+                        configured:
+                          type: boolean
+                      required:
+                      - name
+                      - displayName
+                      - configured
+                      additionalProperties: false
+                  gatewayProviders:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                  budget:
+                    type: object
+                    properties:
+                      monthlyLimitUsd:
+                        type:
+                        - number
+                        - 'null'
+                      monthlyUsedUsd:
+                        type: number
+                      period:
+                        type: string
+                        const: MONTHLY
+                    required:
+                    - monthlyLimitUsd
+                    - monthlyUsedUsd
+                    - period
+                    additionalProperties: false
+                  gatewayUrl:
+                    type: string
+                    format: uri
+                  adminEmail:
+                    type:
+                    - string
+                    - 'null'
+                  toolPolicies:
+                    type: object
+                    properties:
+                      claude:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      codex:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      gemini:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      opencode:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      cursor:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      copilot:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                      code:
+                        type: object
+                        properties:
+                          allowVk:
+                            type: boolean
+                          allowOtelDirect:
+                            type: boolean
+                        required:
+                        - allowVk
+                        - allowOtelDirect
+                        additionalProperties: false
+                    required:
+                    - claude
+                    - codex
+                    - gemini
+                    - opencode
+                    - cursor
+                    - copilot
+                    - code
+                    additionalProperties: false
+                required:
+                - tools
+                - providers
+                - gatewayProviders
+                - budget
+                - gatewayUrl
+                - adminEmail
+                - toolPolicies
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli bootstrap
+      x-summary-source: derived
+  /api/v1/auth/cli/budget-overview:
+    get:
+      operationId: readCliBudgetOverview
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gatewayAccess:
+                    type: boolean
+                  reason:
+                    type: string
+                    enum:
+                    - flag_off
+                    - no_membership
+                  budgets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        scopeType:
+                          type: string
+                        scopeId:
+                          type: string
+                        scopeLabel:
+                          type: string
+                        window:
+                          type: string
+                        limitUsd:
+                          type: string
+                        spentUsd:
+                          type: string
+                        onBreach:
+                          type: string
+                        timezone:
+                          type:
+                          - string
+                          - 'null'
+                        providerKey:
+                          type:
+                          - string
+                          - 'null'
+                        providerLabel:
+                          type:
+                          - string
+                          - 'null'
+                        isPerMember:
+                          type: boolean
+                        managedByVirtualKeyId:
+                          type:
+                          - string
+                          - 'null'
+                        scopeClass:
+                          type: string
+                          enum:
+                          - organization
+                          - team
+                          - project
+                          - personal
+                          - key
+                          - department
+                          - other
+                        scopePhrase:
+                          type: string
+                        resetsAt:
+                          type:
+                          - string
+                          - 'null'
+                        topModels:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              model:
+                                type: string
+                              spentUsd:
+                                type: number
+                            required:
+                            - model
+                            - spentUsd
+                            additionalProperties: false
+                      required:
+                      - id
+                      - name
+                      - scopeType
+                      - scopeId
+                      - scopeLabel
+                      - window
+                      - limitUsd
+                      - spentUsd
+                      - onBreach
+                      - timezone
+                      - providerKey
+                      - providerLabel
+                      - isPerMember
+                      - managedByVirtualKeyId
+                      - scopeClass
+                      - scopePhrase
+                      - resetsAt
+                      additionalProperties: false
+                required:
+                - gatewayAccess
+                - budgets
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli budget overview
+      x-summary-source: derived
+  /api/v1/auth/cli/personal-project:
+    get:
+      operationId: readCliPersonalProject
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - id
+                    - slug
+                    - name
+                    additionalProperties: false
+                required:
+                - project
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli personal project
+      x-summary-source: derived
+  /api/v1/auth/cli/project-key:
+    post:
+      operationId: readCliProjectKey
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - id
+                    - slug
+                    - name
+                    additionalProperties: false
+                required:
+                - project
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli project key
+      x-summary-source: derived
+  /api/v1/auth/cli/virtual-key:
+    post:
+      operationId: issueCliVirtualKey
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  secret:
+                    type: string
+                  prefix:
+                    type: string
+                required:
+                - id
+                - secret
+                - prefix
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Issue cli virtual key
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingest/sources:
+    get:
+      operationId: listCliIngestionSources
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        sourceType:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                        lastEventAt:
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                        archivedAt:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - name
+                      - sourceType
+                      - description
+                      - status
+                      - lastEventAt
+                      - createdAt
+                      - archivedAt
+                      additionalProperties: false
+                required:
+                - sources
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions:
+        - ingestionSources:view
+      parameters:
+      - in: query
+        name: include_archived
+        schema:
+          type: string
+      tags:
+      - Auth
+      summary: List cli ingestion sources
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingest/sources/{sourceId}/events:
+    get:
+      operationId: listCliIngestionSourceEvents
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        eventId:
+                          type: string
+                        eventType:
+                          type: string
+                        actor:
+                          type: string
+                        action:
+                          type: string
+                        target:
+                          type: string
+                        costUsd:
+                          type: string
+                        tokensInput:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                        tokensOutput:
+                          type: integer
+                          minimum: 0
+                          maximum: 9007199254740991
+                        eventTimestampIso:
+                          type: string
+                        ingestedAtIso:
+                          type: string
+                        rawPayload:
+                          type: string
+                      required:
+                      - eventId
+                      - eventType
+                      - actor
+                      - action
+                      - target
+                      - costUsd
+                      - tokensInput
+                      - tokensOutput
+                      - eventTimestampIso
+                      - ingestedAtIso
+                      - rawPayload
+                      additionalProperties: false
+                required:
+                - events
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions:
+        - activityMonitor:view
+      parameters:
+      - in: path
+        name: sourceId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      - in: query
+        name: limit
+        schema:
+          type: string
+      - in: query
+        name: before_iso
+        schema:
+          type: string
+      tags:
+      - Auth
+      summary: List cli ingestion source events
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingest/sources/{sourceId}/health:
+    get:
+      operationId: readCliIngestionSourceHealth
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      status:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - status
+                    additionalProperties: false
+                  health:
+                    type: object
+                    properties:
+                      events24h:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      events7d:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      events30d:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      lastSuccessIso:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - events24h
+                    - events7d
+                    - events30d
+                    - lastSuccessIso
+                    additionalProperties: false
+                required:
+                - source
+                - health
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions:
+        - activityMonitor:view
+      parameters:
+      - in: path
+        name: sourceId
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Auth
+      summary: Read cli ingestion source health
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/status:
+    get:
+      operationId: readCliGovernanceStatus
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  setup:
+                    type: object
+                    properties:
+                      hasPersonalVKs:
+                        type: boolean
+                      hasRoutingPolicies:
+                        type: boolean
+                      hasIngestionSources:
+                        type: boolean
+                      hasAnomalyRules:
+                        type: boolean
+                      hasRecentActivity:
+                        type: boolean
+                      hasApplicationTraces:
+                        type: boolean
+                      governanceActive:
+                        type: boolean
+                    required:
+                    - hasPersonalVKs
+                    - hasRoutingPolicies
+                    - hasIngestionSources
+                    - hasAnomalyRules
+                    - hasRecentActivity
+                    - hasApplicationTraces
+                    - governanceActive
+                    additionalProperties: false
+                required:
+                - setup
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Read cli governance status
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingestion-templates:
+    get:
+      operationId: listCliIngestionTemplates
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ingestion_templates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        organization_id:
+                          type:
+                          - string
+                          - 'null'
+                        slug:
+                          type: string
+                        source_type:
+                          type: string
+                        display_name:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        icon_asset:
+                          type:
+                          - string
+                          - 'null'
+                        credential_schema:
+                          type:
+                          - string
+                          - 'null'
+                        ottl_rules:
+                          type: string
+                        platform_published:
+                          type: boolean
+                        enabled:
+                          type: boolean
+                      required:
+                      - id
+                      - organization_id
+                      - slug
+                      - source_type
+                      - display_name
+                      - description
+                      - icon_asset
+                      - credential_schema
+                      - ottl_rules
+                      - platform_published
+                      - enabled
+                      additionalProperties: false
+                required:
+                - ingestion_templates
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: List cli ingestion templates
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingestion-key:
+    post:
+      operationId: mintCliIngestionKey
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  prefix:
+                    type: string
+                  endpoint:
+                    type: string
+                  project:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      slug:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - id
+                    - slug
+                    - name
+                    additionalProperties: false
+                required:
+                - token
+                - prefix
+                - endpoint
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: Mint cli ingestion key
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingestion-keys:
+    get:
+      operationId: listCliIngestionKeys
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source_type:
+                          type: string
+                        lookup_id:
+                          type: string
+                        ingestion_template_id:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - source_type
+                      - lookup_id
+                      - ingestion_template_id
+                      additionalProperties: false
+                required:
+                - keys
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      tags:
+      - Auth
+      summary: List cli ingestion keys
+      x-summary-source: derived
+  /api/v1/auth/cli/governance/ingestion-keys/{lookup_id}:
+    get:
+      operationId: readCliIngestionKeyState
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lookup_id:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - unknown
+                    - live
+                    - revoked
+                  source_type:
+                    type: string
+                  revocation_cause:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - lookup_id
+                - status
+                additionalProperties: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '402':
+          description: Response 402
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '412':
+          description: Response 412
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  upgrade_url:
+                    type: string
+                required:
+                - error
+                - error_description
+                additionalProperties: false
+      security:
+      - cli_access_token: []
+      x-access-policy:
+        kind: handlerManaged
+        credential:
+        - cli_access_token
+        permissions: []
+      parameters:
+      - in: path
+        name: lookup_id
+        schema:
+          type: string
+          minLength: 1
+        required: true
+      tags:
+      - Auth
+      summary: Read cli ingestion key state
+      x-summary-source: derived
+components:
+  securitySchemes:
+    project_api_key:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+      description: 'Project API key for sending traces and accessing project-scoped resources. Format: sk-lw-... (no underscore). Obtain one by creating a project via the Admin API or the LangWatch UI.'
+    admin_api_key:
+      type: http
+      scheme: bearer
+      description: 'Admin API key for organization-level operations (managing projects, API keys). Create one in Settings > API Keys or via POST /api/api-keys. Format: sk-lw-{id}_{secret}.'
+    scim_bearer:
+      type: http
+      scheme: bearer
+      description: SCIM token for one organization's directory connection, created with POST /api/scim-tokens or in Settings > SCIM. It authenticates provisioning calls only, and stops working if the organization's Enterprise plan lapses.
+    cli_access_token:
+      type: http
+      scheme: bearer
+      description: The device session the LangWatch CLI holds after `langwatch login`. It acts as the person who signed in, in the organization they chose, and expires unless the CLI refreshes it.
+    instance_admin_key:
+      type: http
+      scheme: bearer
+      description: Instance administrator key, set as LANGWATCH_INSTANCE_ADMIN_API_KEY on a self-hosted deployment. It exists to create the first organization, before any organization key does; every other management API takes an organization key instead.
+    internal_secret:
+      type: http
+      scheme: bearer
+      description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.
