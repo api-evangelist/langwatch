@@ -24,3 +24,31 @@
     detected: '2026-10-20'
   status: not-a-workflow
   arazzo: null
+- slug: langwatch-antler
+  label: Antler
+  partner_name: Antler
+  category: accelerator portfolio participation
+  type: register
+  channel: standard-directory
+  evidence: https://www.antler.co/portfolio?0b933bfd_page=10
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Antler portfolio (antler.co/portfolio)
+    standard: null
+    spec_file: null
+    role: accelerator-portfolio-company
+    registered_name: Langwatch
+    register_id: https://www.antler.co/portfolio?0b933bfd_page=10
+    register_country: Netherlands
+    register_website: https://langwatch.ai/
+    matched_domain: langwatch.ai
+    matched_by: domain
+    signal_note: 'participation only: the accelerator''s own portfolio register lists the company (cohort / investment);
+      an ownership and participation record, not conformance or certification'
+    detected_by: sweep-accelerator-portfolios.py
+    detected: '2026-10-21'
+    year: '2023'
+    sector: B2B Software
+  status: not-a-workflow
+  arazzo: null
