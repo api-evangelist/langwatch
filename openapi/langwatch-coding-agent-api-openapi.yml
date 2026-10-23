@@ -849,3 +849,9 @@ components:
       type: http
       scheme: bearer
       description: The deployment's own shared secret, presented by another LangWatch service rather than by a customer. The families behind it are ingress-blocked; they are described so a self-hosted operator can see what the deployment talks to itself about.
+x-provenance:
+  method: harvested
+  publisher: LangWatch
+  source: https://app.langwatch.ai/api/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
