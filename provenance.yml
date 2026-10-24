@@ -9,6 +9,9 @@ artifacts:
   authentication/langwatch-authentication.yml:
     method: derived
     evidence: declared in the artifact
+  capabilities/langwatch-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-agents-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-agents-api
@@ -34,17 +37,17 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-api-keys-api
   collections/langwatch-budgets-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-budgets-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-budgets-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-budgets-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-cache-rules-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-cache-rules-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-cache-rules-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-cache-rules-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-dashboards-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-dashboards-api
@@ -58,11 +61,11 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-dataset-api
   collections/langwatch-evaluations-v3-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-evaluations-v3-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-evaluations-v3-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-evaluations-v3-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-evaluators-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-evaluators-api
@@ -76,11 +79,11 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-graphs-api
   collections/langwatch-langwatch-api-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-langwatch-api-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-langwatch-api-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-langwatch-api-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-model-defaults-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-model-defaults-api
@@ -112,11 +115,11 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-prompts-api
   collections/langwatch-providers-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-providers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-providers-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-providers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-scenario-events-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-scenario-events-api
@@ -148,11 +151,11 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-suites-api
   collections/langwatch-trace-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-trace-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-trace-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-trace-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-traces-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-traces-api
@@ -166,11 +169,11 @@ artifacts:
     method: derived
     evidence: openapi/langwatch-triggers-api
   collections/langwatch-virtual-keys-api.opencollection.json:
-    method: derived
-    evidence: openapi/langwatch-virtual-keys-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-virtual-keys-api.postman_collection.json:
-    method: derived
-    evidence: openapi/langwatch-virtual-keys-api
+    method: unknown
+    evidence: no authorship recorded
   collections/langwatch-workflows-api.opencollection.json:
     method: derived
     evidence: openapi/langwatch-workflows-api
@@ -184,135 +187,21 @@ artifacts:
     method: derived
     evidence: openapi/langwatch
   finops/langwatch-finops.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: declared in the artifact
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/langwatch-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
   json-ld/langwatch-context.jsonld:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -396,14 +285,38 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   openapi/_original/langwatch-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
+    evidence: byte-identical to https://app.langwatch.ai/api/openapi.json (sha256 47ab84f7fa07, fetched
+      2026-10-19)
+  openapi/langwatch-admin-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-agent-cache-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-agents-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-analytics-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-analytics-langwatchql-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-annotations-api-openapi.yml:
@@ -412,10 +325,19 @@ artifacts:
   openapi/langwatch-api-keys-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-budgets-api-openapi.yml:
+  openapi/langwatch-auth-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-cache-rules-api-openapi.yml:
+  openapi/langwatch-browser-telemetry-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-bug-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-checkup-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-coding-agent-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-dashboards-api-openapi.yml:
@@ -424,16 +346,61 @@ artifacts:
   openapi/langwatch-dataset-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-evaluations-v3-api-openapi.yml:
+  openapi/langwatch-datasets-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-elevenlabs-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-evaluations-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-evaluators-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-events-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-experiments-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-files-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-gateway-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-gateway-spend-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-governance-ingestion-templates-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-grants-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-graphs-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-langwatch-api-api-openapi.yml:
+  openapi/langwatch-groups-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-instant-evals-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-internal-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-invites-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-langy-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-me-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-members-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-model-defaults-api-openapi.yml:
@@ -445,13 +412,34 @@ artifacts:
   openapi/langwatch-monitors-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-ops-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-organization-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-organizations-self-hosted-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-platform-health-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-projects-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-prompts-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-providers-api-openapi.yml:
+  openapi/langwatch-query-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-role-bindings-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-roles-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-run-plans-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-scenario-events-api-openapi.yml:
@@ -460,16 +448,31 @@ artifacts:
   openapi/langwatch-scenarios-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-scim-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-scim-tokens-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-secrets-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-simulation-runs-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-slack-connections-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-stored-objects-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-suites-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-trace-api-openapi.yml:
+  openapi/langwatch-teams-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-test-suites-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-traces-api-openapi.yml:
@@ -478,18 +481,21 @@ artifacts:
   openapi/langwatch-triggers-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/langwatch-virtual-keys-api-openapi.yml:
+  openapi/langwatch-user-avatar-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/langwatch-webhooks-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/langwatch-workflows-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   plans/langwatch-plans-pricing.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: searched
+    evidence: declared in the artifact
   rate-limits/langwatch-rate-limits.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: declared in the artifact
   security/langwatch-domain-security.yml:
     method: unknown
     evidence: no authorship recorded
