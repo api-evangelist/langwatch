@@ -1,4 +1,4 @@
-# LangWatch (langwatch)
+# LangWatch
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,466 +66,181 @@
 
 LangWatch is an open-source LLM observability, evaluation, and AI agent testing platform. Built around OpenTelemetry-native tracing, LangWatch lets teams instrument LLM applications (LangChain, LangGraph, DSPy, OpenAI Agents, LiteLLM, Pydantic AI, CrewAI, AWS Bedrock, and more), run real-time and batch evaluations, version and deploy prompts, simulate multi-turn agent conversations against scripted scenarios and Judge Agents, manage labeled datasets, and govern model traffic through a virtual-key AI Gateway with budgets and semantic caching. The platform exposes a REST API at app.langwatch.ai, ships Python and TypeScript SDKs plus an MCP server, publishes the companion `scenario` agent-testing framework and `better-agents` standards, and runs on Apache-2.0 core (with `ee/` enterprise modules under commercial license) — deployable as LangWatch Cloud or self-hosted via Docker Compose, Helm, Kind, or full Kubernetes.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/langwatch/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/langwatch/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · LLM · LLM Observability · LLM Evaluation · Agent Testing · Agent Simulation · Prompt Management · Datasets · Tracing · OpenTelemetry · AI Gateway · DSPy
+
+## LangWatch on APIs.io
+
+Everything profiled for LangWatch is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/langwatch/](https://apis.io/providers/langwatch/)** — or go straight to one of the APIs or properties below.
+
+### APIs (28)
+
+- [LangWatch Agents API](https://apis.io/apis/langwatch/langwatch-agents-api/) — The Agents API from LangWatch — 2 operation(s) for agents.
+- [LangWatch Analytics API](https://apis.io/apis/langwatch/langwatch-analytics-api/) — The Analytics API from LangWatch — 1 operation(s) for analytics.
+- [LangWatch Annotations API](https://apis.io/apis/langwatch/langwatch-annotations-api/) — The Annotations API from LangWatch — 3 operation(s) for annotations.
+- [LangWatch Api Keys API](https://apis.io/apis/langwatch/langwatch-api-keys-api/) — The Api Keys API from LangWatch — 2 operation(s) for api keys.
+- [LangWatch Budgets API](https://apis.io/apis/langwatch/langwatch-budgets-api/) — The Budgets API from LangWatch — 2 operation(s) for budgets.
+- [LangWatch Cache Rules API](https://apis.io/apis/langwatch/langwatch-cache-rules-api/) — The Cache Rules API from LangWatch — 2 operation(s) for cache rules.
+- [LangWatch Dashboards API](https://apis.io/apis/langwatch/langwatch-dashboards-api/) — The Dashboards API from LangWatch — 3 operation(s) for dashboards.
+- [LangWatch Dataset API](https://apis.io/apis/langwatch/langwatch-dataset-api/) — The Dataset API from LangWatch — 7 operation(s) for dataset.
+- [LangWatch Evaluations V3 API](https://apis.io/apis/langwatch/langwatch-evaluations-v3-api/) — The Evaluations V3 API from LangWatch — 2 operation(s) for evaluations v3.
+- [LangWatch Evaluators API](https://apis.io/apis/langwatch/langwatch-evaluators-api/) — The Evaluators API from LangWatch — 3 operation(s) for evaluators.
+- [LangWatch Graphs API](https://apis.io/apis/langwatch/langwatch-graphs-api/) — The Graphs API from LangWatch — 2 operation(s) for graphs.
+- [LangWatch API](https://apis.io/apis/langwatch/langwatch-langwatch-api-api/) — The LangWatch API API from LangWatch — 1 operation(s) for langwatch api.
+- [LangWatch Model Defaults API](https://apis.io/apis/langwatch/langwatch-model-defaults-api/) — The Model Defaults API from LangWatch — 2 operation(s) for model defaults.
+- [LangWatch Model Providers API](https://apis.io/apis/langwatch/langwatch-model-providers-api/) — The Model Providers API from LangWatch — 2 operation(s) for model providers.
+- [LangWatch Monitors API](https://apis.io/apis/langwatch/langwatch-monitors-api/) — The Monitors API from LangWatch — 3 operation(s) for monitors.
+- [LangWatch Projects API](https://apis.io/apis/langwatch/langwatch-projects-api/) — The Projects API from LangWatch — 2 operation(s) for projects.
+- [LangWatch Prompts API](https://apis.io/apis/langwatch/langwatch-prompts-api/) — The Prompts API from LangWatch — 8 operation(s) for prompts.
+- [LangWatch Providers API](https://apis.io/apis/langwatch/langwatch-providers-api/) — The Providers API from LangWatch — 2 operation(s) for providers.
+- [LangWatch Scenario Events API](https://apis.io/apis/langwatch/langwatch-scenario-events-api/) — The Scenario Events API from LangWatch — 1 operation(s) for scenario events.
+- [LangWatch Scenarios API](https://apis.io/apis/langwatch/langwatch-scenarios-api/) — The Scenarios API from LangWatch — 2 operation(s) for scenarios.
+- [LangWatch Secrets API](https://apis.io/apis/langwatch/langwatch-secrets-api/) — The Secrets API from LangWatch — 2 operation(s) for secrets.
+- [LangWatch Simulation Runs API](https://apis.io/apis/langwatch/langwatch-simulation-runs-api/) — The Simulation Runs API from LangWatch — 3 operation(s) for simulation runs.
+- [LangWatch Suites API](https://apis.io/apis/langwatch/langwatch-suites-api/) — The Suites API from LangWatch — 4 operation(s) for suites.
+- [LangWatch Trace API](https://apis.io/apis/langwatch/langwatch-trace-api/) — The Trace API from LangWatch — 3 operation(s) for trace.
+- [LangWatch Traces API](https://apis.io/apis/langwatch/langwatch-traces-api/) — The Traces API from LangWatch — 3 operation(s) for traces.
+- [LangWatch Triggers API](https://apis.io/apis/langwatch/langwatch-triggers-api/) — The Triggers API from LangWatch — 2 operation(s) for triggers.
+- [LangWatch Virtual Keys API](https://apis.io/apis/langwatch/langwatch-virtual-keys-api/) — The Virtual Keys API from LangWatch — 4 operation(s) for virtual keys.
+- [LangWatch Workflows API](https://apis.io/apis/langwatch/langwatch-workflows-api/) — The Workflows API from LangWatch — 2 operation(s) for workflows.
 
-## Scope
+### Published properties
 
-- **Type:** contract
-- **Position:** Consuming
-- **Access:** 3rd-Party
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Tags
+#### Agentic access (1)
 
-- AI
-- Artificial Intelligence
-- LLM
-- LLM Observability
-- LLM Evaluation
-- Agent Testing
-- Agent Simulation
-- Prompt Management
-- Datasets
-- Tracing
-- OpenTelemetry
-- AI Gateway
-- DSPy
-- LangChain
-- Open Source
-- MCP
-- FinOps
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Timestamps
+- [Langwatch Agentic Access](https://apis.io/agentic-access/langwatch/langwatch-agentic-access/)
 
-- **Created:** 2026-05-25
-- **Modified:** 2026-05-25
+#### JSON-LD (1)
 
-## APIs
+Linked-data contexts for the provider's vocabulary.
 
-### LangWatch Traces API
+- [Langwatch Context](https://apis.io/jsonld/langwatch/langwatch-context/)
 
-Search, retrieve, share, and unshare traces produced by instrumented LLM applications. Traces are the foundational observability primitive in LangWatch and arrive via OTLP/OpenTelemetry from Python or TypeScript SDKs (or any OTel-compliant client). Endpoints include /api/traces/search, /api/traces/{traceId}, /api/trace/{id}/share, and /api/trace/{id}/unshare.
+#### Collections (29)
 
-- **Human URL:** [https://langwatch.ai/docs/api-reference/traces](https://langwatch.ai/docs/api-reference/traces)
+Postman and Open Collection request collections.
 
-#### Tags
+- [LangWatch API](https://apis.io/collections/langwatch/open-langwatch/)
+- [LangWatch Agents API](https://apis.io/collections/langwatch/open-langwatch-agents-api/)
+- [LangWatch Agents Analytics API](https://apis.io/collections/langwatch/open-langwatch-analytics-api/)
+- [LangWatch Agents Annotations API](https://apis.io/collections/langwatch/open-langwatch-annotations-api/)
+- [LangWatch Agents Api Keys API](https://apis.io/collections/langwatch/open-langwatch-api-keys-api/)
+- [LangWatch Agents Budgets API](https://apis.io/collections/langwatch/open-langwatch-budgets-api/)
+- [LangWatch Agents Cache Rules API](https://apis.io/collections/langwatch/open-langwatch-cache-rules-api/)
+- [LangWatch Agents Dashboards API](https://apis.io/collections/langwatch/open-langwatch-dashboards-api/)
+- [LangWatch Agents Dataset API](https://apis.io/collections/langwatch/open-langwatch-dataset-api/)
+- [LangWatch Agents Evaluations V3 API](https://apis.io/collections/langwatch/open-langwatch-evaluations-v3-api/)
+- [LangWatch Agents Evaluators API](https://apis.io/collections/langwatch/open-langwatch-evaluators-api/)
+- [LangWatch Agents Graphs API](https://apis.io/collections/langwatch/open-langwatch-graphs-api/)
+- [LangWatch Agents LangWatch API API](https://apis.io/collections/langwatch/open-langwatch-langwatch-api-api/)
+- [LangWatch Agents Model Defaults API](https://apis.io/collections/langwatch/open-langwatch-model-defaults-api/)
+- [LangWatch Agents Model Providers API](https://apis.io/collections/langwatch/open-langwatch-model-providers-api/)
+- [LangWatch Agents Monitors API](https://apis.io/collections/langwatch/open-langwatch-monitors-api/)
+- [LangWatch Agents Projects API](https://apis.io/collections/langwatch/open-langwatch-projects-api/)
+- [LangWatch Agents Prompts API](https://apis.io/collections/langwatch/open-langwatch-prompts-api/)
+- [LangWatch Agents Providers API](https://apis.io/collections/langwatch/open-langwatch-providers-api/)
+- [LangWatch Agents Scenario Events API](https://apis.io/collections/langwatch/open-langwatch-scenario-events-api/)
+- [LangWatch Agents Scenarios API](https://apis.io/collections/langwatch/open-langwatch-scenarios-api/)
+- [LangWatch Agents Secrets API](https://apis.io/collections/langwatch/open-langwatch-secrets-api/)
+- [LangWatch Agents Simulation Runs API](https://apis.io/collections/langwatch/open-langwatch-simulation-runs-api/)
+- [LangWatch Agents Suites API](https://apis.io/collections/langwatch/open-langwatch-suites-api/)
+- [LangWatch Agents Trace API](https://apis.io/collections/langwatch/open-langwatch-trace-api/)
+- …and 4 more published on APIs.io
 
-- Traces
-- Observability
-- OpenTelemetry
+#### Security (3)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [Documentation](https://langwatch.ai/docs/api-reference/traces)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Langwatch Authentication](https://apis.io/security/langwatch/langwatch-authentication/)
+- [Langwatch Domain Security](https://apis.io/security/langwatch/langwatch-domain-security/)
+- [Langwatch Trust Center](https://apis.io/security/langwatch/langwatch-trust-center/)
 
-### LangWatch Evaluators API
+#### Plans and pricing (1)
 
-Configure and manage scorer evaluators — RAG quality (RAGAS), safety (Azure Content Safety, OpenAI Moderation, PII), format validation, semantic similarity, language detection, and LLM-as-Judge variants — that grade traces and dataset records.
+Published plans, tiers and prices.
 
-- **Human URL:** [https://langwatch.ai/docs/api-reference/evaluators](https://langwatch.ai/docs/api-reference/evaluators)
+- [Langwatch Plans Pricing](https://apis.io/plans/langwatch/langwatch-plans-pricing/)
 
-#### Tags
+#### Rate limits (1)
 
-- Evaluations
-- Evaluators
-- RAGAS
-- Safety
+Published request limits.
 
-#### Properties
+- [Langwatch Rate Limits](https://apis.io/rate-limits/langwatch/langwatch-rate-limits/)
 
-- [Documentation](https://langwatch.ai/docs/api-reference/evaluators)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### FinOps (1)
 
-### LangWatch Monitors API
+What the API costs to run, by operation.
 
-Create, toggle, and manage online monitors that automatically run configured evaluators against incoming production traces in real time.
+- [Langwatch Finops](https://apis.io/finops/langwatch/langwatch-finops/)
 
-- **Human URL:** [https://langwatch.ai/docs/api-reference/monitors](https://langwatch.ai/docs/api-reference/monitors)
+## Where to find this API
 
-#### Tags
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- Monitors
-- Online Evaluations
-- Production
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/monitors)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Datasets API
-
-Manage evaluation, regression, and fine-tuning datasets and their records. Supports CSV upload, programmatic record CRUD, and conversion of production traces into reusable test cases.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/datasets](https://langwatch.ai/docs/api-reference/datasets)
-
-#### Tags
-
-- Datasets
-- Records
-- Fine-Tuning
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/datasets)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Prompts API
-
-Version, tag, sync, and restore prompts across projects. Backs the LangWatch Studio prompt editor and supports feature-flag-style deployment of prompt versions in production code.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/prompts](https://langwatch.ai/docs/api-reference/prompts)
-
-#### Tags
-
-- Prompts
-- Versioning
-- Deployment
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/prompts)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Scenarios API
-
-Define multi-turn agent test scenarios used by the open-source `scenario` framework. Scenarios pair an Agent Under Test, a User Simulator Agent, and a Judge Agent (with optional script DSL) and run via pytest-compatible runners locally or in CI.
-
-- **Human URL:** [https://github.com/langwatch/scenario](https://github.com/langwatch/scenario)
-
-#### Tags
-
-- Scenarios
-- Agent Testing
-- Simulations
-
-#### Properties
-
-- [Documentation](https://github.com/langwatch/scenario)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Simulation Runs API
-
-Query and retrieve completed agent simulation runs and batches, including Judge Agent verdicts, transcripts, and per-turn evaluator scores.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/simulation-runs](https://langwatch.ai/docs/api-reference/simulation-runs)
-
-#### Tags
-
-- Simulations
-- Agent Testing
-- Batches
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/simulation-runs)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Suites API
-
-Manage and execute batch test suites that compose scenarios, datasets, and evaluators into reproducible experiments and regression runs.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/suites](https://langwatch.ai/docs/api-reference/suites)
-
-#### Tags
-
-- Suites
-- Experiments
-- Batches
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/suites)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Experiments API
-
-Trigger and inspect batch experiment runs (including DSPy-driven prompt and pipeline optimization runs) by slug, with full per-run telemetry.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/experiments](https://langwatch.ai/docs/api-reference/experiments)
-
-#### Tags
-
-- Experiments
-- Batches
-- DSPy
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/experiments)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Annotations API
-
-Collaborative annotation and labeling workflows over traces — used by domain experts and PMs to produce graded examples for evaluations and fine-tuning datasets.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/annotations](https://langwatch.ai/docs/api-reference/annotations)
-
-#### Tags
-
-- Annotations
-- Labeling
-- Human Feedback
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/annotations)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Analytics API
-
-Time-series analytics over traces, tokens, costs, latency, and evaluator scores — the data source behind LangWatch dashboards and graphs.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/analytics](https://langwatch.ai/docs/api-reference/analytics)
-
-#### Tags
-
-- Analytics
-- Time Series
-- Dashboards
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/analytics)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Dashboards API
-
-Create, reorder, update, and embed dashboards composed of analytics graphs and saved trace searches.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/dashboards](https://langwatch.ai/docs/api-reference/dashboards)
-
-#### Tags
-
-- Dashboards
-- Graphs
-- Visualization
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/dashboards)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Projects API
-
-Programmatically provision and manage projects and team workspaces — the top-level isolation boundary for traces, prompts, datasets, and gateway routing.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/projects](https://langwatch.ai/docs/api-reference/projects)
-
-#### Tags
-
-- Projects
-- Teams
-- Provisioning
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/projects)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch API Keys API
-
-Create, list, and revoke project API keys for SDK and automation use. Authenticates as `project_api_key` against the LangWatch REST API.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/api-keys](https://langwatch.ai/docs/api-reference/api-keys)
-
-#### Tags
-
-- API Keys
-- Authentication
-- Service Accounts
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/api-keys)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Secrets API
-
-Encrypted credential storage for evaluator and integration secrets (model-provider keys, third-party API keys) used by hosted runs.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/secrets](https://langwatch.ai/docs/api-reference/secrets)
-
-#### Tags
-
-- Secrets
-- Credentials
-- Vault
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/secrets)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Model Providers API
-
-Configure model-provider credentials and per-project model defaults used by evaluators, judges, and the AI Gateway.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/model-providers](https://langwatch.ai/docs/api-reference/model-providers)
-
-#### Tags
-
-- Model Providers
-- Model Defaults
-- Routing
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/model-providers)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch AI Gateway API
-
-OpenAI/Anthropic-compatible governance proxy. Manages provider bindings, virtual keys (with rotate and revoke), per-team budgets, and semantic cache rules under /api/gateway/v1/* — written in Go.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/gateway](https://langwatch.ai/docs/api-reference/gateway)
-
-#### Tags
-
-- AI Gateway
-- Virtual Keys
-- Budgets
-- Caching
-- Governance
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/gateway)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Workflows API
-
-Compose, version, and run optimization-studio workflows that chain prompts, datasets, evaluators, and DSPy optimizers.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/workflows](https://langwatch.ai/docs/api-reference/workflows)
-
-#### Tags
-
-- Workflows
-- Optimization Studio
-- DSPy
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/workflows)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Agents API
-
-Define and update agent records used by Agent Simulations and Scenarios — wiring system prompts, tools, and evaluator suites into reproducible agent definitions.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/agents](https://langwatch.ai/docs/api-reference/agents)
-
-#### Tags
-
-- Agents
-- Better Agents
-- Configuration
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/agents)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### LangWatch Triggers API
-
-Create and manage event-driven triggers that fire actions (alerts, webhooks, eval runs) when trace conditions or monitor scores match.
-
-- **Human URL:** [https://langwatch.ai/docs/api-reference/triggers](https://langwatch.ai/docs/api-reference/triggers)
-
-#### Tags
-
-- Triggers
-- Alerts
-- Automation
-
-#### Properties
-
-- [Documentation](https://langwatch.ai/docs/api-reference/triggers)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langwatch.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langwatch.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Portal](https://langwatch.ai)
+- [Website](https://www.langwatch.ai/)
 - [Documentation](https://langwatch.ai/docs/)
-- [Getting Started](https://langwatch.ai/docs/integration/quickstart)
-- [Documentation](https://langwatch.ai/docs/api-reference)
-- [OpenAPI](openapi/langwatch-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Application](https://app.langwatch.ai)
-- [Sign Up](https://app.langwatch.ai/auth/signup)
+- [Getting started](https://langwatch.ai/docs/integration/quickstart)
 - [Pricing](https://langwatch.ai/pricing)
-- [Plans](plans/langwatch-plans-pricing.yml)
-- [Rate Limits](rate-limits/langwatch-rate-limits.yml)
-- [Fin Ops](finops/langwatch-finops.yml)
-- [Documentation](https://langwatch.ai/docs/self-hosting/overview)
-- [Documentation](https://langwatch.ai/docs/observability)
-- [Documentation](https://langwatch.ai/docs/evaluations)
-- [Documentation](https://langwatch.ai/docs/prompt-management)
-- [Documentation](https://langwatch.ai/docs/simulations)
-- [Documentation](https://langwatch.ai/docs/llms.txt)
-- [GitHub Organization](https://github.com/langwatch)
-- [Source Code](https://github.com/langwatch/langwatch)
-- [Source Code](https://github.com/langwatch/scenario)
-- [Source Code](https://github.com/langwatch/better-agents)
-- [Source Code](https://github.com/langwatch/langevals)
-- [Source Code](https://github.com/langwatch/cookbooks)
-- [Source Code](https://github.com/langwatch/skills)
-- [SDK](https://pypi.org/project/langwatch/)
-- [SDK](https://www.npmjs.com/package/langwatch)
-- [M C P](https://www.npmjs.com/package/@langwatch/mcp-server)
-- [License](https://github.com/langwatch/langwatch/blob/main/LICENSE)
-- [Terms of Service](https://langwatch.ai/terms)
-- [Privacy Policy](https://langwatch.ai/privacy)
-- [Blog](https://langwatch.ai/blog)
 - [Changelog](https://langwatch.ai/docs/changelog)
-- [Forum](https://discord.gg/langwatch)
-- [LinkedIn](https://www.linkedin.com/company/langwatch)
-- [Twitter](https://twitter.com/langwatchai)
-- [YouTube](https://www.youtube.com/@langwatch)
-- [Features](undefined)
+- [Blog](https://langwatch.ai/blog)
+- [Terms of service](https://langwatch.ai/terms)
+- [Privacy policy](https://langwatch.ai/privacy)
+- [GitHub](https://github.com/langwatch)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** info@apievangelist.com
-**URL:** https://apievangelist.com
+**Kin Score 42.7** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 56.1 |
+| Contract governance | 0.0 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 42.9 |
+| Access clarity | 52.6 |
+
+**Agent readiness 28.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 20.0** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/langwatch/](https://apis.io/providers/langwatch/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for LangWatch: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/langwatch/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
